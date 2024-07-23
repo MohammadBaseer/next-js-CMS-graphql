@@ -1,0 +1,13 @@
+{
+    "cSpell.ignoreWords": [
+        "mediapost"
+    ],
+    "cSpell.customDictionaries": {
+        "custom-dictionary-workspace": {
+            "name": "custom-dictionary-workspace",
+            "path": "${workspaceFolder:next-js-CMS-graphql}/.cspell/custom-dictionary-workspace.txt",
+            "addWords": true,
+            "scope": "workspace"
+        }
+    }
+}
