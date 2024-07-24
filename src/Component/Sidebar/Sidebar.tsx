@@ -48,7 +48,9 @@ const Sidebar = () => {
             </ul>
 
             <li className={styles.li_main}>
-              <span className="pi pi-cog">&nbsp;Settings</span>
+              <span className="pi">
+                <i className="pi pi-spin pi-cog"></i>&nbsp;Settings
+              </span>
             </li>
 
             <ul className={styles.ul_sub}>

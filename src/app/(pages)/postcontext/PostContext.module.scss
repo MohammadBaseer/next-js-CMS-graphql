@@ -1,4 +1,4 @@
-$sideNavbar-width: 250px; // You can adjust this value
+$sideNavbar-width: 250px;
 $background-color: #f2f2f2;
 .main {
   margin-left: $sideNavbar-width;
@@ -7,20 +7,135 @@ $background-color: #f2f2f2;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  border: solid;
-
+  // align-items: center;
+  // border: solid;
+  .page_title {
+    padding: 20px;
+    color: #706f6f;
+    .title_href {
+      text-decoration-line: none;
+      color: #706f6f;
+      &:hover {
+        color: #cbc7c7;
+      }
+    }
+  }
   @media (max-width: 768px) {
-    margin-left: 200px; // Adjust main content margin for smaller screens
+    margin-left: 200px;
     width: calc(100% - 200px);
   }
 
   @media (max-width: 576px) {
-    margin-left: 150px; // Further adjust main content margin for extra small screens
+    margin-left: 150px;
     width: calc(100% - 150px);
   }
 
   @media (max-width: 480px) {
     margin-left: 0;
     width: 100%;
+  }
+}
+
+.post_context_table_box {
+  width: 90%;
+  margin: 0 auto;
+}
+
+.table {
+  border-collapse: collapse;
+  border-spacing: 0;
+  width: 100%;
+  border: 1px solid #ddd;
+  margin-top: 20px;
+  overflow-x: auto;
+
+  thead {
+    tr {
+      th {
+        text-align: center;
+        padding: 16px;
+        &:first-child {
+          text-align: left;
+        }
+      }
+    }
+  }
+
+  tbody {
+    tr {
+      td {
+        text-align: center;
+        padding: 16px;
+        border-bottom: 1px solid #efe9e9;
+
+        .image {
+          width: 100px;
+          height: 80px;
+          border-radius: 10px;
+        }
+
+        .ref {
+          .edit_icon {
+            color: #000;
+          }
+          .delete_icon {
+            color: red;
+          }
+        }
+
+        &:first-child {
+          text-align: left;
+        }
+      }
+      &:nth-child(even) {
+        background-color: #f2f2f2;
+      }
+    }
+  }
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .table {
+    border: none;
+    thead {
+      display: none;
+    }
+
+    tbody {
+      tr {
+        display: block;
+        margin-bottom: 20px;
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        overflow: hidden;
+      }
+
+      td {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px;
+        border: none;
+        border-bottom: 1px solid #ddd;
+      }
+
+      td:first-child {
+        background-color: #f9f9f9;
+        font-weight: bold;
+      }
+
+      td::before {
+        content: attr(data-label);
+        flex: 1;
+        text-align: left;
+        font-weight: bold;
+        padding-right: 10px;
+      }
+
+      td:last-child {
+        border-bottom: 0;
+      }
+    }
   }
 }

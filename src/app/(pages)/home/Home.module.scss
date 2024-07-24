@@ -10,12 +10,12 @@ $background-color: #f2f2f2;
   border: solid;
 
   @media (max-width: 768px) {
-    margin-left: 200px; // Adjust main content margin for smaller screens
+    margin-left: 200px;
     width: calc(100% - 200px);
   }
 
   @media (max-width: 576px) {
-    margin-left: 150px; // Further adjust main content margin for extra small screens
+    margin-left: 150px;
     width: calc(100% - 150px);
   }
 
