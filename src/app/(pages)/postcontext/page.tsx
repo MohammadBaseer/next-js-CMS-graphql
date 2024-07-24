@@ -17,6 +17,11 @@ const PostContext = () => {
         </div>
         <div className={styles.post_context_table_box}>
           <h1>Post Content List</h1>
+          <div className={styles.add_button}>
+            <button className={styles.button}>
+              <span className="pi pi-plus">&nbsp;</span>Add New Post
+            </button>
+          </div>
           <table className={styles.table}>
             <thead className={styles.thead}>
               <tr className={styles.tr}>

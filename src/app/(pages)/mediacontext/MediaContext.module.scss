@@ -39,6 +39,18 @@ $background-color: #f2f2f2;
 .post_context_table_box {
   width: 90%;
   margin: 0 auto;
+  .add_button {
+    margin-top: 15px;
+    .button {
+      padding: 10px;
+      cursor: pointer;
+      border: solid 1px #bbb9b9;
+      border-radius: 5px;
+      &:hover {
+        background-color: #ccc6c6;
+      }
+    }
+  }
 }
 
 .table {
@@ -46,7 +58,7 @@ $background-color: #f2f2f2;
   border-spacing: 0;
   width: 100%;
   border: 1px solid #ddd;
-  margin-top: 20px;
+  margin-top: 10px;
   overflow-x: auto;
 
   thead {
