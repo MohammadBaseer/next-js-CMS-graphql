@@ -1,4 +1,4 @@
-import styles from "./Products.module.scss";
+import styles from "./MediaContext.module.scss";
 
 const MediaPost = () => {
   return (

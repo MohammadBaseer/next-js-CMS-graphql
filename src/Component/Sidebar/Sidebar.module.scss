@@ -3,28 +3,33 @@ $secondary-color: #6c757d;
 $background-color: #f8f9fa;
 $hover-color: darken($primary-color, 10%);
 $text-color: #343a40;
-$sidebar-width: 258px;
+
+$sideNavbar-width: 250px; // You can adjust this value
+$background-color: #f2f2f2;
 
 .main_container {
-  width: $sidebar-width;
+  width: $sideNavbar-width;
   background-color: $background-color;
   height: 100vh;
   padding: 1rem;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-
-  //   width: 258px;
-  //   height: 100vh;
   overflow-y: auto; /* Enable vertical scrolling */
   position: fixed;
   top: 0;
   left: 0;
   padding: 15px;
-  background-color: #f2f2f2;
   color: #000;
-  // direction: rtl;
   scrollbar-color: #888 #f0f0f0;
   scrollbar-width: thin;
-  box-shadow: -4px -2px 8px 6px rgb(199 199 199);
+  box-shadow: -4px -2px 8px 6px rgb(199, 199, 199);
+
+  @media (max-width: 768px) {
+    width: 200px; // Adjust sidebar width for smaller screens
+  }
+
+  @media (max-width: 576px) {
+    width: 150px; // Further adjust sidebar width for extra small screens
+  }
 }
 
 .navbar {
@@ -80,12 +85,12 @@ $sidebar-width: 258px;
   .li_sub {
     margin-bottom: 0.25rem;
 
-    a {
+    .link {
       display: flex;
       align-items: center;
       color: $secondary-color;
       text-decoration: none;
-      padding: 0.25rem 1rem;
+      padding: 0.5rem 1rem;
       border-radius: 4px;
       transition: background-color 0.3s ease;
 

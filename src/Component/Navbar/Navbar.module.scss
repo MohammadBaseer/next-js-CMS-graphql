@@ -1,0 +1,27 @@
+$sideNavbar-width: 250px; // You can adjust this value
+$background-color: #f2f2f2;
+.navbar_main {
+  margin-left: $sideNavbar-width;
+  padding: 15px;
+
+  width: calc(100% - #{$sideNavbar-width});
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border: solid;
+
+  @media (max-width: 768px) {
+    margin-left: 200px; // Adjust main content margin for smaller screens
+    width: calc(100% - 200px);
+  }
+
+  @media (max-width: 576px) {
+    margin-left: 150px; // Further adjust main content margin for extra small screens
+    width: calc(100% - 150px);
+  }
+
+  @media (max-width: 480px) {
+    margin-left: 0;
+    width: 100%;
+  }
+}

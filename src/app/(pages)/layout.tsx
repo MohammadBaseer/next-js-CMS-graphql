@@ -1,4 +1,5 @@
-import Sidebar from "@/Component/Navbar/Sidebar";
+import Navbar from "@/Component/Navbar/Navbar";
+import Sidebar from "@/Component/Sidebar/Sidebar";
 
 export default function DashboardLayout({
   children, // will be a page or nested layout
@@ -8,7 +9,7 @@ export default function DashboardLayout({
   return (
     <div>
       <Sidebar />
-      <h1>Hello</h1>
+      <Navbar />
       {children}
     </div>
   );
