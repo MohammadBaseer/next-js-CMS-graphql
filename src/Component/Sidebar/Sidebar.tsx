@@ -2,7 +2,6 @@
 import Link from "next/link";
 import styles from "./Sidebar.module.scss";
 import "primeicons/primeicons.css";
-import { useEffect, useRef, useState } from "react";
 
 const Sidebar = () => {
   return (
