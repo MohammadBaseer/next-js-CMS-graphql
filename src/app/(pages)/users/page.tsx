@@ -15,6 +15,13 @@ const Users = () => {
       </div>
       <div className={styles.post_context_table_box}>
         <h1>Users</h1>
+
+        <div className={styles.add_button}>
+          <button className={styles.button}>
+            <span className="pi pi-plus">&nbsp;</span>Add New User
+          </button>
+        </div>
+
         <table className={styles.table}>
           <thead className={styles.thead}>
             <tr className={styles.tr}>
