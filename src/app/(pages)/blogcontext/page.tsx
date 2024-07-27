@@ -12,15 +12,15 @@ const PostContext = () => {
             <Link href={"/home"} className={styles.title_href}>
               Home
             </Link>
-            /Context/Post Context
+            /Context/Blog Context
           </p>
         </div>
         <div className={styles.post_context_table_box}>
-          <h1>Post Content List</h1>
+          <h1>Blogs Content List</h1>
           <div className={styles.add_button}>
-            <button className={styles.button}>
+            <Link href={"/blogcontext/addblog"} className={styles.button}>
               <span className="pi pi-plus">&nbsp;</span>Add New Post
-            </button>
+            </Link>
           </div>
           <table className={styles.table}>
             <thead className={styles.thead}>

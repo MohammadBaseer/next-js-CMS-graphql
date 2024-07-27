@@ -17,9 +17,9 @@ const Users = () => {
         <h1>Users</h1>
 
         <div className={styles.add_button}>
-          <button className={styles.button}>
+          <Link href={"/users/adduser"} className={styles.button}>
             <span className="pi pi-plus">&nbsp;</span>Add New User
-          </button>
+          </Link>
         </div>
 
         <table className={styles.table}>

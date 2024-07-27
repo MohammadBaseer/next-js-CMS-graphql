@@ -1,7 +1,11 @@
 import Link from "next/link";
 import styles from "./MediaContext.module.scss";
+import pathFinderFunction from "@/util/URLPathFinder/urlPathFinder";
 
 const MediaPost = () => {
+  const path = pathFinderFunction;
+  console.log("Path::::::==> ", path);
+
   return (
     <div className={styles.main}>
       <div className={styles.page_title}>
@@ -18,9 +22,9 @@ const MediaPost = () => {
         <h1>Video Context List</h1>
 
         <div className={styles.add_button}>
-          <button className={styles.button}>
+          <Link href={"/mediacontext/addnewvideo"} className={styles.button}>
             <span className="pi pi-plus">&nbsp;</span>Add New Video
-          </button>
+          </Link>
         </div>
 
         <table className={styles.table}>

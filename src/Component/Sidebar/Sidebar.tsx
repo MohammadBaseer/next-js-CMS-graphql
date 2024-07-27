@@ -15,7 +15,7 @@ const Sidebar = () => {
             </li>
             <ul className={styles.ul_sub}>
               <li className={styles.li_sub}>
-                <Link className={styles.link} href="home">
+                <Link className={styles.link} href="/home">
                   <span className="pi pi-angle-right">&nbsp;Home</span>
                 </Link>
               </li>
@@ -25,10 +25,10 @@ const Sidebar = () => {
             </li>
             <ul className={styles.ul_sub}>
               <li className={styles.li_sub}>
-                <Link className={styles.link} href="postcontext">
-                  <span className="pi pi-angle-right">&nbsp;Post Context</span>
+                <Link className={styles.link} href="/blogcontext">
+                  <span className="pi pi-angle-right">&nbsp;Blog Context</span>
                 </Link>
-                <Link className={styles.link} href="mediacontext">
+                <Link className={styles.link} href="/mediacontext">
                   <span className="pi pi-angle-right">&nbsp;Media Context</span>
                 </Link>
               </li>
