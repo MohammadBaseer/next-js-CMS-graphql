@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "type": "module",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
@@ -11,8 +12,14 @@
   "dependencies": {
     "@apollo/client": "^3.10.8",
     "@apollo/experimental-nextjs-app-support": "^0.11.2",
+    "apollo-server": "^3.13.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
     "get-youtube-id": "^1.0.1",
     "graphql": "^16.9.0",
+    "mongodb": "^6.8.0",
+    "mongoose": "^8.5.1",
     "next": "14.2.5",
     "primeicons": "^7.0.0",
     "primereact": "^10.7.0",
