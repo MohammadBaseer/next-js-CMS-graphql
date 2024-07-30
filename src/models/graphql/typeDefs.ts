@@ -2,7 +2,7 @@ import gql from "graphql-tag";
 
 const typeDefs = gql`
   # //! Types Decelerations
-  type Users {
+  type User {
     id: ID!
     name: String!
     email: String!
@@ -25,9 +25,10 @@ const typeDefs = gql`
 
   # //! Create Query to get the data from Postman/Apollo SandBox
   type Query {
-    user: [Users!]!
-    blogContext: [BlogContext!]!
-    videoBlogContext: [VideoBlogContext!]!
+    # //! to fetch multi Data
+    users: [User!]!
+    blogContexts: [BlogContext!]!
+    videoBlogContexts: [VideoBlogContext!]!
   }
 `;
 

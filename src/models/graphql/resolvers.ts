@@ -5,19 +5,18 @@ import { GraphQLError } from "graphql";
 import videoBlogContentModel from "../mongoose/videoBlogModel";
 
 const resolvers = {
-  //! This os Query function to get the data from from MongooseDB
+  //! This os Query function to get the data from MongooseDB
   Query: {
-    async user() {
+    async users() {
       await connectMongoDB();
       const documentCount = await userModel.countDocuments();
       if (documentCount === 0) {
         throw new GraphQLError("Not found");
       }
-      console.log(documentCount);
       return await userModel.find();
     },
     // !
-    async blogContext() {
+    async blogContexts() {
       const documentCount = await blogContextModel.countDocuments();
       if (documentCount === 0) {
         throw new GraphQLError("Not found");
@@ -25,7 +24,7 @@ const resolvers = {
       return await blogContextModel.find();
     },
     // !
-    async videoBlogContext() {
+    async videoBlogContexts() {
       const documentCount = await videoBlogContentModel.countDocuments();
       if (documentCount === 0) {
         throw new GraphQLError("Not found");
@@ -33,6 +32,7 @@ const resolvers = {
       return await videoBlogContentModel.find();
     },
     // !
+    //! This os Query function to get the data by ID from MongooseDB
   },
 };
 
