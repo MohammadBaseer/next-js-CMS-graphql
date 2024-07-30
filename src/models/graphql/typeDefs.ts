@@ -29,6 +29,10 @@ const typeDefs = gql`
     users: [User!]!
     blogContexts: [BlogContext!]!
     videoBlogContexts: [VideoBlogContext!]!
+    # //! To fetch Single Data by ID
+    user(id: ID!): User!
+    blogContext(id: ID!): BlogContext!
+    videoBlogContext(id: ID!): VideoBlogContext!
   }
 `;
 

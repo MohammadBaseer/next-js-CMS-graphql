@@ -33,6 +33,18 @@ const resolvers = {
     },
     // !
     //! This os Query function to get the data by ID from MongooseDB
+    async user(_, args) {
+      return await userModel.findById(args.id);
+    },
+    //!
+    async blogContext(_, args) {
+      return await blogContextModel.findById(args.id);
+    },
+    //!
+    async videoBlogContext(_, args) {
+      return await videoBlogContentModel.findById(args.id);
+    },
+    //!
   },
 };
 
