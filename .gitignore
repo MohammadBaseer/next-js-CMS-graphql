@@ -7,6 +7,7 @@
 .yarn/install-state.gz
 test
 .cspell
+util
 
 # testing
 /coverage
