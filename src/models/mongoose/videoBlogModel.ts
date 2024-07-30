@@ -10,6 +10,6 @@ const videoBlogContentSchema = new Schema(
   { timestamps: true }
 );
 
-const VideoBlogContentModel = mongoose.models.videoBlogContentSchema || mongoose.model("videoblogcontext", videoBlogContentSchema);
+const videoBlogContentModel = mongoose.models.videoblogcontexts || mongoose.model("videoblogcontexts", videoBlogContentSchema);
 
-export default VideoBlogContentModel;
+export default videoBlogContentModel;
