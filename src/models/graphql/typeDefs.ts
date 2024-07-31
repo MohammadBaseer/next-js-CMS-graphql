@@ -34,6 +34,28 @@ const typeDefs = gql`
     blogContext(id: ID!): BlogContext!
     videoBlogContext(id: ID!): VideoBlogContext!
   }
+  type Mutation {
+    #//! To Insert New Data
+    addUser(newUserData: AddUserInput): User!
+    addBlogContext(newBlogContextData: AddBlogContextInput): BlogContext!
+    addVideoBlogContext(newVideoBlogContextData: addVideoBlogContextInput): VideoBlogContext!
+  }
+  input AddUserInput {
+    name: String
+    email: String
+    password: String
+    roll: String
+    avatar: String
+  }
+  input AddBlogContextInput {
+    title: String
+    description: String
+    photo: String
+  }
+  input addVideoBlogContextInput {
+    title: String
+    url: String
+  }
 `;
 
 export default typeDefs;
