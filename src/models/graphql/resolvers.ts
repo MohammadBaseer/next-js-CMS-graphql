@@ -116,7 +116,20 @@ const resolvers = {
       return await newVideoContext.save();
     },
     //
-
+    //!Delete the data
+    async deleteUser(_, args) {
+      await connectMongoDB();
+      return await userModel.findByIdAndDelete(args.id);
+    },
+    //
+    async deleteBlogContext(_, args) {
+      await connectMongoDB();
+      return await blogContextModel.findByIdAndDelete(args.id);
+    },
+    //
+    async deleteVideoContext(_, args) {
+      return await videoBlogContentModel.findByIdAndDelete(args.id);
+    },
     //
   },
 };

@@ -39,6 +39,11 @@ const typeDefs = gql`
     addUser(newUserData: AddUserInput): User!
     addBlogContext(newBlogContextData: AddBlogContextInput): BlogContext!
     addVideoBlogContext(newVideoBlogContextData: addVideoBlogContextInput): VideoBlogContext!
+    #//! To Delete the Data
+    deleteUser(id: ID!): User!
+    # deleteUser(id: ID!): User!
+    deleteBlogContext(id: ID!): BlogContext!
+    deleteVideoContext(id: ID!): VideoBlogContext!
   }
   input AddUserInput {
     name: String
