@@ -39,12 +39,16 @@ const typeDefs = gql`
     addUser(newUserData: AddUserInput): User!
     addBlogContext(newBlogContextData: AddBlogContextInput): BlogContext!
     addVideoBlogContext(newVideoBlogContextData: addVideoBlogContextInput): VideoBlogContext!
+    #//! To Edit the Data
+    editUser(id: ID!, edits: userEdits): User!
+    editBlogContext(id: ID!, edits: blogContextEdits): BlogContext!
+    editVideoContext(id: ID!, edits: videoBlogContextEdits): VideoBlogContext!
     #//! To Delete the Data
     deleteUser(id: ID!): User!
-    # deleteUser(id: ID!): User!
     deleteBlogContext(id: ID!): BlogContext!
     deleteVideoContext(id: ID!): VideoBlogContext!
   }
+  #//! Inputs of Add Data
   input AddUserInput {
     name: String
     email: String
@@ -58,6 +62,22 @@ const typeDefs = gql`
     photo: String
   }
   input addVideoBlogContextInput {
+    title: String
+    url: String
+  }
+  #//! Inputs of Edit Data
+  input userEdits {
+    name: String
+    password: String
+    roll: String
+    avatar: String
+  }
+  input blogContextEdits {
+    title: String
+    description: String
+    photo: String
+  }
+  input videoBlogContextEdits {
     title: String
     url: String
   }

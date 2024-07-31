@@ -115,6 +115,49 @@ const resolvers = {
       });
       return await newVideoContext.save();
     },
+    //!Edit the data
+    async editUser(_, args) {
+      return await userModel.findByIdAndUpdate(
+        args.id,
+        {
+          $set: {
+            name: args.edits.name,
+            password: args.edits.password,
+            roll: args.edits.roll,
+            avatar: args.edits.avatar,
+          },
+        },
+        { new: true }
+      );
+    },
+    //
+    async editBlogContext(_, args) {
+      return await blogContextModel.findByIdAndUpdate(
+        args.id,
+        {
+          $set: {
+            title: args.edits.title,
+            description: args.edits.description,
+            photo: args.edits.photo,
+          },
+        },
+        { new: true }
+      );
+    },
+    //
+    async editVideoContext(_, args) {
+      return await videoBlogContentModel.findByIdAndUpdate(
+        args.id,
+        {
+          $set: {
+            title: args.edits.title,
+            url: args.edits.url,
+          },
+        },
+        { new: true }
+      );
+    },
+    //
     //
     //!Delete the data
     async deleteUser(_, args) {
