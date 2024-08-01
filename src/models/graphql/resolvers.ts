@@ -3,8 +3,9 @@ import userModel from "../mongoose/userModel";
 import blogContextModel from "../mongoose/blogModel";
 import { GraphQLError } from "graphql";
 import videoBlogContentModel from "../mongoose/videoBlogModel";
+import { BlogContext, Resolvers, User, VideoBlogContext } from "@/graphql/__generated__/types";
 
-const resolvers = {
+const resolvers: Resolvers = {
   //! This os Query function to get the data from MongooseDB
   //TODO -  ==========---Query---==========
   Query: {
@@ -37,15 +38,15 @@ const resolvers = {
     // !
     //! This os Query function to get the data by ID from MongooseDB
     async user(_, args) {
-      return await userModel.findById(args.id);
+      return (await userModel.findById(args.id)) as User;
     },
     //!
     async blogContext(_, args) {
-      return await blogContextModel.findById(args.id);
+      return (await blogContextModel.findById(args.id)) as BlogContext;
     },
     //!
     async videoBlogContext(_, args) {
-      return await videoBlogContentModel.findById(args.id);
+      return (await videoBlogContentModel.findById(args.id)) as VideoBlogContext;
     },
     //!
   },
@@ -57,20 +58,20 @@ const resolvers = {
     async addUser(_, args) {
       await connectMongoDB();
       // Inputs Validation
-      const existUser = await userModel.findOne({ email: args.newUserData.email });
+      const existUser = await userModel.findOne({ email: args.newUserData!.email });
       if (existUser) {
         throw new GraphQLError("User exist");
       }
-      if (!args.newUserData.name) {
+      if (!args.newUserData!.name) {
         throw new GraphQLError("Input name empty*");
       }
-      if (!args.newUserData.email) {
+      if (!args.newUserData!.email) {
         throw new GraphQLError("Input email empty*");
       }
-      if (!args.newUserData.password) {
+      if (!args.newUserData!.password) {
         throw new GraphQLError("Input password empty*");
       }
-      if (!args.newUserData.avatar) {
+      if (!args.newUserData!.avatar) {
         throw new GraphQLError("please Select an Avatar*");
       }
       // Create New Schema
@@ -86,13 +87,13 @@ const resolvers = {
       await connectMongoDB();
 
       //Input Validation
-      if (!args.newBlogContextData.title) {
+      if (!args.newBlogContextData!.title) {
         throw new GraphQLError("Input title empty*");
       }
-      if (!args.newBlogContextData.description) {
+      if (!args.newBlogContextData!.description) {
         throw new GraphQLError("Input description empty*");
       }
-      if (!args.newBlogContextData.photo) {
+      if (!args.newBlogContextData!.photo) {
         throw new GraphQLError("please Select an Avatar*");
       }
       const newBlogContext = new blogContextModel({
@@ -104,10 +105,10 @@ const resolvers = {
     //
     async addVideoBlogContext(_, args) {
       //Input Validation
-      if (!args.newVideoBlogContextData.title) {
+      if (!args.newVideoBlogContextData!.title) {
         throw new GraphQLError("Input title empty*");
       }
-      if (!args.newVideoBlogContextData.url) {
+      if (!args.newVideoBlogContextData!.url) {
         throw new GraphQLError("Input url empty*");
       }
       const newVideoContext = new videoBlogContentModel({
@@ -117,61 +118,61 @@ const resolvers = {
     },
     //!Edit the data
     async editUser(_, args) {
-      return await userModel.findByIdAndUpdate(
+      return (await userModel.findByIdAndUpdate(
         args.id,
         {
           $set: {
-            name: args.edits.name,
-            password: args.edits.password,
-            roll: args.edits.roll,
-            avatar: args.edits.avatar,
+            name: args.edits!.name,
+            password: args.edits!.password,
+            roll: args.edits!.roll,
+            avatar: args.edits!.avatar,
           },
         },
         { new: true }
-      );
+      )) as User;
     },
     //
     async editBlogContext(_, args) {
-      return await blogContextModel.findByIdAndUpdate(
+      return (await blogContextModel.findByIdAndUpdate(
         args.id,
         {
           $set: {
-            title: args.edits.title,
-            description: args.edits.description,
-            photo: args.edits.photo,
+            title: args.edits!.title,
+            description: args.edits!.description,
+            photo: args.edits!.photo,
           },
         },
         { new: true }
-      );
+      )) as BlogContext;
     },
     //
     async editVideoContext(_, args) {
-      return await videoBlogContentModel.findByIdAndUpdate(
+      return (await videoBlogContentModel.findByIdAndUpdate(
         args.id,
         {
           $set: {
-            title: args.edits.title,
-            url: args.edits.url,
+            title: args.edits!.title,
+            url: args.edits!.url,
           },
         },
         { new: true }
-      );
+      )) as VideoBlogContext;
     },
     //
     //
     //!Delete the data
     async deleteUser(_, args) {
       await connectMongoDB();
-      return await userModel.findByIdAndDelete(args.id);
+      return (await userModel.findByIdAndDelete(args.id)) as User;
     },
     //
     async deleteBlogContext(_, args) {
       await connectMongoDB();
-      return await blogContextModel.findByIdAndDelete(args.id);
+      return (await blogContextModel.findByIdAndDelete(args.id)) as BlogContext;
     },
     //
     async deleteVideoContext(_, args) {
-      return await videoBlogContentModel.findByIdAndDelete(args.id);
+      return (await videoBlogContentModel.findByIdAndDelete(args.id)) as VideoBlogContext;
     },
     //
   },
