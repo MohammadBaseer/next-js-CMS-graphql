@@ -7,7 +7,7 @@
 .yarn/install-state.gz
 test
 .cspell
-util
+URLPathFinder
 
 # testing
 /coverage
