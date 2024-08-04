@@ -1,14 +1,12 @@
-
-
 export type GetAllVideoBlogsTypes = {
-  videoBlogContexts: VideoBlogContextTypes[]
-}
+  videoBlogContexts: VideoBlogContextTypes[];
+};
 
 export type GetSingleVideoBlogType = {
-  videoBlogContext:VideoBlogContextTypes
-}
+  videoBlogContext: VideoBlogContextTypes;
+};
 export type VideoBlogContextTypes = {
-    id: string;
-    title: string;
-    url: string;
-  }
+  id: string;
+  title: string;
+  url: string;
+};
