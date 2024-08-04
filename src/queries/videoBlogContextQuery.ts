@@ -23,6 +23,7 @@ export const GETVIDEOBLOGBYID = gql`
 export const UPDATEVIDEOCONTEXT = gql`
   mutation EditVideoContext($editVideoContextId: ID!, $edits: videoBlogContextEdits) {
     editVideoContext(id: $editVideoContextId, edits: $edits) {
+      id
       title
       url
     }
