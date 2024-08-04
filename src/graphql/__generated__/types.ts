@@ -1,4 +1,4 @@
-import { GraphQLResolveInfo } from 'graphql';
+import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -14,6 +14,7 @@ export type Scalars = {
   Boolean: { input: boolean; output: boolean; }
   Int: { input: number; output: number; }
   Float: { input: number; output: number; }
+  Upload: { input: any; output: any; }
 };
 
 export type AddBlogContextInput = {
@@ -38,6 +39,13 @@ export type BlogContext = {
   title: Scalars['String']['output'];
 };
 
+export type File = {
+  __typename?: 'File';
+  encoding: Scalars['String']['output'];
+  filename: Scalars['String']['output'];
+  mimetype: Scalars['String']['output'];
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   addBlogContext: BlogContext;
@@ -49,6 +57,7 @@ export type Mutation = {
   editBlogContext: BlogContext;
   editUser: User;
   editVideoContext: VideoBlogContext;
+  uploadAvatar: User;
 };
 
 
@@ -97,6 +106,11 @@ export type MutationEditUserArgs = {
 export type MutationEditVideoContextArgs = {
   edits?: InputMaybe<VideoBlogContextEdits>;
   id: Scalars['ID']['input'];
+};
+
+
+export type MutationUploadAvatarArgs = {
+  file: Scalars['Upload']['input'];
 };
 
 export type Query = {
@@ -239,10 +253,12 @@ export type ResolversTypes = {
   AddUserInput: AddUserInput;
   BlogContext: ResolverTypeWrapper<BlogContext>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
+  File: ResolverTypeWrapper<File>;
   ID: ResolverTypeWrapper<Scalars['ID']['output']>;
   Mutation: ResolverTypeWrapper<{}>;
   Query: ResolverTypeWrapper<{}>;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
+  Upload: ResolverTypeWrapper<Scalars['Upload']['output']>;
   User: ResolverTypeWrapper<User>;
   VideoBlogContext: ResolverTypeWrapper<VideoBlogContext>;
   addVideoBlogContextInput: AddVideoBlogContextInput;
@@ -257,10 +273,12 @@ export type ResolversParentTypes = {
   AddUserInput: AddUserInput;
   BlogContext: BlogContext;
   Boolean: Scalars['Boolean']['output'];
+  File: File;
   ID: Scalars['ID']['output'];
   Mutation: {};
   Query: {};
   String: Scalars['String']['output'];
+  Upload: Scalars['Upload']['output'];
   User: User;
   VideoBlogContext: VideoBlogContext;
   addVideoBlogContextInput: AddVideoBlogContextInput;
@@ -277,6 +295,13 @@ export type BlogContextResolvers<ContextType = any, ParentType extends Resolvers
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type FileResolvers<ContextType = any, ParentType extends ResolversParentTypes['File'] = ResolversParentTypes['File']> = {
+  encoding?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  filename?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  mimetype?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
   addBlogContext?: Resolver<ResolversTypes['BlogContext'], ParentType, ContextType, Partial<MutationAddBlogContextArgs>>;
   addUser?: Resolver<ResolversTypes['User'], ParentType, ContextType, Partial<MutationAddUserArgs>>;
@@ -287,6 +312,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   editBlogContext?: Resolver<ResolversTypes['BlogContext'], ParentType, ContextType, RequireFields<MutationEditBlogContextArgs, 'id'>>;
   editUser?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationEditUserArgs, 'id'>>;
   editVideoContext?: Resolver<ResolversTypes['VideoBlogContext'], ParentType, ContextType, RequireFields<MutationEditVideoContextArgs, 'id'>>;
+  uploadAvatar?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationUploadAvatarArgs, 'file'>>;
 };
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
@@ -297,6 +323,10 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   videoBlogContext?: Resolver<ResolversTypes['VideoBlogContext'], ParentType, ContextType, RequireFields<QueryVideoBlogContextArgs, 'id'>>;
   videoBlogContexts?: Resolver<Array<ResolversTypes['VideoBlogContext']>, ParentType, ContextType>;
 };
+
+export interface UploadScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['Upload'], any> {
+  name: 'Upload';
+}
 
 export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
   avatar?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -317,8 +347,10 @@ export type VideoBlogContextResolvers<ContextType = any, ParentType extends Reso
 
 export type Resolvers<ContextType = any> = {
   BlogContext?: BlogContextResolvers<ContextType>;
+  File?: FileResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
+  Upload?: GraphQLScalarType;
   User?: UserResolvers<ContextType>;
   VideoBlogContext?: VideoBlogContextResolvers<ContextType>;
 };

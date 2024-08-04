@@ -5,6 +5,7 @@ import "primereact/resources/primereact.min.css"; //core css
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import { ApolloWrapper } from "@/lib/ApolloWrapper";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -21,7 +22,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className} suppressHydrationWarning={true}>
-        <PrimeReactProvider>{children}</PrimeReactProvider>
+        <PrimeReactProvider>
+          <ApolloWrapper>{children}</ApolloWrapper>
+        </PrimeReactProvider>
       </body>
     </html>
   );

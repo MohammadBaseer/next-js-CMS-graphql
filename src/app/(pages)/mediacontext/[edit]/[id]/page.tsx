@@ -1,28 +1,43 @@
 "use client";
-import styles from "./AddVideo.module.scss";
+import styles from "./EditVideo.module.scss";
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import Link from "next/link";
 import YouTube from "react-youtube";
-import { useMutation } from "@apollo/client";
-import { INSERTVIDEOCONTEXT } from "@/queries/videoBlogContextQuery";
+import { GetSingleVideoBlogType } from "@/types/customTypes/customTypes";
+import { ApolloError, useMutation, useSuspenseQuery } from "@apollo/client";
+import { GETVIDEOBLOGBYID, UPDATEVIDEOCONTEXT } from "@/queries/videoBlogContextQuery";
 import { onError, onReady, opts } from "@/util/YoutubeIDContext/YoutubeVideoOptionCustomFunction";
-import getYouTubeID from "get-youtube-id";
-
-const AddNewVideo = () => {
+var getYouTubeID = require("get-youtube-id");
+type ParamsType = {
+  params: {
+    id: string;
+  };
+};
+const EditNewVideo = ({ params: { id } }: ParamsType) => {
   const [error, setError] = useState<string>("");
   const [urlId, setUrlId] = useState<string | null>(null);
-  const [videoInput, setVideoInput] = useState({
-    title: "",
-    url: "",
-  });
 
-  const [InsertVideoBlog, { loading, error: GraphQLError, data }] = useMutation(INSERTVIDEOCONTEXT, {
+  //! To Get the Data From DB
+  const { data } = useSuspenseQuery<GetSingleVideoBlogType>(GETVIDEOBLOGBYID, {
+    variables: {
+      videoId: id,
+    },
+  });
+  //!
+
+  //! To Update/Edit The Data by ID
+  const [editVideo, { loading, error: GraphQLError }] = useMutation(UPDATEVIDEOCONTEXT, {
     onCompleted: (data) => {
-      // console.log(":::", data)
+      // console.log(":::", data);
     },
     onError: (error) => {
       setError(`Submission error! ${error.message}`);
     },
+  });
+
+  const [videoInput, setVideoInput] = useState({
+    title: data.videoBlogContext.title,
+    url: data.videoBlogContext.url,
   });
 
   const getInputValues = (e: ChangeEvent<HTMLInputElement> | any) => {
@@ -33,10 +48,12 @@ const AddNewVideo = () => {
 
   const addBlogFunction = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
     try {
-      const result = await InsertVideoBlog({
+      const result = await editVideo({
         variables: {
-          newVideoBlogContextData: videoInput,
+          editVideoContextId: id,
+          edits: videoInput,
         },
       });
 
@@ -44,7 +61,7 @@ const AddNewVideo = () => {
         setError("");
         return;
       }
-    } catch (error) {
+    } catch (GraphQLError) {
       console.error("Error during mutation:", GraphQLError);
     }
   };
@@ -65,12 +82,12 @@ const AddNewVideo = () => {
           <Link href={"/mediacontext"} className={styles.title_href}>
             Media context
           </Link>
-          /Add New Video
+          /Edit Video
         </p>
       </div>
 
       <div className={styles.head_title}>
-        <h1>Add New Video</h1>
+        <h1>Edit Video</h1>
         <div className={styles.hr}></div>
         <form className={styles.form} onSubmit={addBlogFunction}>
           <div className="video-container">
@@ -90,7 +107,7 @@ const AddNewVideo = () => {
           {error && <div className={styles.error}>{error}</div>}
           <div className={styles.sub_btn_box}>
             <button className={styles.form_btn} type="submit">
-              Add New Video
+              Update
             </button>
           </div>
         </form>
@@ -99,4 +116,4 @@ const AddNewVideo = () => {
   );
 };
 
-export default AddNewVideo;
+export default EditNewVideo;
