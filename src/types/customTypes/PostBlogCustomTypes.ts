@@ -9,5 +9,7 @@ export type BlogContext = {
   id: string;
   title: string;
   description: string;
-  photo: string;
+  photo:{
+    url:string;
+  } 
 };
