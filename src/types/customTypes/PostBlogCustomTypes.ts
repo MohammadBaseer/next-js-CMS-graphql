@@ -1,15 +1,16 @@
 export type GetAllBlogContextType = {
-  BlogContext: BlogContext[];
+  blogContexts: BlogContext[];
 };
 export type GetSingleBlogContextType = {
-  BlogContext: BlogContext;
+  blogContexts: BlogContext;
 };
 
 export type BlogContext = {
-  id: string;
+  _id: string;
   title: string;
   description: string;
-  photo:{
-    url:string;
-  } 
+  photo: {
+    url: string;
+    public_id: string;
+  };
 };

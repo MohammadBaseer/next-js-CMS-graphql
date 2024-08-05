@@ -83,9 +83,9 @@ const MediaPost = () => {
                       <i className={`pi pi-file-edit ${styles.edit_icon}`}> </i>
                     </Link>
                     &nbsp;
-                    <Link href={`mediacontext/edit=${video.id}`} className={styles.ref} onClick={deleteVideoBlogHandler(video.id)}>
-                      <i className={`pi pi-trash ${styles.delete_icon}`}></i>
-                    </Link>
+                    {/* <Link href={`mediacontext}`} className={styles.ref} onClick={deleteVideoBlogHandler(video.id)}> */}
+                    <i className={`pi pi-trash ${styles.delete_icon}`} onClick={deleteVideoBlogHandler(video.id)}></i>
+                    {/* </Link> */}
                   </td>
                 </tr>
               );

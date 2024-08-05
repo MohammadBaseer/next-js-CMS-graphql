@@ -1,8 +1,30 @@
+"use client";
 import Link from "next/link";
 import styles from "./PostContext.module.scss";
 import "primeicons/primeicons.css";
+import { useMutation, useSuspenseQuery } from "@apollo/client";
+import { DELETE_POST_CONTEXT, GET_POST_CONTEXT } from "@/queries/postContextQuery";
+import { GetAllBlogContextType } from "@/types/customTypes/PostBlogCustomTypes";
 
 const PostContext = () => {
+  // const { data, error, refetch } = useSuspenseQuery(GET_POST_CONTEXT);
+  const { data, refetch } = useSuspenseQuery<GetAllBlogContextType>(GET_POST_CONTEXT);
+
+  const [deleteBlogContext, { error, loading }] = useMutation(DELETE_POST_CONTEXT);
+
+  const deleteBlogHandler = (id: string) => async (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
+    event.preventDefault();
+    try {
+      await deleteBlogContext({
+        variables: {
+          deleteBlogContextId: id,
+        },
+      });
+      refetch();
+    } catch (error) {
+      console.error("Failed to delete video context", error);
+    }
+  };
   return (
     <div className={styles.container}>
       <div className={styles.main}>
@@ -35,43 +57,26 @@ const PostContext = () => {
             </thead>
 
             <tbody className={styles.tbody}>
-              <tr className={styles.tr}>
-                <td className={styles.td}>1</td>
-                <td className={styles.td}>
-                  <img className={styles.image} src="https://www.blog.de/wp-content/uploads/2024/07/Vintage-trifft-Modern.jpg" alt="nice" />
-                </td>
-                <td className={styles.td}>City of Berlin</td>
-                <td className={styles.td}>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Possimus inventore cum sunt nemo? Quo maxime similique molestias eum quos pariatur debitis. Aut voluptatum dignissimos eius? Quod unde quam molestias soluta est, facere dolorem incidunt assumenda velit veniam suscipit excepturi earum.</td>
-                <td className={styles.td}>20.5.2024</td>
-                <td className={styles.td}>
-                  <Link href={"/"} className={styles.ref}>
-                    <i className={`pi pi-file-edit ${styles.edit_icon}`}> </i>
-                  </Link>
-                  &nbsp;
-                  <Link href={"/"} className={styles.ref}>
-                    <i className={`pi pi-trash ${styles.delete_icon}`}></i>
-                  </Link>
-                </td>
-              </tr>
-
-              <tr className={styles.tr}>
-                <td className={styles.td}>1</td>
-                <td className={styles.td}>
-                  <img className={styles.image} src="https://www.blog.de/wp-content/uploads/2024/07/Vintage-trifft-Modern.jpg" alt="nice" />
-                </td>
-                <td className={styles.td}>City of Berlin</td>
-                <td className={styles.td}>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Possimus inventore cum sunt nemo? Quo maxime similique molestias eum quos pariatur debitis. Aut voluptatum dignissimos eius? Quod unde quam molestias soluta est, facere dolorem incidunt assumenda velit veniam suscipit excepturi earum.</td>
-                <td className={styles.td}>20.5.2024</td>
-                <td className={styles.td}>
-                  <Link href={"/"} className={styles.ref}>
-                    <i className={`pi pi-file-edit ${styles.edit_icon}`}> </i>
-                  </Link>
-                  &nbsp;
-                  <Link href={"/"} className={styles.ref}>
-                    <i className={`pi pi-trash ${styles.delete_icon}`}></i>
-                  </Link>
-                </td>
-              </tr>
+              {data.blogContexts.map((blog, index) => {
+                return (
+                  <tr className={styles.tr} key={index}>
+                    <td className={styles.td}>{index + 1}</td>
+                    <td className={styles.td}>
+                      <img className={styles.image} src={blog.photo.url} alt="nice" />
+                    </td>
+                    <td className={styles.td}>{blog.title}</td>
+                    <td className={styles.td}>{blog.description}</td>
+                    <td className={styles.td}>20.5.2024</td>
+                    <td className={styles.td}>
+                      <Link href={`/blogcontext/edit=${blog._id}`} className={styles.ref}>
+                        <i className={`pi pi-file-edit ${styles.edit_icon}`}> </i>
+                      </Link>
+                      &nbsp;
+                      <i className={`pi pi-trash ${styles.delete_icon}`} onClick={deleteBlogHandler(blog._id)}></i>
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>
