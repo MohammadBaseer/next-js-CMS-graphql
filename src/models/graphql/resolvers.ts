@@ -1,15 +1,18 @@
-import connectMongoDB from "@/lib/connectDB";
+import connectMongoDB from "@/config/connectDB";
 import userModel from "../mongoose/userModel";
 import blogContextModel from "../mongoose/blogModel";
 import { GraphQLError } from "graphql";
 import videoBlogContentModel from "../mongoose/videoBlogModel";
 import { BlogContext, Resolvers, User, VideoBlogContext } from "@/graphql/__generated__/types";
+import cloudinary from "@/config/cloudinary";
 
 const resolvers: Resolvers = {
   //! This os Query function to get the data from MongooseDB
   //TODO -  ==========---Query---==========
   Query: {
     async users() {
+      console.log("Running::::::::");
+
       await connectMongoDB();
       const documentCount = await userModel.countDocuments();
       if (documentCount === 0) {
@@ -20,6 +23,7 @@ const resolvers: Resolvers = {
     // !
 
     async blogContexts() {
+      await connectMongoDB();
       const documentCount = await blogContextModel.countDocuments();
       if (documentCount === 0) {
         throw new GraphQLError("Not found");
@@ -28,24 +32,28 @@ const resolvers: Resolvers = {
     },
     // !
     async videoBlogContexts() {
+      await connectMongoDB();
       const documentCount = await videoBlogContentModel.countDocuments();
-      if (documentCount === 0) {
-        throw new GraphQLError("Not found");
-      }
+      // if (documentCount === 0) {
+      //   throw new GraphQLError("Not found");
+      // }
       return await videoBlogContentModel.find();
     },
 
     // !
     //! This os Query function to get the data by ID from MongooseDB
     async user(_, args) {
+      await connectMongoDB();
       return (await userModel.findById(args.id)) as User;
     },
     //!
     async blogContext(_, args) {
+      await connectMongoDB();
       return (await blogContextModel.findById(args.id)) as BlogContext;
     },
     //!
     async videoBlogContext(_, args) {
+      await connectMongoDB();
       return (await videoBlogContentModel.findById(args.id)) as VideoBlogContext;
     },
     //!
@@ -83,27 +91,60 @@ const resolvers: Resolvers = {
     },
 
     //Add New Block Context Into DB
-    async addBlogContext(_, args) {
-      await connectMongoDB();
-
-      //Input Validation
-      if (!args.newBlogContextData!.title) {
+    async addBlogContext(_, { newBlogContextData }) {
+      const { title, description, photo } = newBlogContextData as BlogContext;
+      // console.log("photo::::", photo);
+      const newPhoto = photo.url;
+      if (!title) {
         throw new GraphQLError("Input title empty*");
       }
-      if (!args.newBlogContextData!.description) {
+      if (!description) {
         throw new GraphQLError("Input description empty*");
       }
-      if (!args.newBlogContextData!.photo) {
+      if (!newPhoto) {
         throw new GraphQLError("please Select an Avatar*");
       }
-      const newBlogContext = new blogContextModel({
-        ...args.newBlogContextData,
-      });
-      return await newBlogContext.save();
+
+      await connectMongoDB();
+      const newAvatar = { url: "", public_id: "" };
+
+      if (newPhoto?.match(/data:image\/(jpeg|jpg|png|gif|bmp|tiff|webp|svg\+xml);base64,/)) {
+        const uploaded = await cloudinary.uploader.upload(newPhoto, {
+          folder: "delete",
+        });
+        newAvatar.url = uploaded.secure_url;
+        newAvatar.public_id = uploaded.public_id;
+        console.log("uploaded :>> ", uploaded);
+      } else {
+        throw new GraphQLError("Invalid image format. Supported formats are .jpg, .jpeg, .png, .gif, .bmp, .tiff, .webp, .svg");
+      }
+
+      try {
+        const newData = {
+          title: title,
+          description: description,
+          photo: {
+            url: newAvatar.url,
+            public_id: newAvatar.public_id,
+          },
+        };
+        console.log("newData Object", newData);
+        const newBlogContext = new blogContextModel({ ...newData });
+
+        const result = await newBlogContext.save();
+        console.log("uploaded blog result ::::::>> ", result);
+
+        return result;
+      } catch (error) {
+        const err = error as Error;
+        console.log("error :>> ", error);
+        return new GraphQLError(err.message ? `AddBlog error:::${err.message}` : "something went really bad!");
+      }
     },
 
     //
     async addVideoBlogContext(_, args) {
+      await connectMongoDB();
       //Input Validation
       if (!args.newVideoBlogContextData!.title) {
         throw new GraphQLError("Input title empty*");
@@ -118,6 +159,7 @@ const resolvers: Resolvers = {
     },
     //!Edit the data
     async editUser(_, args) {
+      await connectMongoDB();
       return (await userModel.findByIdAndUpdate(
         args.id,
         {
@@ -133,6 +175,7 @@ const resolvers: Resolvers = {
     },
     //
     async editBlogContext(_, args) {
+      await connectMongoDB();
       return (await blogContextModel.findByIdAndUpdate(
         args.id,
         {
@@ -147,6 +190,7 @@ const resolvers: Resolvers = {
     },
     //
     async editVideoContext(_, args) {
+      await connectMongoDB();
       return (await videoBlogContentModel.findByIdAndUpdate(
         args.id,
         {

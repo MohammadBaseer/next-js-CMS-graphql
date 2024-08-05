@@ -12,17 +12,20 @@ const typeDefs = gql`
   }
 
   type BlogContext {
-    id: ID!
+    _id: ID!
     title: String!
     description: String!
-    photo: String!
+    photo: Picture!
   }
   type VideoBlogContext {
     id: ID!
     title: String!
     url: String!
   }
-
+  type Picture {
+    url: String!
+    public_id: String
+  }
   # //! Create Query to get the data from Postman/Apollo SandBox
   type Query {
     # //! to fetch multi Data
@@ -37,12 +40,22 @@ const typeDefs = gql`
   type Mutation {
     #//! To Insert New Data
     addUser(newUserData: AddUserInput): User!
+
     addBlogContext(newBlogContextData: AddBlogContextInput): BlogContext!
+
     addVideoBlogContext(newVideoBlogContextData: addVideoBlogContextInput): VideoBlogContext!
+    # ///REVIEW - //! Test for upload the file
+
     #//! To Edit the Data
     editUser(id: ID!, edits: userEdits): User!
     editBlogContext(id: ID!, edits: blogContextEdits): BlogContext!
     editVideoContext(id: ID!, edits: videoBlogContextEdits): VideoBlogContext!
+
+    # uploadAvatar(file: Upload!): User!
+    # uploadAvatar(file: Upload!): String
+    # uploadAvatar(file: Upload!): File!
+    # uploadAvatar: User
+
     #//! To Delete the Data
     deleteUser(id: ID!): User!
     deleteBlogContext(id: ID!): BlogContext!
@@ -56,11 +69,22 @@ const typeDefs = gql`
     roll: String
     avatar: String
   }
+  # //! ----------------------
   input AddBlogContextInput {
     title: String
     description: String
-    photo: String
+    photo: Pic
   }
+  input blogContextEdits {
+    title: String
+    description: String
+    photo: Pic
+  }
+  input Pic {
+    url: String!
+    public_id: String
+  }
+  # //! --------------------
   input addVideoBlogContextInput {
     title: String
     url: String
@@ -71,11 +95,6 @@ const typeDefs = gql`
     password: String
     roll: String
     avatar: String
-  }
-  input blogContextEdits {
-    title: String
-    description: String
-    photo: String
   }
   input videoBlogContextEdits {
     title: String
