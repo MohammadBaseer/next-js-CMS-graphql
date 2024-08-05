@@ -94,9 +94,10 @@ $background-color: #f2f2f2;
           .edit_icon {
             color: #000;
           }
-          .delete_icon {
-            color: red;
-          }
+        }
+        .delete_icon {
+          color: red;
+          cursor: pointer !important;
         }
 
         &:first-child {
