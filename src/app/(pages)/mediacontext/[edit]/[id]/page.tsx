@@ -3,9 +3,9 @@ import styles from "./EditVideo.module.scss";
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import Link from "next/link";
 import YouTube from "react-youtube";
-import { GetSingleVideoBlogType } from "@/types/customTypes/customTypes";
+import { GetSingleVideoBlogType } from "@/types/customTypes/VideoCustomTypes";
 import { ApolloError, useMutation, useSuspenseQuery } from "@apollo/client";
-import { GETVIDEOBLOGBYID, UPDATEVIDEOCONTEXT } from "@/queries/videoBlogContextQuery";
+import { GET_VIDEO_BLOG_BY_ID, UPDATE_VIDEO_CONTEXT } from "@/queries/videoBlogContextQuery";
 import { onError, onReady, opts } from "@/util/YoutubeIDContext/YoutubeVideoOptionCustomFunction";
 var getYouTubeID = require("get-youtube-id");
 type ParamsType = {
@@ -13,12 +13,12 @@ type ParamsType = {
     id: string;
   };
 };
-const EditNewVideo = ({ params: { id } }: ParamsType) => {
+const EditVideoContext = ({ params: { id } }: ParamsType) => {
   const [error, setError] = useState<string>("");
   const [urlId, setUrlId] = useState<string | null>(null);
 
   //! To Get the Data From DB
-  const { data } = useSuspenseQuery<GetSingleVideoBlogType>(GETVIDEOBLOGBYID, {
+  const { data } = useSuspenseQuery<GetSingleVideoBlogType>(GET_VIDEO_BLOG_BY_ID, {
     variables: {
       videoId: id,
     },
@@ -26,7 +26,7 @@ const EditNewVideo = ({ params: { id } }: ParamsType) => {
   //!
 
   //! To Update/Edit The Data by ID
-  const [editVideo, { loading, error: GraphQLError }] = useMutation(UPDATEVIDEOCONTEXT, {
+  const [editVideo, { loading, error: GraphQLError }] = useMutation(UPDATE_VIDEO_CONTEXT, {
     onCompleted: (data) => {
       // console.log(":::", data);
     },
@@ -116,4 +116,4 @@ const EditNewVideo = ({ params: { id } }: ParamsType) => {
   );
 };
 
-export default EditNewVideo;
+export default EditVideoContext;

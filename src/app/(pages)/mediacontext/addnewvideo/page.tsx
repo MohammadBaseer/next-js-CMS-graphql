@@ -4,7 +4,7 @@ import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import Link from "next/link";
 import YouTube from "react-youtube";
 import { useMutation } from "@apollo/client";
-import { INSERTVIDEOCONTEXT } from "@/queries/videoBlogContextQuery";
+import { INSERT_VIDEO_CONTEXT } from "@/queries/videoBlogContextQuery";
 import { onError, onReady, opts } from "@/util/YoutubeIDContext/YoutubeVideoOptionCustomFunction";
 import getYouTubeID from "get-youtube-id";
 
@@ -16,7 +16,7 @@ const AddNewVideo = () => {
     url: "",
   });
 
-  const [InsertVideoBlog, { loading, error: GraphQLError, data }] = useMutation(INSERTVIDEOCONTEXT, {
+  const [InsertVideoBlog, { loading, error: GraphQLError, data }] = useMutation(INSERT_VIDEO_CONTEXT, {
     onCompleted: (data) => {
       // console.log(":::", data)
     },
@@ -40,8 +40,10 @@ const AddNewVideo = () => {
         },
       });
 
-      if (result.data) {
+      if (result) {
         setError("");
+        setVideoInput({ title: "", url: "" });
+        alert("Added");
         return;
       }
     } catch (error) {

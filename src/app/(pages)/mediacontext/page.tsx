@@ -1,20 +1,19 @@
 "use client";
 import Link from "next/link";
 import styles from "./MediaContext.module.scss";
-import { DELETEVIDECONTEXT, VIDEOBLOGCONTEXT } from "@/queries/videoBlogContextQuery";
+import { DELETE_VIDEO_CONTEXT, VIDEO_BLOG_CONTEXT } from "@/queries/videoBlogContextQuery";
 import { useMutation, useSuspenseQuery } from "@apollo/client";
-import { getClient } from "@/lib/client";
-import { GetAllVideoBlogsTypes } from "@/types/customTypes/customTypes";
+import { GetAllVideoBlogsTypes } from "@/types/customTypes/VideoCustomTypes";
 import YouTube from "react-youtube";
 import getYouTubeID from "get-youtube-id";
 import { onError, onReady, opts, opts_small_size } from "@/util/YoutubeIDContext/YoutubeVideoOptionCustomFunction";
 import { useEffect } from "react";
 
 const MediaPost = () => {
-  const { data, error, refetch } = useSuspenseQuery<GetAllVideoBlogsTypes>(VIDEOBLOGCONTEXT);
+  const { data, error, refetch } = useSuspenseQuery<GetAllVideoBlogsTypes>(VIDEO_BLOG_CONTEXT);
   //!
   console.log(":::::::::::::", data.videoBlogContexts.length);
-  const [deleteVideContext, { error: GraphQLError, loading }] = useMutation(DELETEVIDECONTEXT);
+  const [deleteVideContext, { error: GraphQLError, loading }] = useMutation(DELETE_VIDEO_CONTEXT);
 
   const deleteVideoBlogHandler = (id: string) => async (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
     event.preventDefault();
@@ -31,10 +30,6 @@ const MediaPost = () => {
       console.error("Failed to delete video context", error);
     }
   };
-
-  // useEffect(() => {
-  //   refetch();
-  // }, []);
 
   return (
     <div className={styles.main}>
@@ -79,12 +74,12 @@ const MediaPost = () => {
                   <td className={styles.td}>{video.title}</td>
                   <td className={styles.td}>20.5.2024</td>
                   <td className={styles.td}>
-                    <Link href={`mediacontext/edit/${video.id}`} className={styles.ref}>
+                    <Link href={`mediacontext/edit/${video._id}`} className={styles.ref}>
                       <i className={`pi pi-file-edit ${styles.edit_icon}`}> </i>
                     </Link>
                     &nbsp;
                     {/* <Link href={`mediacontext}`} className={styles.ref} onClick={deleteVideoBlogHandler(video.id)}> */}
-                    <i className={`pi pi-trash ${styles.delete_icon}`} onClick={deleteVideoBlogHandler(video.id)}></i>
+                    <i className={`pi pi-trash ${styles.delete_icon}`} onClick={deleteVideoBlogHandler(video._id)}></i>
                     {/* </Link> */}
                   </td>
                 </tr>

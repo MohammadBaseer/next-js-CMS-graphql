@@ -1,34 +1,52 @@
 "use client";
-import styles from "./AddBlog.module.scss";
-import avatar from "../../../../assets/img/registrationFormAvatar/addAvatar.png";
+import styles from "./EditPostBlogContext.module.scss";
 import { ChangeEvent, FormEvent, useState } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import FroalaEditor from "react-froala-wysiwyg";
 import "froala-editor/css/froala_style.min.css";
 import "froala-editor/css/froala_editor.pkgd.min.css";
 import "froala-editor/js/plugins/code_view.min.js";
 import "froala-editor/css/plugins/code_view.min.css";
-import { ApolloError, useMutation } from "@apollo/client";
-import { INSERT_POST_CONTEXT } from "@/queries/postContextQuery";
+import { ApolloError, useMutation, useSuspenseQuery } from "@apollo/client";
+import { GET_POST_CONTEXT_BY_ID, INSERT_POST_CONTEXT, UPDATE_POST_CONTEXT } from "@/queries/postContextQuery";
 import { convertToBase64 } from "@/util/convertToBase64";
+import { GetSingleBlogContextType } from "@/types/customTypes/PostBlogCustomTypes";
+
+type ParamsPropsType = {
+  params: {
+    id: string;
+  };
+};
 
 type BlogInputTypes = {
   title: string;
   description: string;
-  photo: string;
+  photo: {
+    url: string;
+  };
 };
-const AddNewBlog = () => {
+const EditBlogContext = ({ params: { id } }: ParamsPropsType) => {
+  //!SECTION
+
+  const { data: fetchData } = useSuspenseQuery<GetSingleBlogContextType>(GET_POST_CONTEXT_BY_ID, {
+    variables: {
+      blogContextId: id,
+    },
+  });
+
+  //! End SECTION
+
   //! ------
-  const [insertBlogContext, { loading, error:GraphQLError, data }] = useMutation(INSERT_POST_CONTEXT);
+  const [insertBlogContext, { error: fetchError, data }] = useMutation(INSERT_POST_CONTEXT);
   //! ------
-  // const [error, setError] = useState< undefined | string>("");
-  const [selectImage, setSelectImage] = useState<string | null>(null);
-  const [photo, setPhoto] = useState<string | null>(null);
+  const [selectImage, setSelectImage] = useState<string | File | string | null>(null);
+  const [error, setError] = useState<string>("");
   const [blogInput, setBlogInput] = useState<BlogInputTypes>({
-    title: "",
-    description: "",
-    photo: "",
+    title: fetchData.blogContext.title,
+    description: fetchData.blogContext.description,
+    photo: {
+      url: fetchData.blogContext.photo.url,
+    },
   });
   //! =====================
   const getInputValues = (e: ChangeEvent<HTMLInputElement> | any) => {
@@ -37,6 +55,14 @@ const AddNewBlog = () => {
       return { ...prev, [e.target.name]: e.target.value };
     });
   };
+  //! To Update/Edit The Data by ID
+  const [editBlog, { loading, error: GraphQLError }] = useMutation(UPDATE_POST_CONTEXT, {
+    onCompleted: (data) => {},
+    onError: (error) => {
+      setError(`Submission error! ${error.message}`);
+    },
+  });
+
   //! =====================
   const handleModelChange = (description: string) => {
     setBlogInput((prev) => {
@@ -45,9 +71,21 @@ const AddNewBlog = () => {
   };
   //! =====================
   const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    setSelectImage(file ? URL.createObjectURL(file) : null);
+    const file: File | any = e.target.files?.[0];
 
+    if (e.target.files!.length === 0) {
+      URL.revokeObjectURL(selectImage as string);
+      setSelectImage(fetchData.blogContext.photo.url);
+    }
+    if (e.target.files!.length === 1) {
+      setSelectImage(URL.createObjectURL(file));
+    } else {
+      URL.revokeObjectURL(selectImage as string);
+      setSelectImage(fetchData.blogContext.photo.url);
+    }
+
+    //FIXME -
+    //REVIEW -  //! write an statement to handel the file if the file.length is 0
     let value = "";
     if (file) {
       const base64 = await convertToBase64(file);
@@ -56,35 +94,26 @@ const AddNewBlog = () => {
     setBlogInput((prev) => {
       return {
         ...prev,
-        photo: value,
+        photo: {
+          url: value,
+        },
       };
     });
-
-
-
-console.log("value", value)
-
   };
+
   //! =====================
-  const addBlogFunction = async (e: FormEvent<HTMLFormElement>) => {
+  const editBlogFunction = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const { photo } = blogInput;
-      const result = await insertBlogContext({
+      const { url } = blogInput.photo;
+      const result = await editBlog({
         variables: {
-          newBlogContextData: {
-            title: blogInput.title,
-            description: blogInput.description,
-            photo: {
-              url: photo,
-            },
-          },
+          editBlogContextId: id,
+          edits: blogInput,
         },
       });
-      console.log("Successfully Added", result);
+      console.log("Successfully Added");
       // ! reset the state after insert
-      setBlogInput({ title: "", description: "", photo: "" });
-      setSelectImage(null);
     } catch (GraphQLError) {
       const err = GraphQLError as ApolloError;
       console.log("GraphQL Error:", err);
@@ -106,18 +135,19 @@ console.log("value", value)
           <Link href={"/blogcontext"} className={styles.title_href}>
             Blog Context
           </Link>
-          /Add New Blog
+          /Edit Blog
         </p>
       </div>
 
       <div className={styles.head_title}>
-        <h1>Add New Blog</h1>
+        <h1>Edit Blog</h1>
         <div className={styles.hr}></div>
-        <form className={styles.form} method="mu" onSubmit={addBlogFunction}>
+        <form className={styles.form} method="mu" onSubmit={editBlogFunction}>
           <div>
             <label className={styles.file} htmlFor="addBlogFile">
-              <Image className={styles.avatar} src={selectImage !== null ? selectImage : avatar} width={80} height={80} alt="user" />
-              <span>Add Blog Photo</span>
+              <img className={styles.avatar} src={(selectImage !== null ? selectImage : blogInput.photo.url) as string} width={80} height={80} alt={blogInput.title} />
+              {/* <Image className={styles.avatar} src={selectImage !== null ? selectImage : blogInput.photo.url} width={80} height={80} alt={blogInput.title} /> */}
+              <span>Change Blog Photo</span>
             </label>
             <input style={{ display: "none" }} type="file" id="addBlogFile" name="photo" onChange={handleFileChange} />
           </div>
@@ -140,7 +170,7 @@ console.log("value", value)
               }}
             />{" "}
           </div>
-          {/* {error && <div className={styles.error}>{error}</div>} */}
+          {error && <div className={styles.error}>{error}</div>}
           <div className={styles.sub_btn_box}>
             <button className={styles.form_btn} type="submit">
               {loading ? "Adding Blog..." : "Add New Blog"}
@@ -152,4 +182,4 @@ console.log("value", value)
   );
 };
 
-export default AddNewBlog;
+export default EditBlogContext;

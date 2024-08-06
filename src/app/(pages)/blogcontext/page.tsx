@@ -68,7 +68,7 @@ const PostContext = () => {
                     <td className={styles.td}>{blog.description}</td>
                     <td className={styles.td}>20.5.2024</td>
                     <td className={styles.td}>
-                      <Link href={`/blogcontext/edit=${blog._id}`} className={styles.ref}>
+                      <Link href={`/blogcontext/edit/${blog._id}`} className={styles.ref}>
                         <i className={`pi pi-file-edit ${styles.edit_icon}`}> </i>
                       </Link>
                       &nbsp;
@@ -79,6 +79,7 @@ const PostContext = () => {
               })}
             </tbody>
           </table>
+          {data.blogContexts.length === 0 ? <h1>Not Found</h1> : ""}
         </div>
       </div>
     </div>
