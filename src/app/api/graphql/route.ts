@@ -8,8 +8,9 @@ import { makeExecutableSchema } from "@graphql-tools/schema";
 const schema = makeExecutableSchema({ typeDefs, resolvers });
 
 const server = new ApolloServer({
-  typeDefs,
-  resolvers,
+  // typeDefs,
+  // resolvers,
+  schema,
 });
 
 const handler = startServerAndCreateNextHandler<NextRequest>(server, {
