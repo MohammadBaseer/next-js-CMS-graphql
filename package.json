@@ -32,7 +32,8 @@
     "react-dom": "^18",
     "react-froala-wysiwyg": "^4.2.1",
     "react-youtube": "^10.1.0",
-    "sass": "^1.77.8"
+    "sass": "^1.77.8",
+    "sharp": "^0.33.4"
   },
   "devDependencies": {
     "@graphql-codegen/cli": "^5.0.2",
