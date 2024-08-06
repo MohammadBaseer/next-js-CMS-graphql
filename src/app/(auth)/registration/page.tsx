@@ -1,6 +1,6 @@
 "use client";
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
-import styles from "./Registration.module.css";
+import styles from "./Registration.module.scss";
 import Link from "next/link";
 import avatar from "../../../assets/img/registrationFormAvatar/addAvatar.png";
 import Image from "next/image";
@@ -34,7 +34,7 @@ const Registration = () => {
 
   useEffect(() => {
     //! This is only one way that I found to change the page title of client component, but No warranty for SEO
-    document.title = "User Registration Page";
+    document.title = "Register";
   }, []);
 
   return (
@@ -47,17 +47,17 @@ const Registration = () => {
           <hr className={styles.hr} />
           <div>
             <label htmlFor="name">Username</label>
-            <input className={styles.input_field} type="text" id="name" name="name" value={newUserCredential.name} onChange={getInputValues} />
+            <input className={styles.input_field} type="text" id="name" name="name" value={newUserCredential.name} autoComplete="username" onChange={getInputValues} />
           </div>
 
           <div className={styles.email}>
             <label htmlFor="email">Email</label>
-            <input className={styles.input_field} type="email" id="email" name="email" value={newUserCredential.email} required onChange={getInputValues} />
+            <input className={styles.input_field} type="email" id="email" name="email" value={newUserCredential.email} autoComplete="username" required  onChange={getInputValues} />
           </div>
 
           <div className={styles.password}>
             <label htmlFor="password">password</label>
-            <input className={styles.input_field} type="password" id="password" name="password" value={newUserCredential.password} onChange={getInputValues} />
+            <input className={styles.input_field} type="password" id="password" name="password" value={newUserCredential.password}  autoComplete="current-password" onChange={getInputValues} />
           </div>
 
           <div>
