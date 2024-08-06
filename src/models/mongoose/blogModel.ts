@@ -6,15 +6,12 @@ const blogContextSchema = new Schema(
   {
     title: { type: String, required: true },
     description: { type: String, required: true },
-    // url: { type: String },
-    // public_id: { type: String },
-
     photo: {
       public_id: { type: String },
       url: { type: String },
     },
-  }
-  // { timestamps: true }
+  },
+  { timestamps: true }
 );
 
 const blogContextModel = mongoose.models.blogcontexts || mongoose.model("blogcontexts", blogContextSchema);

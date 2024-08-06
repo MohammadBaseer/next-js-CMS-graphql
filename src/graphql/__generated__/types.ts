@@ -147,9 +147,9 @@ export type User = {
 
 export type VideoBlogContext = {
   __typename?: 'VideoBlogContext';
-  id: Scalars['ID']['output'];
+  _id: Scalars['ID']['output'];
+  photo: Picture;
   title: Scalars['String']['output'];
-  url: Scalars['String']['output'];
 };
 
 export type AddVideoBlogContextInput = {
@@ -159,7 +159,7 @@ export type AddVideoBlogContextInput = {
 
 export type BlogContextEdits = {
   description?: InputMaybe<Scalars['String']['input']>;
-  photo?: InputMaybe<Scalars['String']['input']>;
+  photo?: InputMaybe<Pic>;
   title?: InputMaybe<Scalars['String']['input']>;
 };
 
@@ -330,9 +330,9 @@ export type UserResolvers<ContextType = any, ParentType extends ResolversParentT
 };
 
 export type VideoBlogContextResolvers<ContextType = any, ParentType extends ResolversParentTypes['VideoBlogContext'] = ResolversParentTypes['VideoBlogContext']> = {
-  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  _id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  photo?: Resolver<ResolversTypes['Picture'], ParentType, ContextType>;
   title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  url?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 

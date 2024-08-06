@@ -15,14 +15,13 @@ export const GET_POST_CONTEXT = gql`
 `;
 
 export const GET_POST_CONTEXT_BY_ID = gql`
-  query BlogContext($blogContextId: ID!) {
+  query BlogContextByID($blogContextId: ID!) {
     blogContext(id: $blogContextId) {
       _id
       title
       description
       photo {
         url
-        public_id
       }
     }
   }

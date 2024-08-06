@@ -3,7 +3,7 @@ import gql from "graphql-tag";
 const typeDefs = gql`
   # //! Types Decelerations
   type User {
-    id: ID!
+    _id: ID!
     name: String!
     email: String!
     password: String!
@@ -18,7 +18,7 @@ const typeDefs = gql`
     photo: Picture!
   }
   type VideoBlogContext {
-    id: ID!
+    _id: ID!
     title: String!
     url: String!
   }
@@ -50,11 +50,6 @@ const typeDefs = gql`
     editUser(id: ID!, edits: userEdits): User!
     editBlogContext(id: ID!, edits: blogContextEdits): BlogContext!
     editVideoContext(id: ID!, edits: videoBlogContextEdits): VideoBlogContext!
-
-    # uploadAvatar(file: Upload!): User!
-    # uploadAvatar(file: Upload!): String
-    # uploadAvatar(file: Upload!): File!
-    # uploadAvatar: User
 
     #//! To Delete the Data
     deleteUser(id: ID!): User!

@@ -1,36 +1,36 @@
 import { gql } from "@apollo/client";
 
-export const VIDEOBLOGCONTEXT = gql`
+export const VIDEO_BLOG_CONTEXT = gql`
   query videoBlogContexts {
     videoBlogContexts {
-      id
+      _id
       title
       url
     }
   }
 `;
 
-export const GETVIDEOBLOGBYID = gql`
+export const GET_VIDEO_BLOG_BY_ID = gql`
   query VideoBlogContextById($videoId: ID!) {
     videoBlogContext(id: $videoId) {
-      id
+      _id
       title
       url
     }
   }
 `;
 
-export const UPDATEVIDEOCONTEXT = gql`
+export const UPDATE_VIDEO_CONTEXT = gql`
   mutation EditVideoContext($editVideoContextId: ID!, $edits: videoBlogContextEdits) {
     editVideoContext(id: $editVideoContextId, edits: $edits) {
-      id
+      _id
       title
       url
     }
   }
 `;
 
-export const INSERTVIDEOCONTEXT = gql`
+export const INSERT_VIDEO_CONTEXT = gql`
   mutation AddVideoBlogContext($newVideoBlogContextData: addVideoBlogContextInput) {
     addVideoBlogContext(newVideoBlogContextData: $newVideoBlogContextData) {
       title
@@ -39,10 +39,10 @@ export const INSERTVIDEOCONTEXT = gql`
   }
 `;
 
-export const DELETEVIDECONTEXT = gql`
+export const DELETE_VIDEO_CONTEXT = gql`
   mutation DeleteVideoContextById($deleteVideoContextId: ID!) {
     deleteVideoContext(id: $deleteVideoContextId) {
-      id
+      _id
       title
       url
     }

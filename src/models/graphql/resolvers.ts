@@ -5,6 +5,7 @@ import { GraphQLError } from "graphql";
 import videoBlogContentModel from "../mongoose/videoBlogModel";
 import { BlogContext, Resolvers, User, VideoBlogContext } from "@/graphql/__generated__/types";
 import cloudinary from "@/config/cloudinary";
+import { removeCloudinaryImage } from "@/util/cloudinaryImageManagement";
 
 const resolvers: Resolvers = {
   //! This os Query function to get the data from MongooseDB
@@ -24,20 +25,24 @@ const resolvers: Resolvers = {
 
     async blogContexts() {
       await connectMongoDB();
-      const documentCount = await blogContextModel.countDocuments();
-      if (documentCount === 0) {
-        throw new GraphQLError("Not found");
+
+      try {
+        // const documentCount = await blogContextModel.countDocuments();
+        return await blogContextModel.find();
+      } catch (error: any) {
+        throw new GraphQLError(error.message);
       }
-      return await blogContextModel.find();
     },
     // !
     async videoBlogContexts() {
       await connectMongoDB();
-      const documentCount = await videoBlogContentModel.countDocuments();
-      // if (documentCount === 0) {
-      //   throw new GraphQLError("Not found");
-      // }
-      return await videoBlogContentModel.find();
+      // const documentCount = await videoBlogContentModel.countDocuments();
+      try {
+        const result = await videoBlogContentModel.find();
+        return result;
+      } catch (error: any) {
+        throw new GraphQLError(error.message);
+      }
     },
 
     // !
@@ -93,7 +98,7 @@ const resolvers: Resolvers = {
     //Add New Block Context Into DB
     async addBlogContext(_, { newBlogContextData }) {
       const { title, description, photo } = newBlogContextData as BlogContext;
-      // console.log("photo::::", photo);
+
       const newPhoto = photo.url;
       if (!title) {
         throw new GraphQLError("Input title empty*");
@@ -110,11 +115,10 @@ const resolvers: Resolvers = {
 
       if (newPhoto?.match(/data:image\/(jpeg|jpg|png|gif|bmp|tiff|webp|svg\+xml);base64,/)) {
         const uploaded = await cloudinary.uploader.upload(newPhoto, {
-          folder: "delete",
+          folder: "NextJS_Apollo_GraphQL_Project/Blogs_Images",
         });
         newAvatar.url = uploaded.secure_url;
         newAvatar.public_id = uploaded.public_id;
-        console.log("uploaded :>> ", uploaded);
       } else {
         throw new GraphQLError("Invalid image format. Supported formats are .jpg, .jpeg, .png, .gif, .bmp, .tiff, .webp, .svg");
       }
@@ -128,11 +132,10 @@ const resolvers: Resolvers = {
             public_id: newAvatar.public_id,
           },
         };
-        console.log("newData Object", newData);
+
         const newBlogContext = new blogContextModel({ ...newData });
 
         const result = await newBlogContext.save();
-        console.log("uploaded blog result ::::::>> ", result);
 
         return result;
       } catch (error) {
@@ -173,50 +176,111 @@ const resolvers: Resolvers = {
         { new: true }
       )) as User;
     },
-    //
-    async editBlogContext(_, args) {
+
+    //!=================================
+    async editBlogContext(_, { id, edits }) {
       await connectMongoDB();
-      return (await blogContextModel.findByIdAndUpdate(
-        args.id,
-        {
-          $set: {
-            title: args.edits!.title,
-            description: args.edits!.description,
-            photo: args.edits!.photo,
+      console.log(edits);
+      console.log("edits", edits?.photo?.url);
+      const newPhoto = edits?.photo?.url;
+
+      console.log("newPhoto:::::::::::", newPhoto);
+
+      const newAvatar = { url: "", public_id: "" };
+
+      if (newPhoto?.match(/data:image\/(jpeg|jpg|png|gif|bmp|tiff|webp|svg\+xml);base64,/)) {
+        const isData = (await blogContextModel.findById(id)) as BlogContext;
+        const ImageID = isData.photo.public_id as string;
+        await removeCloudinaryImage(ImageID);
+        const uploaded = await cloudinary.uploader.upload(newPhoto, {
+          folder: "NextJS_Apollo_GraphQL_Project/Blogs_Images",
+        });
+        newAvatar.url = uploaded.secure_url;
+        newAvatar.public_id = uploaded.public_id;
+        console.log("uploaded :>> ", uploaded);
+      } else {
+        throw new GraphQLError("Invalid image format. Supported formats are .jpg, .jpeg, .png, .gif, .bmp, .tiff, .webp, .svg");
+      }
+
+      try {
+        return (await blogContextModel.findByIdAndUpdate(
+          id,
+          {
+            $set: {
+              title: edits!.title,
+              description: edits!.description,
+              photo: {
+                url: newAvatar.url,
+                public_id: newAvatar.public_id,
+              },
+            },
           },
-        },
-        { new: true }
-      )) as BlogContext;
+          { new: true }
+        )) as BlogContext;
+      } catch (error: any) {
+        throw new GraphQLError(error.message);
+      }
     },
-    //
+    //!=================================
+
     async editVideoContext(_, args) {
       await connectMongoDB();
-      return (await videoBlogContentModel.findByIdAndUpdate(
-        args.id,
-        {
-          $set: {
-            title: args.edits!.title,
-            url: args.edits!.url,
+
+      try {
+        const result = (await videoBlogContentModel.findByIdAndUpdate(
+          args.id,
+          {
+            $set: {
+              title: args.edits!.title,
+              url: args.edits!.url,
+            },
           },
-        },
-        { new: true }
-      )) as VideoBlogContext;
+          { new: true }
+        )) as VideoBlogContext;
+
+        return result;
+      } catch (error: any) {
+        throw new GraphQLError(error.message);
+      }
     },
     //
     //
     //!Delete the data
     async deleteUser(_, args) {
       await connectMongoDB();
-      return (await userModel.findByIdAndDelete(args.id)) as User;
+      try {
+        const result = (await userModel.findByIdAndDelete(args.id)) as User;
+        return result;
+      } catch (error: any) {
+        throw new GraphQLError(error.message);
+      }
     },
     //
-    async deleteBlogContext(_, args) {
+    //!=================================
+
+    async deleteBlogContext(_, { id }) {
       await connectMongoDB();
-      return (await blogContextModel.findByIdAndDelete(args.id)) as BlogContext;
+
+      try {
+        const isData = (await blogContextModel.findById(id)) as BlogContext;
+        const ImageID = isData.photo.public_id as string;
+        await removeCloudinaryImage(ImageID);
+
+        return (await blogContextModel.findByIdAndDelete(id)) as BlogContext;
+      } catch (error: any) {
+        throw new GraphQLError(error.message);
+      }
     },
+    //!=================================
+
     //
     async deleteVideoContext(_, args) {
-      return (await videoBlogContentModel.findByIdAndDelete(args.id)) as VideoBlogContext;
+      try {
+        const result = (await videoBlogContentModel.findByIdAndDelete(args.id)) as VideoBlogContext;
+        return result;
+      } catch (error: any) {
+        throw new GraphQLError(error.message);
+      }
     },
     //
   },

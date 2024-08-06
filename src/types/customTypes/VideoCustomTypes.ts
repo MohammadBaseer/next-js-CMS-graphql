@@ -6,7 +6,7 @@ export type GetSingleVideoBlogType = {
   videoBlogContext: VideoBlogContextTypes;
 };
 export type VideoBlogContextTypes = {
-  id: string;
+  _id: string;
   title: string;
   url: string;
 };
