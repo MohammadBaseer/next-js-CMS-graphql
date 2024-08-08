@@ -82,7 +82,7 @@ const Login = () => {
           </div>
           <div className={styles.sub_btn_box}>
             <button className={styles.form_btn} type="submit">
-              Login
+              {loading ? "Logging..." : "Login"}
             </button>
           </div>
         </form>

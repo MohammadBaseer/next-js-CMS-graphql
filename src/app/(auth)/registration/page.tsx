@@ -127,7 +127,7 @@ const Registration = () => {
           </div>
           <div className={styles.sub_btn_box}>
             <button className={styles.form_btn} type="submit">
-              Register
+              {loading ? "Creating..." : "Register"}
             </button>
           </div>
         </form>
