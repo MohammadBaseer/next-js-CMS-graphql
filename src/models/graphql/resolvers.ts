@@ -1,4 +1,3 @@
-import connectMongoDB from "@/config/connectDB";
 import userModel from "../mongoose/userModel";
 import blogContextModel from "../mongoose/blogModel";
 import { GraphQLError } from "graphql";
@@ -7,9 +6,8 @@ import { BlogContext, Resolvers, User, VideoBlogContext } from "@/graphql/__gene
 import cloudinary from "@/config/cloudinary";
 import { removeCloudinaryImage } from "@/util/cloudinaryImageManagement";
 import { encryptPassword, verifyPassword } from "@/util/passwordServices";
-import { ApolloError, UserInputError } from "apollo-server-errors";
 import generateToken from "@/util/jwt_token_generator/jwt_token_generator";
-import { authContext } from "@/util/check_auth/check_auth"; 
+import { authContext } from "@/util/check_auth/check_auth";
 
 const resolvers: Resolvers = {
   //! This os Query function to get the data from MongooseDB
@@ -75,74 +73,74 @@ const resolvers: Resolvers = {
   Mutation: {
     //! !====================================
     // Add New User Into DB
-    async addUser(_parent: any, { newUserData: {name , email, password, avatar, role} }) {
+    async addUser(_parent: any, { newUserData: { name, email, password, avatar, role } }) {
       //! Validation
       if (!name.trim()) {
-        // throw new GraphQLError("Input name empty*");
-        throw new UserInputError("Input name empty*");
+        throw new GraphQLError("Input name empty*");
       }
       if (!email.trim()) {
-        // throw new GraphQLError("Input email empty*");
-        throw new UserInputError("Input email empty*");
+        throw new GraphQLError("Input email empty*");
       }
       if (!password) {
-        // throw new GraphQLError("Input password empty*");
-        throw new UserInputError("Input password empty*");
+        throw new GraphQLError("Input password empty*");
       }
       if (!avatar.url) {
-        // throw new GraphQLError("please Select an Avatar*");
-        throw new UserInputError("please Select an Avatar*");
+        throw new GraphQLError("please Select an Avatar*");
       }
 
       const newAvatar = { url: "", public_id: "" };
 
-      //! User  Validation
-      const existUser = await userModel.findOne({ email });
-      if (existUser) {
-        throw new GraphQLError("User exist");
-      }
-      if (!existUser) {
-        // ! Cloudinary Save
-        if (avatar.url?.match(/data:image\/(jpeg|jpg|png|gif|bmp|tiff|webp|svg\+xml);base64,/)) {
-          const uploaded = await cloudinary.uploader.upload(avatar!.url, {
-            folder: "NextJS_Apollo_GraphQL_Project/users_avatar",
-          });
-          newAvatar.url = uploaded.secure_url;
-          newAvatar.public_id = uploaded.public_id;
-        } else {
-          throw new GraphQLError("Invalid image format. Supported formats are .jpg, .jpeg, .png, .gif, .bmp, .tiff, .webp, .svg");
+      try {
+        //! User  Validation
+        const existUser = await userModel.findOne({ email });
+        if (existUser) {
+          throw new GraphQLError("User exist");
         }
-        //!
-        //! Password Bcrypt
-        const encryptedPassword = await encryptPassword(password);
+        if (!existUser) {
+          // ! Cloudinary Save
+          if (avatar.url?.match(/data:image\/(jpeg|jpg|png|gif|bmp|tiff|webp|svg\+xml);base64,/)) {
+            const uploaded = await cloudinary.uploader.upload(avatar!.url, {
+              folder: "NextJS_Apollo_GraphQL_Project/users_avatar",
+            });
+            newAvatar.url = uploaded.secure_url;
+            newAvatar.public_id = uploaded.public_id;
+          } else {
+            throw new GraphQLError("Invalid image format. Supported formats are .jpg, .jpeg, .png, .gif, .bmp, .tiff, .webp, .svg");
+          }
+          //!
+          //! Password Bcrypt
+          const encryptedPassword = await encryptPassword(password);
 
-        if (!encryptedPassword) {
-          throw new GraphQLError("Password encrypt error");
+          if (!encryptedPassword) {
+            throw new GraphQLError("Password encrypt error");
+          }
+          if (encryptedPassword) {
+            // Create New Schema
+            const newUser = new userModel({
+              name: name,
+              email: email,
+              password: encryptedPassword,
+              role: role,
+              avatar: {
+                url: newAvatar.url,
+                public_id: newAvatar.public_id,
+              },
+              createdAt: new Date().toISOString(),
+            });
+            // Store into DB
+            const result = await newUser.save();
+            const token = generateToken(result);
+            console.log("result:::", result);
+            console.log("token:::", token);
+            return {
+              ...result._doc,
+              _id: result._id,
+              token,
+            };
+          }
         }
-        if (encryptedPassword) {
-          // Create New Schema
-          const newUser = new userModel({
-            name: name,
-            email: email,
-            password: encryptedPassword,
-            role: role,
-            avatar: {
-              url: newAvatar.url,
-              public_id: newAvatar.public_id,
-            },
-            createdAt: new Date().toISOString()
-          });
-          // Store into DB
-          const result = await newUser.save();
-          const token = generateToken(result);
-          console.log("result:::", result);
-          console.log("token:::", token);
-          return {
-            ...result._doc,
-            _id: result._id, 
-            token,
-          };
-        }
+      } catch (error: any) {
+        throw new GraphQLError(error);
       }
     },
 
@@ -152,32 +150,32 @@ const resolvers: Resolvers = {
 
     async loginUser(_: any, { inputData: { email, password } }: any) {
       if (!email.trim()) {
-        // throw new GraphQLError("Input email empty*");
-        throw new UserInputError("Input email empty*");
+        throw new GraphQLError("Input email empty*");
       }
       if (!password) {
-        // throw new GraphQLError("Input password empty*");
-        throw new UserInputError("Input password empty*");
+        throw new GraphQLError("Input password empty*");
       }
       try {
         const isUser = await userModel.findOne({ email });
 
         if (!isUser) {
           console.log("User Not Fount");
-          return;
+          throw new GraphQLError("User Not Fount*");
         }
         const matchPassword = await verifyPassword(password, isUser.password);
         if (!matchPassword) {
           console.log("wrong credentials");
-          return;
+          throw new GraphQLError("wrong credentials*");
         }
         const token = generateToken(isUser);
         console.log("token:::::::", token);
         return {
+          ...isUser._doc,
+          _id: isUser._id,
           token,
         };
-      } catch (error) {
-        throw new UserInputError("something went wrong*");
+      } catch (error: any) {
+        throw new GraphQLError(error);
       }
     },
 
