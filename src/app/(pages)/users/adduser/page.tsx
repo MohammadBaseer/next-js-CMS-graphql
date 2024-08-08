@@ -72,9 +72,9 @@ const AddNewUser = () => {
           </div>
 
           <div>
-            <label htmlFor="roll">Rolls</label>
+            <label htmlFor="roll">Roles</label>
             <select name="roll" className={styles.input_field} onChange={getInputValues}>
-              <option>Assign User Roll</option>
+              <option>Assign User Role</option>
               <option value="admin">Admin</option>
               <option value="modifier">Modifier</option>
               <option value="reviewer">Reviewer</option>

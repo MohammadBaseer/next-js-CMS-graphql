@@ -29,7 +29,7 @@ const Users = () => {
               <th className={styles.th}>Image</th>
               <th className={styles.th}>Name</th>
               <th className={styles.th}>Registration Date</th>
-              <th className={styles.th}>Roll</th>
+              <th className={styles.th}>Rolr</th>
               <th className={styles.th}>Action</th>
             </tr>
           </thead>

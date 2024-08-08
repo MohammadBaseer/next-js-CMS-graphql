@@ -35,13 +35,13 @@ const Sidebar = () => {
             </ul>
 
             <li className={styles.li_main}>
-              <span className="pi pi-cog">&nbsp;Rolls Config</span>
+              <span className="pi pi-cog">&nbsp;Roles Config</span>
             </li>
 
             <ul className={styles.ul_sub}>
               <li className={styles.li_sub}>
                 <Link className={styles.link} href="/messages">
-                  <span className="pi pi-angle-right">&nbsp;Rolls</span>
+                  <span className="pi pi-angle-right">&nbsp;Roles</span>
                 </Link>
               </li>
             </ul>

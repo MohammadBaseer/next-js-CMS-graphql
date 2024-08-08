@@ -10,6 +10,6 @@ export type Users = {
   name: string;
   email: string;
   password: string;
-  roll: string;
+  role: string;
   avatar: string;
 };
