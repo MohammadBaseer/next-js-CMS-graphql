@@ -9,7 +9,7 @@ import { removeCloudinaryImage } from "@/util/cloudinaryImageManagement";
 import { encryptPassword, verifyPassword } from "@/util/passwordServices";
 import { ApolloError, UserInputError } from "apollo-server-errors";
 import generateToken from "@/util/jwt_token_generator/jwt_token_generator";
-import { authContext } from "@/util/check_auth/check_auth";
+import { authContext } from "@/util/check_auth/check_auth"; 
 
 const resolvers: Resolvers = {
   //! This os Query function to get the data from MongooseDB
@@ -75,21 +75,21 @@ const resolvers: Resolvers = {
   Mutation: {
     //! !====================================
     // Add New User Into DB
-    async addUser(_parent: any, { newUserData }) {
+    async addUser(_parent: any, { newUserData: {name , email, password, avatar, role} }) {
       //! Validation
-      if (!newUserData!.name?.trim()) {
+      if (!name.trim()) {
         // throw new GraphQLError("Input name empty*");
         throw new UserInputError("Input name empty*");
       }
-      if (!newUserData!.email!.trim()) {
+      if (!email.trim()) {
         // throw new GraphQLError("Input email empty*");
         throw new UserInputError("Input email empty*");
       }
-      if (!newUserData!.password) {
+      if (!password) {
         // throw new GraphQLError("Input password empty*");
         throw new UserInputError("Input password empty*");
       }
-      if (!newUserData!.avatar!.url) {
+      if (!avatar.url) {
         // throw new GraphQLError("please Select an Avatar*");
         throw new UserInputError("please Select an Avatar*");
       }
@@ -97,15 +97,15 @@ const resolvers: Resolvers = {
       const newAvatar = { url: "", public_id: "" };
 
       //! User  Validation
-      const existUser = await userModel.findOne({ email: newUserData!.email });
+      const existUser = await userModel.findOne({ email });
       if (existUser) {
         throw new GraphQLError("User exist");
       }
       if (!existUser) {
         // ! Cloudinary Save
-        if (newUserData!.avatar!.url?.match(/data:image\/(jpeg|jpg|png|gif|bmp|tiff|webp|svg\+xml);base64,/)) {
-          const uploaded = await cloudinary.uploader.upload(newUserData!.avatar!.url, {
-            folder: "NextJS_Apollo_GraphQL_Project/Blogs_Images",
+        if (avatar.url?.match(/data:image\/(jpeg|jpg|png|gif|bmp|tiff|webp|svg\+xml);base64,/)) {
+          const uploaded = await cloudinary.uploader.upload(avatar!.url, {
+            folder: "NextJS_Apollo_GraphQL_Project/users_avatar",
           });
           newAvatar.url = uploaded.secure_url;
           newAvatar.public_id = uploaded.public_id;
@@ -114,7 +114,7 @@ const resolvers: Resolvers = {
         }
         //!
         //! Password Bcrypt
-        const encryptedPassword = await encryptPassword(newUserData!.password);
+        const encryptedPassword = await encryptPassword(password);
 
         if (!encryptedPassword) {
           throw new GraphQLError("Password encrypt error");
@@ -122,15 +122,15 @@ const resolvers: Resolvers = {
         if (encryptedPassword) {
           // Create New Schema
           const newUser = new userModel({
-            name: newUserData!.name,
-            email: newUserData!.email,
+            name: name,
+            email: email,
             password: encryptedPassword,
-            role: newUserData?.role,
+            role: role,
             avatar: {
               url: newAvatar.url,
               public_id: newAvatar.public_id,
             },
-            // createdAt: new Date().toISOString()
+            createdAt: new Date().toISOString()
           });
           // Store into DB
           const result = await newUser.save();
@@ -138,7 +138,8 @@ const resolvers: Resolvers = {
           console.log("result:::", result);
           console.log("token:::", token);
           return {
-            result,
+            ...result._doc,
+            _id: result._id, 
             token,
           };
         }
