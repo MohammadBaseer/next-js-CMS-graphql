@@ -20,11 +20,10 @@ type BlogInputTypes = {
 };
 const AddNewBlog = () => {
   //! ------
-  const [insertBlogContext, { loading, error:GraphQLError, data }] = useMutation(INSERT_POST_CONTEXT);
+  const [insertBlogContext, { loading, error: GraphQLError, data }] = useMutation(INSERT_POST_CONTEXT);
   //! ------
   // const [error, setError] = useState< undefined | string>("");
   const [selectImage, setSelectImage] = useState<string | null>(null);
-  const [photo, setPhoto] = useState<string | null>(null);
   const [blogInput, setBlogInput] = useState<BlogInputTypes>({
     title: "",
     description: "",
@@ -59,11 +58,6 @@ const AddNewBlog = () => {
         photo: value,
       };
     });
-
-
-
-console.log("value", value)
-
   };
   //! =====================
   const addBlogFunction = async (e: FormEvent<HTMLFormElement>) => {
@@ -87,10 +81,8 @@ console.log("value", value)
       setSelectImage(null);
     } catch (GraphQLError) {
       const err = GraphQLError as ApolloError;
-      console.log("GraphQL Error:", err);
-      console.log("Error Details:", err.graphQLErrors);
-      console.log("Network Error:", err.networkError);
-      alert("Blog couldn't be updated");
+      console.log("Network Error:", err.message);
+      alert(err.message);
     }
   };
   //! =====================
