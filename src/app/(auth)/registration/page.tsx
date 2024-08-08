@@ -4,14 +4,27 @@ import styles from "./Registration.module.scss";
 import Link from "next/link";
 import avatar from "../../../assets/img/registrationFormAvatar/addAvatar.png";
 import Image from "next/image";
+import { useMutation } from "@apollo/client";
+import { REGISTER_USER } from "@/queries/userQuery";
+import { convertToBase64 } from "@/util/convertToBase64";
+import { ApolloError } from "apollo-server-errors";
 
 const Registration = () => {
+  // ! ==========
+  const [registerUser, { loading }] = useMutation(REGISTER_USER, {
+    update(_, { data }) {
+      console.log("data:::", data);
+    },
+  });
+
+  // ! -------
   const [error, setError] = useState<string | null>(null);
   const [selectImage, setSelectImage] = useState<string | null>(null);
   const [newUserCredential, setNewUserCredential] = useState({
     name: "",
     email: "",
     password: "",
+    avatar: "",
   });
 
   const getInputValues = (e: ChangeEvent<HTMLInputElement>) => {
@@ -19,17 +32,56 @@ const Registration = () => {
       return { ...prev, [e.target.name]: e.target.value };
     });
   };
-  const userRegisterFunction = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    console.log("Nem: ", newUserCredential.name);
-    console.log("Email: ", newUserCredential.email);
-    console.log("Password: ", newUserCredential.password);
-    setError("New User Created");
-  };
-
-  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     setSelectImage(file ? URL.createObjectURL(file) : null);
+
+    let value = "";
+    if (file) {
+      const base64 = await convertToBase64(file);
+      if (typeof base64 === "string") value = base64;
+    }
+    setNewUserCredential((prev) => {
+      return {
+        ...prev,
+        avatar: value,
+      };
+    });
+
+    // console.log(value);
+  };
+
+  const userRegisterFunction = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    console.log("newUserCredential", newUserCredential);
+    try {
+      const { avatar, name, email, password } = newUserCredential;
+      const result = await registerUser({
+        variables: {
+          newUserData: {
+            name,
+            email,
+            password,
+            avatar: {
+              url: avatar,
+            },
+          },
+        },
+      });
+      setNewUserCredential({
+        name: "",
+        email: "",
+        password: "",
+        avatar: "",
+      });
+      setError("");
+      setSelectImage(null);
+    } catch (error) {
+      const err = error as ApolloError;
+      console.log("Network Error:", err.message);
+      alert(err.message);
+      setError(err.message);
+    }
   };
 
   useEffect(() => {
@@ -52,12 +104,12 @@ const Registration = () => {
 
           <div className={styles.email}>
             <label htmlFor="email">Email</label>
-            <input className={styles.input_field} type="email" id="email" name="email" value={newUserCredential.email} autoComplete="username" required  onChange={getInputValues} />
+            <input className={styles.input_field} type="email" id="email" name="email" value={newUserCredential.email} autoComplete="username" required onChange={getInputValues} />
           </div>
 
           <div className={styles.password}>
             <label htmlFor="password">password</label>
-            <input className={styles.input_field} type="password" id="password" name="password" value={newUserCredential.password}  autoComplete="current-password" onChange={getInputValues} />
+            <input className={styles.input_field} type="password" id="password" name="password" value={newUserCredential.password} autoComplete="current-password" onChange={getInputValues} />
           </div>
 
           <div>
