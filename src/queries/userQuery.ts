@@ -1,12 +1,31 @@
 import { gql } from "@apollo/client";
 
+export const LOGIN_USER = gql`
+  mutation loginUser($inputData: LoginInput!) {
+    loginUser(inputData: $inputData) {
+      name
+      email
+      password
+      avatar {
+        url
+      }
+      token
+    }
+  }
+`;
+
 export const GET_USERS = gql`
-  query BlogContextByID($blogContextId: ID!) {
-    blogContext(id: $blogContextId) {
-      id
-      title
-      description
-      photo
+  query Users {
+    users {
+      _id
+      name
+      email
+      role
+      avatar {
+        url
+      }
+      createdAt
+      updatedAt
     }
   }
 `;
@@ -14,11 +33,15 @@ export const GET_USERS = gql`
 export const GET_USERS_BY_ID = gql`
   query userByID($userId: ID!) {
     user(id: $userId) {
-      id
-      email
+      _id
       name
-      roll
-      avatar
+      email
+      role
+      avatar {
+        url
+      }
+      createdAt
+      updatedAt
     }
   }
 `;
@@ -26,22 +49,29 @@ export const GET_USERS_BY_ID = gql`
 export const UPDATE_USERS = gql`
   mutation EditUser($editUserId: ID!, $edits: userEdits) {
     editUser(id: $editUserId, edits: $edits) {
+      _id
       name
+      email
       password
-      roll
-      avatar
+      role
+      avatar {
+        url
+      }
     }
   }
 `;
 
-export const INSERT_USERS = gql`
+export const REGISTER_USER = gql`
   mutation AddNewUser($newUserData: AddUserInput) {
     addUser(newUserData: $newUserData) {
       name
       email
-      password
-      roll
-      avatar
+      avatar {
+        url
+      }
+      _id
+      createdAt
+      token
     }
   }
 `;
@@ -49,12 +79,13 @@ export const INSERT_USERS = gql`
 export const DELETE_USERS = gql`
   mutation DeleteUserById($deleteUserId: ID!) {
     deleteUser(id: $deleteUserId) {
-      id
+      _id
       name
       email
-      password
-      roll
-      avatar
+      role
+      avatar {
+        url
+      }
     }
   }
 `;
