@@ -1,14 +1,17 @@
 import gql from "graphql-tag";
 
 const typeDefs = gql`
-  # //! Types Decelerations
+  # //! Types Declarations
   type User {
     _id: ID!
     name: String!
     email: String!
     password: String!
-    roll: String!
-    avatar: String!
+    role: String!
+    avatar: Picture!
+    createdAt: String
+    updatedAt: String
+    token: String!
   }
 
   type BlogContext {
@@ -38,13 +41,14 @@ const typeDefs = gql`
     videoBlogContext(id: ID!): VideoBlogContext!
   }
   type Mutation {
+    # //! Login User
+    loginUser(inputData: LoginInput!): User!
     #//! To Insert New Data
     addUser(newUserData: AddUserInput): User!
 
     addBlogContext(newBlogContextData: AddBlogContextInput): BlogContext!
 
     addVideoBlogContext(newVideoBlogContextData: addVideoBlogContextInput): VideoBlogContext!
-    # ///REVIEW - //! Test for upload the file
 
     #//! To Edit the Data
     editUser(id: ID!, edits: userEdits): User!
@@ -56,13 +60,18 @@ const typeDefs = gql`
     deleteBlogContext(id: ID!): BlogContext!
     deleteVideoContext(id: ID!): VideoBlogContext!
   }
+  # //! ==== Login User Input
+  input LoginInput {
+    email: String!
+    password: String!
+  }
   #//! Inputs of Add Data
   input AddUserInput {
     name: String
     email: String
     password: String
-    roll: String
-    avatar: String
+    role: String
+    avatar: Pic
   }
   # //! ----------------------
   input AddBlogContextInput {
@@ -88,8 +97,8 @@ const typeDefs = gql`
   input userEdits {
     name: String
     password: String
-    roll: String
-    avatar: String
+    role: String
+    avatar: Pic!
   }
   input videoBlogContextEdits {
     title: String

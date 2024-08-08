@@ -6,26 +6,36 @@ import videoBlogContentModel from "../mongoose/videoBlogModel";
 import { BlogContext, Resolvers, User, VideoBlogContext } from "@/graphql/__generated__/types";
 import cloudinary from "@/config/cloudinary";
 import { removeCloudinaryImage } from "@/util/cloudinaryImageManagement";
+import { encryptPassword, verifyPassword } from "@/util/passwordServices";
+import { ApolloError, UserInputError } from "apollo-server-errors";
+import generateToken from "@/util/jwt_token_generator/jwt_token_generator";
+import { authContext } from "@/util/check_auth/check_auth";
 
 const resolvers: Resolvers = {
   //! This os Query function to get the data from MongooseDB
   //TODO -  ==========---Query---==========
   Query: {
     async users() {
-      console.log("Running::::::::");
-
-      await connectMongoDB();
-      const documentCount = await userModel.countDocuments();
-      if (documentCount === 0) {
-        throw new GraphQLError("Not found");
+      try {
+        const documentCount = await userModel.countDocuments();
+        console.log(`Document count: ${documentCount}`);
+        if (documentCount === 0) {
+          console.log("No documents found");
+          throw new GraphQLError("Not found");
+        }
+        const res = await userModel.find();
+        console.log(`Found documents: ${res.length}`);
+        console.log(res);
+        return res;
+      } catch (error: any) {
+        console.error("Error in users query: ", error);
+        throw new GraphQLError(error.message);
       }
-      return await userModel.find();
     },
+
     // !
 
     async blogContexts() {
-      await connectMongoDB();
-
       try {
         // const documentCount = await blogContextModel.countDocuments();
         return await blogContextModel.find();
@@ -35,7 +45,6 @@ const resolvers: Resolvers = {
     },
     // !
     async videoBlogContexts() {
-      await connectMongoDB();
       // const documentCount = await videoBlogContentModel.countDocuments();
       try {
         const result = await videoBlogContentModel.find();
@@ -48,17 +57,14 @@ const resolvers: Resolvers = {
     // !
     //! This os Query function to get the data by ID from MongooseDB
     async user(_, args) {
-      await connectMongoDB();
       return (await userModel.findById(args.id)) as User;
     },
     //!
     async blogContext(_, args) {
-      await connectMongoDB();
       return (await blogContextModel.findById(args.id)) as BlogContext;
     },
     //!
     async videoBlogContext(_, args) {
-      await connectMongoDB();
       return (await videoBlogContentModel.findById(args.id)) as VideoBlogContext;
     },
     //!
@@ -67,33 +73,114 @@ const resolvers: Resolvers = {
   //TODO -  ==========---Mutation---==========
   // ! Insert New Data Into DB
   Mutation: {
+    //! !====================================
     // Add New User Into DB
-    async addUser(_, args) {
-      await connectMongoDB();
-      // Inputs Validation
-      const existUser = await userModel.findOne({ email: args.newUserData!.email });
+    async addUser(_parent: any, { newUserData }) {
+      //! Validation
+      if (!newUserData!.name?.trim()) {
+        // throw new GraphQLError("Input name empty*");
+        throw new UserInputError("Input name empty*");
+      }
+      if (!newUserData!.email!.trim()) {
+        // throw new GraphQLError("Input email empty*");
+        throw new UserInputError("Input email empty*");
+      }
+      if (!newUserData!.password) {
+        // throw new GraphQLError("Input password empty*");
+        throw new UserInputError("Input password empty*");
+      }
+      if (!newUserData!.avatar!.url) {
+        // throw new GraphQLError("please Select an Avatar*");
+        throw new UserInputError("please Select an Avatar*");
+      }
+
+      const newAvatar = { url: "", public_id: "" };
+
+      //! User  Validation
+      const existUser = await userModel.findOne({ email: newUserData!.email });
       if (existUser) {
         throw new GraphQLError("User exist");
       }
-      if (!args.newUserData!.name) {
-        throw new GraphQLError("Input name empty*");
+      if (!existUser) {
+        // ! Cloudinary Save
+        if (newUserData!.avatar!.url?.match(/data:image\/(jpeg|jpg|png|gif|bmp|tiff|webp|svg\+xml);base64,/)) {
+          const uploaded = await cloudinary.uploader.upload(newUserData!.avatar!.url, {
+            folder: "NextJS_Apollo_GraphQL_Project/Blogs_Images",
+          });
+          newAvatar.url = uploaded.secure_url;
+          newAvatar.public_id = uploaded.public_id;
+        } else {
+          throw new GraphQLError("Invalid image format. Supported formats are .jpg, .jpeg, .png, .gif, .bmp, .tiff, .webp, .svg");
+        }
+        //!
+        //! Password Bcrypt
+        const encryptedPassword = await encryptPassword(newUserData!.password);
+
+        if (!encryptedPassword) {
+          throw new GraphQLError("Password encrypt error");
+        }
+        if (encryptedPassword) {
+          // Create New Schema
+          const newUser = new userModel({
+            name: newUserData!.name,
+            email: newUserData!.email,
+            password: encryptedPassword,
+            role: newUserData?.role,
+            avatar: {
+              url: newAvatar.url,
+              public_id: newAvatar.public_id,
+            },
+            // createdAt: new Date().toISOString()
+          });
+          // Store into DB
+          const result = await newUser.save();
+          const token = generateToken(result);
+          console.log("result:::", result);
+          console.log("token:::", token);
+          return {
+            result,
+            token,
+          };
+        }
       }
-      if (!args.newUserData!.email) {
-        throw new GraphQLError("Input email empty*");
-      }
-      if (!args.newUserData!.password) {
-        throw new GraphQLError("Input password empty*");
-      }
-      if (!args.newUserData!.avatar) {
-        throw new GraphQLError("please Select an Avatar*");
-      }
-      // Create New Schema
-      const newUser = new userModel({
-        ...args.newUserData,
-      });
-      // Store into DB
-      return await newUser.save();
     },
+
+    // !====================================
+
+    //!  ----- Login User
+
+    async loginUser(_: any, { inputData: { email, password } }: any) {
+      if (!email.trim()) {
+        // throw new GraphQLError("Input email empty*");
+        throw new UserInputError("Input email empty*");
+      }
+      if (!password) {
+        // throw new GraphQLError("Input password empty*");
+        throw new UserInputError("Input password empty*");
+      }
+      try {
+        const isUser = await userModel.findOne({ email });
+
+        if (!isUser) {
+          console.log("User Not Fount");
+          return;
+        }
+        const matchPassword = await verifyPassword(password, isUser.password);
+        if (!matchPassword) {
+          console.log("wrong credentials");
+          return;
+        }
+        const token = generateToken(isUser);
+        console.log("token:::::::", token);
+        return {
+          token,
+        };
+      } catch (error) {
+        throw new UserInputError("something went wrong*");
+      }
+    },
+
+    //! ----
 
     //Add New Block Context Into DB
     async addBlogContext(_, { newBlogContextData }) {
@@ -110,7 +197,6 @@ const resolvers: Resolvers = {
         throw new GraphQLError("please Select an Avatar*");
       }
 
-      await connectMongoDB();
       const newAvatar = { url: "", public_id: "" };
 
       if (newPhoto?.match(/data:image\/(jpeg|jpg|png|gif|bmp|tiff|webp|svg\+xml);base64,/)) {
@@ -147,7 +233,6 @@ const resolvers: Resolvers = {
 
     //
     async addVideoBlogContext(_, args) {
-      await connectMongoDB();
       //Input Validation
       if (!args.newVideoBlogContextData!.title) {
         throw new GraphQLError("Input title empty*");
@@ -162,14 +247,13 @@ const resolvers: Resolvers = {
     },
     //!Edit the data
     async editUser(_, args) {
-      await connectMongoDB();
       return (await userModel.findByIdAndUpdate(
         args.id,
         {
           $set: {
             name: args.edits!.name,
             password: args.edits!.password,
-            roll: args.edits!.roll,
+            role: args.edits!.role,
             avatar: args.edits!.avatar,
           },
         },
@@ -179,7 +263,6 @@ const resolvers: Resolvers = {
 
     //!=================================
     async editBlogContext(_, { id, edits }) {
-      await connectMongoDB();
       console.log(edits);
       console.log("edits", edits?.photo?.url);
       const newPhoto = edits?.photo?.url;
@@ -223,8 +306,8 @@ const resolvers: Resolvers = {
     },
     //!=================================
 
-    async editVideoContext(_, args) {
-      await connectMongoDB();
+    async editVideoContext(_, args, context) {
+      const user = authContext(context);
 
       try {
         const result = (await videoBlogContentModel.findByIdAndUpdate(
@@ -245,9 +328,9 @@ const resolvers: Resolvers = {
     },
     //
     //
+
     //!Delete the data
     async deleteUser(_, args) {
-      await connectMongoDB();
       try {
         const result = (await userModel.findByIdAndDelete(args.id)) as User;
         return result;
@@ -259,8 +342,6 @@ const resolvers: Resolvers = {
     //!=================================
 
     async deleteBlogContext(_, { id }) {
-      await connectMongoDB();
-
       try {
         const isData = (await blogContextModel.findById(id)) as BlogContext;
         const ImageID = isData.photo.public_id as string;

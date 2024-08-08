@@ -23,11 +23,11 @@ export type AddBlogContextInput = {
 };
 
 export type AddUserInput = {
-  avatar?: InputMaybe<Scalars['String']['input']>;
+  avatar?: InputMaybe<Pic>;
   email?: InputMaybe<Scalars['String']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
   password?: InputMaybe<Scalars['String']['input']>;
-  roll?: InputMaybe<Scalars['String']['input']>;
+  role?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type BlogContext = {
@@ -36,6 +36,11 @@ export type BlogContext = {
   description: Scalars['String']['output'];
   photo: Picture;
   title: Scalars['String']['output'];
+};
+
+export type LoginInput = {
+  email: Scalars['String']['input'];
+  password: Scalars['String']['input'];
 };
 
 export type Mutation = {
@@ -49,6 +54,7 @@ export type Mutation = {
   editBlogContext: BlogContext;
   editUser: User;
   editVideoContext: VideoBlogContext;
+  loginUser?: Maybe<User>;
 };
 
 
@@ -99,6 +105,11 @@ export type MutationEditVideoContextArgs = {
   id: Scalars['ID']['input'];
 };
 
+
+export type MutationLoginUserArgs = {
+  loginInput: LoginInput;
+};
+
 export type Pic = {
   public_id?: InputMaybe<Scalars['String']['input']>;
   url: Scalars['String']['input'];
@@ -137,19 +148,19 @@ export type QueryVideoBlogContextArgs = {
 
 export type User = {
   __typename?: 'User';
-  avatar: Scalars['String']['output'];
+  _id: Scalars['ID']['output'];
+  avatar: Picture;
   email: Scalars['String']['output'];
-  id: Scalars['ID']['output'];
   name: Scalars['String']['output'];
   password: Scalars['String']['output'];
-  roll: Scalars['String']['output'];
+  role: Scalars['String']['output'];
 };
 
 export type VideoBlogContext = {
   __typename?: 'VideoBlogContext';
   _id: Scalars['ID']['output'];
-  photo: Picture;
   title: Scalars['String']['output'];
+  url: Scalars['String']['output'];
 };
 
 export type AddVideoBlogContextInput = {
@@ -164,10 +175,10 @@ export type BlogContextEdits = {
 };
 
 export type UserEdits = {
-  avatar?: InputMaybe<Scalars['String']['input']>;
+  avatar: Pic;
   name?: InputMaybe<Scalars['String']['input']>;
   password?: InputMaybe<Scalars['String']['input']>;
-  roll?: InputMaybe<Scalars['String']['input']>;
+  role?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type VideoBlogContextEdits = {
@@ -251,6 +262,7 @@ export type ResolversTypes = {
   BlogContext: ResolverTypeWrapper<BlogContext>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
   ID: ResolverTypeWrapper<Scalars['ID']['output']>;
+  LoginInput: LoginInput;
   Mutation: ResolverTypeWrapper<{}>;
   Pic: Pic;
   Picture: ResolverTypeWrapper<Picture>;
@@ -271,6 +283,7 @@ export type ResolversParentTypes = {
   BlogContext: BlogContext;
   Boolean: Scalars['Boolean']['output'];
   ID: Scalars['ID']['output'];
+  LoginInput: LoginInput;
   Mutation: {};
   Pic: Pic;
   Picture: Picture;
@@ -302,6 +315,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   editBlogContext?: Resolver<ResolversTypes['BlogContext'], ParentType, ContextType, RequireFields<MutationEditBlogContextArgs, 'id'>>;
   editUser?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationEditUserArgs, 'id'>>;
   editVideoContext?: Resolver<ResolversTypes['VideoBlogContext'], ParentType, ContextType, RequireFields<MutationEditVideoContextArgs, 'id'>>;
+  loginUser?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<MutationLoginUserArgs, 'loginInput'>>;
 };
 
 export type PictureResolvers<ContextType = any, ParentType extends ResolversParentTypes['Picture'] = ResolversParentTypes['Picture']> = {
@@ -320,19 +334,19 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
 };
 
 export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
-  avatar?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  _id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  avatar?: Resolver<ResolversTypes['Picture'], ParentType, ContextType>;
   email?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   password?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  roll?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  role?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type VideoBlogContextResolvers<ContextType = any, ParentType extends ResolversParentTypes['VideoBlogContext'] = ResolversParentTypes['VideoBlogContext']> = {
   _id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  photo?: Resolver<ResolversTypes['Picture'], ParentType, ContextType>;
   title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  url?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
