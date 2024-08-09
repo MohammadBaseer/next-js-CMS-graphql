@@ -1,10 +1,13 @@
 import { LOGIN_USER, REGISTER_USER } from "@/queries/userQuery";
+import { decodeToken, isToken, removeToken } from "@/token/tokenCheck";
 import { convertToBase64 } from "@/util/convertToBase64";
 import { useMutation } from "@apollo/client";
 import { ApolloError } from "apollo-server-errors";
-import React, { ChangeEvent, createContext, FormEvent, ReactNode, useState } from "react";
+import { useRouter } from "next/navigation";
+import React, { ChangeEvent, createContext, FormEvent, ReactNode, useEffect, useState } from "react";
 
 type AuthContextTypes = {
+  userProfile: { id: string; email: string; username: string; avatar: string; role: string };
   // ! Registration Elements Types
   registrationLoader: boolean;
   newUserCredential: { name: string; email: string; password: string; avatar: string };
@@ -21,6 +24,7 @@ type AuthContextTypes = {
 };
 
 const AuthContextInitialValue: AuthContextTypes = {
+  userProfile: { id: "", email: "", username: "", avatar: "", role: "" },
   // ! Registration Initial Value Elements
   registrationLoader: false,
   newUserCredential: { name: "", email: "", password: "", avatar: "" },
@@ -52,7 +56,19 @@ type childrenPropsTypes = {
   children: ReactNode;
 };
 
+type UserProfileTypes = {
+  id: string;
+  email: string;
+  username: string;
+  avatar: string;
+  role: string;
+};
+
 const AuthContextProvider = ({ children }: childrenPropsTypes) => {
+  const router = useRouter();
+  //! Setters
+  const [userProfile, setUserProfile] = useState<UserProfileTypes | null | any>(null);
+
   //! ================================== User Registration Part
   // ^ Registration Query
   const [registerUser, { loading: registrationLoader }] = useMutation(REGISTER_USER, {
@@ -115,14 +131,26 @@ const AuthContextProvider = ({ children }: childrenPropsTypes) => {
           },
         },
       });
-      setNewUserCredential({
-        name: "",
-        email: "",
-        password: "",
-        avatar: "",
-      });
-      setError("");
-      setSelectImage(null);
+
+      if (result.data.addUser.token) {
+        if (result.data.addUser.token) {
+          localStorage.setItem("token", result.data.addUser.token);
+          getUserProfile();
+          if (isToken()) {
+            router.push("/"); // redirect to Home
+          } else {
+            router.push("/login"); // redirect to Login
+          }
+        }
+        setNewUserCredential({
+          name: "",
+          email: "",
+          password: "",
+          avatar: "",
+        });
+        setError("");
+        setSelectImage(null);
+      }
     } catch (error) {
       const err = error as ApolloError;
       console.log("Network Error:", err.message);
@@ -136,7 +164,7 @@ const AuthContextProvider = ({ children }: childrenPropsTypes) => {
   //!SECTION
   const [loginUser, { loading: loginLoader }] = useMutation(LOGIN_USER, {
     update(_, { data }) {
-      console.log(data);
+      // console.log(data );
     },
   });
   //!SECTION
@@ -161,11 +189,27 @@ const AuthContextProvider = ({ children }: childrenPropsTypes) => {
       const result = await loginUser({
         variables: { inputData: loginCredential },
       });
-      setLoginCredential({
-        email: "",
-        password: "",
-      });
-      setError("");
+
+      // Check if the mutation succeeded
+      if (result.data) {
+        if (result.data.loginUser.token) {
+          localStorage.setItem("token", result.data.loginUser.token);
+          getUserProfile();
+          router.push("/"); // redirect to Login
+        }
+
+        setLoginCredential({
+          email: "",
+          password: "",
+        });
+        setError("");
+      }
+
+      // Handle potential errors
+      if (result.errors) {
+        console.error("Mutation errors:", result.errors);
+        setError("An error occurred during login.");
+      }
     } catch (error) {
       const err = error as ApolloError;
       console.log("Network Error:", err.message);
@@ -174,6 +218,36 @@ const AuthContextProvider = ({ children }: childrenPropsTypes) => {
     }
   };
   // ? ================================== End User Login Part
+  // ! ================================== Get User Profile  Part
+  const getUserProfile = () => {
+    const getUserInfoFromDecodeToken = decodeToken();
+    if (!getUserInfoFromDecodeToken) {
+      console.log("::::You need a Token:::::");
+      setUserProfile(null);
+    }
+    if (getUserInfoFromDecodeToken) {
+      console.log(":Token Decode :::::", getUserInfoFromDecodeToken);
+      setUserProfile(getUserInfoFromDecodeToken);
+    }
+  };
+  // ? ================================== End Get User Profile  Part
+  // ! LogOut Part
+  const logOutUser = () => {
+    removeToken();
+    setUserProfile(null);
+  };
+  // ? =================================== End Logout Part
+
+  // ! Check user Login Status with the help of Token
+  const isUserLogged = isToken();
+  useEffect(() => {
+    if (isUserLogged) {
+      getUserProfile();
+    }
+    if (!isUserLogged) {
+      setUserProfile(null);
+    }
+  }, []);
 
   return (
     <AuthContext.Provider
@@ -189,6 +263,7 @@ const AuthContextProvider = ({ children }: childrenPropsTypes) => {
         getLoginInputValues,
         loginCredential,
         loginLoader,
+        userProfile,
       }}
     >
       {children}
