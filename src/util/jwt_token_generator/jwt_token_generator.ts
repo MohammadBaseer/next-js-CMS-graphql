@@ -1,6 +1,6 @@
 import Jwt from "jsonwebtoken";
 
-function generateToken(user: { id: string; email: string; username: string }) {
+function generateToken(user: { id: string; email: string; name: string, avatar:{url:string}, role:string}) {
   const secret = process.env.JWT_SECRET;
 
   if (!secret) {
@@ -11,7 +11,9 @@ function generateToken(user: { id: string; email: string; username: string }) {
     {
       id: user.id,
       email: user.email,
-      username: user.username,
+      username: user.name,
+      avatar: user.avatar.url,
+      role: user.role,
     },
     secret,
     {
