@@ -9,16 +9,14 @@ function makeClient() {
     fetchOptions: { cache: "no-store" },
   });
 
+  const token = localStorage.getItem("token");
   const authLink = new ApolloLink((operation, forward) => {
-    if (typeof window !== "undefined") {
-      const token = localStorage.getItem("token");
-      if (token) {
-        operation.setContext({
-          headers: {
-            authorization: `Bearer ${token}`,
-          },
-        });
-      }
+    if (token) {
+      operation.setContext({
+        headers: {
+          authorization: token ? `Bearer ${token}` : null,
+        },
+      });
     }
     return forward(operation);
   });
@@ -30,6 +28,6 @@ function makeClient() {
   });
 }
 
-export function ApolloWrapper({ children }: React.PropsWithChildren<{}>) {
+export function ApolloWrapper({ children }: React.PropsWithChildren) {
   return <ApolloNextAppProvider makeClient={makeClient}>{children}</ApolloNextAppProvider>;
 }
