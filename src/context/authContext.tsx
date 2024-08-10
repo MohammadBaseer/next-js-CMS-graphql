@@ -21,6 +21,8 @@ type AuthContextTypes = {
   loginLoader: boolean;
   userLoginFunction: (e: FormEvent<HTMLFormElement>) => Promise<void>;
   getLoginInputValues: (e: ChangeEvent<HTMLInputElement>) => void;
+  //! Logout Elements Types
+  logOutUser: () => void;
 };
 
 const AuthContextInitialValue: AuthContextTypes = {
@@ -34,19 +36,23 @@ const AuthContextInitialValue: AuthContextTypes = {
     throw new Error("The userRegisterFunction Error");
   },
   getInputValuesFunction: () => {
-    throw new Error("The setNewUserCredential Error");
+    throw new Error("The getInputValuesFunction Error");
   },
   registerHandleFileChange: () => {
-    throw new Error("The setNewUserCredential Error");
+    throw new Error("The registerHandleFileChange Error");
   },
   // ! Login Initial Value Elements
   loginCredential: { email: "", password: "" },
   loginLoader: false,
   userLoginFunction: () => {
-    throw new Error("The userRegisterFunction Error");
+    throw new Error("The userLoginFunction Error");
   },
   getLoginInputValues: () => {
-    throw new Error("The setNewUserCredential Error");
+    throw new Error("The getLoginInputValues Error");
+  },
+  //! Logout Initial Value Elements
+  logOutUser: () => {
+    throw new Error("The logOutUser Error");
   },
 };
 
@@ -264,6 +270,7 @@ const AuthContextProvider = ({ children }: childrenPropsTypes) => {
         loginCredential,
         loginLoader,
         userProfile,
+        logOutUser,
       }}
     >
       {children}
