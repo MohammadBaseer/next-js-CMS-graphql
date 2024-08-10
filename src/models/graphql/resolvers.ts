@@ -13,18 +13,15 @@ const resolvers: Resolvers = {
   //! This os Query function to get the data from MongooseDB
   //TODO -  ==========---Query---==========
   Query: {
-    async users() {
+    async users(_, __, context) {
+      const user = authContext(context);
       try {
         const documentCount = await userModel.countDocuments();
-        console.log(`Document count: ${documentCount}`);
         if (documentCount === 0) {
-          console.log("No documents found");
           throw new GraphQLError("Not found");
         }
-        const res = await userModel.find();
-        console.log(`Found documents: ${res.length}`);
-        console.log(res);
-        return res;
+        const result = await userModel.find();
+        return result;
       } catch (error: any) {
         console.error("Error in users query: ", error);
         throw new GraphQLError(error.message);
@@ -32,17 +29,18 @@ const resolvers: Resolvers = {
     },
 
     // !
-
-    async blogContexts() {
+    async blogContexts(_, __, context) {
+      const user = authContext(context);
       try {
-        // const documentCount = await blogContextModel.countDocuments();
-        return await blogContextModel.find();
+        const result = await blogContextModel.find();
+        return result;
       } catch (error: any) {
         throw new GraphQLError(error.message);
       }
     },
     // !
-    async videoBlogContexts() {
+    async videoBlogContexts(_, __, context) {
+      const user = authContext(context);
       // const documentCount = await videoBlogContentModel.countDocuments();
       try {
         const result = await videoBlogContentModel.find();
@@ -51,19 +49,37 @@ const resolvers: Resolvers = {
         throw new GraphQLError(error.message);
       }
     },
-
     // !
     //! This os Query function to get the data by ID from MongooseDB
-    async user(_, args) {
-      return (await userModel.findById(args.id)) as User;
+    async user(_, { id }, context) {
+      const user = authContext(context);
+
+      try {
+        const result = (await userModel.findById(id)) as User;
+        return result;
+      } catch (error: any) {
+        throw new GraphQLError(error.message);
+      }
     },
     //!
-    async blogContext(_, args) {
-      return (await blogContextModel.findById(args.id)) as BlogContext;
+    async blogContext(_, { id }, context) {
+      const user = authContext(context);
+      try {
+        const result = (await blogContextModel.findById(id)) as BlogContext;
+        return result;
+      } catch (error: any) {
+        throw new GraphQLError(error.message);
+      }
     },
     //!
-    async videoBlogContext(_, args) {
-      return (await videoBlogContentModel.findById(args.id)) as VideoBlogContext;
+    async videoBlogContext(_, { id }, context) {
+      const user = authContext(context);
+      try {
+        const result = (await videoBlogContentModel.findById(id)) as VideoBlogContext;
+        return result;
+      } catch (error: any) {
+        throw new GraphQLError(error.message);
+      }
     },
     //!
   },
@@ -73,7 +89,8 @@ const resolvers: Resolvers = {
   Mutation: {
     //! !====================================
     // Add New User Into DB
-    async addUser(_parent: any, { newUserData: { name, email, password, avatar, role } }) {
+    async addUser(_, { newUserData }) {
+      const { name, email, password, avatar, role } = newUserData as User;
       //! Validation
       if (!name.trim()) {
         throw new GraphQLError("Input name empty*");
@@ -130,8 +147,6 @@ const resolvers: Resolvers = {
             // Store into DB
             const result = await newUser.save();
             const token = generateToken(result);
-            console.log("result:::", result);
-            console.log("token:::", token);
             return {
               ...result._doc,
               _id: result._id,
@@ -148,7 +163,8 @@ const resolvers: Resolvers = {
 
     //!  ----- Login User
 
-    async loginUser(_: any, { inputData: { email, password } }: any) {
+    async loginUser(_, { inputData }) {
+      const { email, password } = inputData;
       if (!email.trim()) {
         throw new GraphQLError("Input email empty*");
       }
@@ -182,7 +198,8 @@ const resolvers: Resolvers = {
     //! ----
 
     //Add New Block Context Into DB
-    async addBlogContext(_, { newBlogContextData }) {
+    async addBlogContext(_, { newBlogContextData }, context) {
+      const user = authContext(context);
       const { title, description, photo } = newBlogContextData as BlogContext;
 
       const newPhoto = photo.url;
@@ -219,7 +236,6 @@ const resolvers: Resolvers = {
         };
 
         const newBlogContext = new blogContextModel({ ...newData });
-
         const result = await newBlogContext.save();
 
         return result;
@@ -229,45 +245,62 @@ const resolvers: Resolvers = {
         return new GraphQLError(err.message ? `AddBlog error:::${err.message}` : "something went really bad!");
       }
     },
-
-    //
-    async addVideoBlogContext(_, args) {
+    //!
+    async addVideoBlogContext(_, { newVideoBlogContextData }, context) {
+      const user = authContext(context);
       //Input Validation
-      if (!args.newVideoBlogContextData!.title) {
+      if (!newVideoBlogContextData!.title) {
         throw new GraphQLError("Input title empty*");
       }
-      if (!args.newVideoBlogContextData!.url) {
+      if (!newVideoBlogContextData!.url) {
         throw new GraphQLError("Input url empty*");
       }
-      const newVideoContext = new videoBlogContentModel({
-        ...args.newVideoBlogContextData,
-      });
-      return await newVideoContext.save();
+
+      try {
+        const newVideoContext = new videoBlogContentModel({
+          ...newVideoBlogContextData,
+        });
+        const result = await newVideoContext.save();
+        return result;
+      } catch (error: any) {
+        throw new GraphQLError(error.message);
+      }
     },
+
     //!Edit the data
-    async editUser(_, args) {
-      return (await userModel.findByIdAndUpdate(
-        args.id,
-        {
-          $set: {
-            name: args.edits!.name,
-            password: args.edits!.password,
-            role: args.edits!.role,
-            avatar: args.edits!.avatar,
+    async editUser(_, { id, edits }, context) {
+      const user = authContext(context);
+      const { name, password, role, avatar } = edits as User;
+
+      try {
+        const result = (await userModel.findByIdAndUpdate(
+          id,
+          {
+            $set: {
+              name: name,
+              password: password,
+              role: role,
+              avatar: {
+                url: avatar.url,
+                public_id: avatar.public_id,
+              },
+            },
           },
-        },
-        { new: true }
-      )) as User;
+          { new: true }
+        )) as User;
+        return result;
+      } catch (error: any) {
+        throw new GraphQLError(error.message);
+      }
     },
 
     //!=================================
-    async editBlogContext(_, { id, edits }) {
-      console.log(edits);
-      console.log("edits", edits?.photo?.url);
-      const newPhoto = edits?.photo?.url;
+    async editBlogContext(_, { id, edits }, context) {
+      const user = authContext(context);
 
-      console.log("newPhoto:::::::::::", newPhoto);
-
+      const { photo, title, description } = edits as BlogContext;
+      console.log("edits", photo?.url);
+      const newPhoto = photo?.url;
       const newAvatar = { url: "", public_id: "" };
 
       if (newPhoto?.match(/data:image\/(jpeg|jpg|png|gif|bmp|tiff|webp|svg\+xml);base64,/)) {
@@ -289,8 +322,8 @@ const resolvers: Resolvers = {
           id,
           {
             $set: {
-              title: edits!.title,
-              description: edits!.description,
+              title: title,
+              description: description,
               photo: {
                 url: newAvatar.url,
                 public_id: newAvatar.public_id,
@@ -305,20 +338,22 @@ const resolvers: Resolvers = {
     },
     //!=================================
 
-    async editVideoContext(_, args, context) {
+    async editVideoContext(_, { id, edits }, context) {
+      const { title, url } = edits as VideoBlogContext;
       const user = authContext(context);
 
       try {
-        const result = (await videoBlogContentModel.findByIdAndUpdate(
-          args.id,
+        ///NOTE -  // * Check if Not item display not fount item
+        const result = await videoBlogContentModel.findByIdAndUpdate(
+          id,
           {
             $set: {
-              title: args.edits!.title,
-              url: args.edits!.url,
+              title: title,
+              url: url,
             },
           },
           { new: true }
-        )) as VideoBlogContext;
+        );
 
         return result;
       } catch (error: any) {
@@ -329,9 +364,12 @@ const resolvers: Resolvers = {
     //
 
     //!Delete the data
-    async deleteUser(_, args) {
+    async deleteUser(_, { id }, context) {
+      const user = authContext(context);
+
       try {
-        const result = (await userModel.findByIdAndDelete(args.id)) as User;
+        ///NOTE -  // * Check if Not item display not fount item
+        const result = (await userModel.findByIdAndDelete(id)) as User;
         return result;
       } catch (error: any) {
         throw new GraphQLError(error.message);
@@ -340,8 +378,10 @@ const resolvers: Resolvers = {
     //
     //!=================================
 
-    async deleteBlogContext(_, { id }) {
+    async deleteBlogContext(_, { id }, context) {
+      const user = authContext(context);
       try {
+        ///NOTE -  // * Check if Not item display not fount item
         const isData = (await blogContextModel.findById(id)) as BlogContext;
         const ImageID = isData.photo.public_id as string;
         await removeCloudinaryImage(ImageID);
@@ -354,9 +394,11 @@ const resolvers: Resolvers = {
     //!=================================
 
     //
-    async deleteVideoContext(_, args) {
+    async deleteVideoContext(_, { id }, context) {
+      const user = authContext(context);
       try {
-        const result = (await videoBlogContentModel.findByIdAndDelete(args.id)) as VideoBlogContext;
+        ///NOTE -  // * Check if Not item display not fount item
+        const result = (await videoBlogContentModel.findByIdAndDelete(id)) as VideoBlogContext;
         return result;
       } catch (error: any) {
         throw new GraphQLError(error.message);

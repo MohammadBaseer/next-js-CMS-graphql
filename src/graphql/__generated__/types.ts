@@ -54,7 +54,7 @@ export type Mutation = {
   editBlogContext: BlogContext;
   editUser: User;
   editVideoContext: VideoBlogContext;
-  loginUser?: Maybe<User>;
+  loginUser: User;
 };
 
 
@@ -107,7 +107,7 @@ export type MutationEditVideoContextArgs = {
 
 
 export type MutationLoginUserArgs = {
-  loginInput: LoginInput;
+  inputData: LoginInput;
 };
 
 export type Pic = {
@@ -150,10 +150,13 @@ export type User = {
   __typename?: 'User';
   _id: Scalars['ID']['output'];
   avatar: Picture;
+  createdAt?: Maybe<Scalars['String']['output']>;
   email: Scalars['String']['output'];
   name: Scalars['String']['output'];
   password: Scalars['String']['output'];
   role: Scalars['String']['output'];
+  token: Scalars['String']['output'];
+  updatedAt?: Maybe<Scalars['String']['output']>;
 };
 
 export type VideoBlogContext = {
@@ -315,7 +318,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   editBlogContext?: Resolver<ResolversTypes['BlogContext'], ParentType, ContextType, RequireFields<MutationEditBlogContextArgs, 'id'>>;
   editUser?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationEditUserArgs, 'id'>>;
   editVideoContext?: Resolver<ResolversTypes['VideoBlogContext'], ParentType, ContextType, RequireFields<MutationEditVideoContextArgs, 'id'>>;
-  loginUser?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<MutationLoginUserArgs, 'loginInput'>>;
+  loginUser?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationLoginUserArgs, 'inputData'>>;
 };
 
 export type PictureResolvers<ContextType = any, ParentType extends ResolversParentTypes['Picture'] = ResolversParentTypes['Picture']> = {
@@ -336,10 +339,13 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
 export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
   _id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   avatar?: Resolver<ResolversTypes['Picture'], ParentType, ContextType>;
+  createdAt?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   email?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   password?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   role?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  token?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  updatedAt?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
