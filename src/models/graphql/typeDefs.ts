@@ -2,12 +2,19 @@ import gql from "graphql-tag";
 
 const typeDefs = gql`
   # //! Types Declarations
+
+  enum RoleSet {
+    Admin
+    Editor
+    User
+  }
+
   type User {
     _id: ID!
     name: String!
     email: String!
     password: String!
-    role: String!
+    role: RoleSet #after development set it to '!'
     avatar: Picture!
     createdAt: String
     updatedAt: String
@@ -18,7 +25,10 @@ const typeDefs = gql`
     _id: ID!
     title: String!
     description: String!
+    createdBy: CreatedByUser!
     photo: Picture!
+    createdAt: String
+    updatedAt: String
   }
   type VideoBlogContext {
     _id: ID!
@@ -29,6 +39,11 @@ const typeDefs = gql`
     url: String!
     public_id: String
   }
+  type CreatedByUser {
+    id: ID
+    username: String!
+  }
+
   # //! Create Query to get the data from Postman/Apollo SandBox
   type Query {
     # //! to fetch multi Data

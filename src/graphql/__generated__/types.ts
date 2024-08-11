@@ -33,9 +33,18 @@ export type AddUserInput = {
 export type BlogContext = {
   __typename?: 'BlogContext';
   _id: Scalars['ID']['output'];
+  createdAt?: Maybe<Scalars['String']['output']>;
+  createdBy: CreatedByUser;
   description: Scalars['String']['output'];
   photo: Picture;
   title: Scalars['String']['output'];
+  updatedAt?: Maybe<Scalars['String']['output']>;
+};
+
+export type CreatedByUser = {
+  __typename?: 'CreatedByUser';
+  id?: Maybe<Scalars['ID']['output']>;
+  username: Scalars['String']['output'];
 };
 
 export type LoginInput = {
@@ -264,6 +273,7 @@ export type ResolversTypes = {
   AddUserInput: AddUserInput;
   BlogContext: ResolverTypeWrapper<BlogContext>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
+  CreatedByUser: ResolverTypeWrapper<CreatedByUser>;
   ID: ResolverTypeWrapper<Scalars['ID']['output']>;
   LoginInput: LoginInput;
   Mutation: ResolverTypeWrapper<{}>;
@@ -285,6 +295,7 @@ export type ResolversParentTypes = {
   AddUserInput: AddUserInput;
   BlogContext: BlogContext;
   Boolean: Scalars['Boolean']['output'];
+  CreatedByUser: CreatedByUser;
   ID: Scalars['ID']['output'];
   LoginInput: LoginInput;
   Mutation: {};
@@ -302,9 +313,18 @@ export type ResolversParentTypes = {
 
 export type BlogContextResolvers<ContextType = any, ParentType extends ResolversParentTypes['BlogContext'] = ResolversParentTypes['BlogContext']> = {
   _id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  createdAt?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  createdBy?: Resolver<ResolversTypes['CreatedByUser'], ParentType, ContextType>;
   description?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   photo?: Resolver<ResolversTypes['Picture'], ParentType, ContextType>;
   title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  updatedAt?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type CreatedByUserResolvers<ContextType = any, ParentType extends ResolversParentTypes['CreatedByUser'] = ResolversParentTypes['CreatedByUser']> = {
+  id?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
+  username?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -358,6 +378,7 @@ export type VideoBlogContextResolvers<ContextType = any, ParentType extends Reso
 
 export type Resolvers<ContextType = any> = {
   BlogContext?: BlogContextResolvers<ContextType>;
+  CreatedByUser?: CreatedByUserResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   Picture?: PictureResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;

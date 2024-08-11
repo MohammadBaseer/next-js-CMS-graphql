@@ -1,5 +1,3 @@
-"use client";
-
 import { ApolloLink, HttpLink } from "@apollo/client";
 import { ApolloNextAppProvider, ApolloClient, InMemoryCache } from "@apollo/experimental-nextjs-app-support";
 
@@ -9,7 +7,15 @@ function makeClient() {
     fetchOptions: { cache: "no-store" },
   });
 
+  // let token: string | null = null;
+
+  // // Check if running in the browser
+  // if (typeof window !== "undefined") {
+  //   token = localStorage.getItem("token");
+  // }
+
   const token = localStorage.getItem("token");
+
   const authLink = new ApolloLink((operation, forward) => {
     if (token) {
       operation.setContext({
