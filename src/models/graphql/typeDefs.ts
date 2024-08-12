@@ -34,6 +34,9 @@ const typeDefs = gql`
     _id: ID!
     title: String!
     url: String!
+    createdBy: CreatedByUser!
+    createdAt: String
+    updatedAt: String
   }
   type Picture {
     url: String!

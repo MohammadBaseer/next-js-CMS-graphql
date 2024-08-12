@@ -143,9 +143,9 @@ const AuthContextProvider = ({ children }: childrenPropsTypes) => {
           localStorage.setItem("token", result.data.addUser.token);
           getUserProfile();
           if (isToken()) {
-            router.push("/"); // redirect to Home
+            router.push("/");
           } else {
-            router.push("/login"); // redirect to Login
+            router.push("/login");
           }
         }
         setNewUserCredential({
@@ -228,11 +228,9 @@ const AuthContextProvider = ({ children }: childrenPropsTypes) => {
   const getUserProfile = () => {
     const getUserInfoFromDecodeToken = decodeToken();
     if (!getUserInfoFromDecodeToken) {
-      console.log("::::You need a Token:::::");
       setUserProfile(null);
     }
     if (getUserInfoFromDecodeToken) {
-      console.log(":Token Decode :::::", getUserInfoFromDecodeToken);
       setUserProfile(getUserInfoFromDecodeToken);
     }
   };
@@ -241,6 +239,7 @@ const AuthContextProvider = ({ children }: childrenPropsTypes) => {
   const logOutUser = () => {
     removeToken();
     setUserProfile(null);
+    router.push("/");
   };
   // ? =================================== End Logout Part
 

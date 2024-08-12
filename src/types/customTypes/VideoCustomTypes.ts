@@ -9,4 +9,8 @@ export type VideoBlogContextTypes = {
   _id: string;
   title: string;
   url: string;
+  createdBy: {
+    username: string;
+  };
+  createdAt: string | number;
 };

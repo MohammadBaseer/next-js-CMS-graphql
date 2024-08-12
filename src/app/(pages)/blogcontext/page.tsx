@@ -51,6 +51,7 @@ const PostContext = () => {
                 <th className={styles.th}>Image</th>
                 <th className={styles.th}>Title</th>
                 <th className={styles.th}>Description</th>
+                <th className={styles.th}>Created By</th>
                 <th className={styles.th}>Date</th>
                 <th className={styles.th}>Action</th>
               </tr>
@@ -66,7 +67,8 @@ const PostContext = () => {
                     </td>
                     <td className={styles.td}>{blog.title}</td>
                     <td className={styles.td}>{blog.description}</td>
-                    <td className={styles.td}>20.5.2024</td>
+                    <td className={styles.td}>{blog.createdBy.username}</td>
+                    <td className={styles.td}>{blog.createdAt}</td>
                     <td className={styles.td}>
                       <Link href={`/blogcontext/edit/${blog._id}`} className={styles.ref}>
                         <i className={`pi pi-file-edit ${styles.edit_icon}`}> </i>

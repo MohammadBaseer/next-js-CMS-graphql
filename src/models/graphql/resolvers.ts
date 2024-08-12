@@ -15,7 +15,7 @@ const resolvers: Resolvers = {
   //TODO -  ==========---Query---==========
   Query: {
     async users(_, __, context) {
-      const user = authContext(context);
+      authContext(context);
       try {
         const documentCount = await userModel.countDocuments();
         if (documentCount === 0) {
@@ -68,7 +68,7 @@ const resolvers: Resolvers = {
     // !
     //! This os Query function to get the data by ID from MongooseDB
     async user(_, { id }, context) {
-      const user = authContext(context);
+      authContext(context);
 
       try {
         const result = (await userModel.findById(id)) as User;
@@ -125,7 +125,7 @@ const resolvers: Resolvers = {
       if (!name.trim()) {
         throw new GraphQLError("Input name empty*");
       }
-      if (!email.trim()) {
+      if (!email.trim().toLowerCase()) {
         throw new GraphQLError("Input email empty*");
       }
       if (!password) {
@@ -164,8 +164,8 @@ const resolvers: Resolvers = {
           if (encryptedPassword) {
             // Create New Schema
             const newUser = new userModel({
-              name: name,
-              email: email,
+              name: name.trim(),
+              email: email.trim().toLowerCase(),
               password: encryptedPassword,
               role: "User",
               avatar: {
@@ -194,8 +194,12 @@ const resolvers: Resolvers = {
     //!  ----- Login User
 
     async loginUser(_, { inputData }) {
-      const { email, password } = inputData;
-      if (!email.trim()) {
+      // const { email, password } = inputData;
+      const email = inputData.email.trim().toLowerCase();
+      const password = inputData.password;
+      console.log("email", email);
+
+      if (!email) {
         throw new GraphQLError("Input email empty*");
       }
       if (!password) {
@@ -231,22 +235,18 @@ const resolvers: Resolvers = {
     async addBlogContext(_, { newBlogContextData }, context) {
       const user = authContext(context);
       const { id, username } = user as UserInfoTypes;
-
       const { title, description, photo } = newBlogContextData as BlogContext;
-
       const newPhoto = photo.url;
-      if (!title) {
+      if (!title.trim()) {
         throw new GraphQLError("Input title empty*");
       }
-      if (!description) {
+      if (!description.trim()) {
         throw new GraphQLError("Input description empty*");
       }
-      if (!newPhoto) {
+      if (!newPhoto.trim()) {
         throw new GraphQLError("please Select an Avatar*");
       }
-
       const newAvatar = { url: "", public_id: "" };
-
       if (newPhoto?.match(/data:image\/(jpeg|jpg|png|gif|bmp|tiff|webp|svg\+xml);base64,/)) {
         const uploaded = await cloudinary.uploader.upload(newPhoto, {
           folder: "NextJS_Apollo_GraphQL_Project/Blogs_Images",
@@ -256,11 +256,10 @@ const resolvers: Resolvers = {
       } else {
         throw new GraphQLError("Invalid image format. Supported formats are .jpg, .jpeg, .png, .gif, .bmp, .tiff, .webp, .svg");
       }
-
       try {
         const newData = {
-          title,
-          description,
+          title: title.trim(),
+          description: description.trim(),
           createdBy: {
             id,
             username,
@@ -270,7 +269,6 @@ const resolvers: Resolvers = {
             public_id: newAvatar.public_id,
           },
         };
-
         const newBlogContext = new blogContextModel({ ...newData });
         const result = await newBlogContext.save();
 
@@ -287,23 +285,21 @@ const resolvers: Resolvers = {
       const user = authContext(context);
       const { id, username } = user as UserInfoTypes;
       //Input Validation
-      if (!newVideoBlogContextData!.title) {
+      if (!title.trim()) {
         throw new GraphQLError("Input title empty*");
       }
-      if (!newVideoBlogContextData!.url) {
+      if (!url.trim()) {
         throw new GraphQLError("Input url empty*");
       }
-
       try {
         const newVideoContext = new videoBlogContentModel({
-          title,
-          url,
+          title: title.trim(),
+          url: url.trim(),
           createdBy: {
             id,
             username,
           },
         });
-
         const result = await newVideoContext.save();
         return result;
       } catch (error: any) {
@@ -341,12 +337,20 @@ const resolvers: Resolvers = {
     //!=================================
     async editBlogContext(_, { id, edits }, context) {
       const user = authContext(context);
-
-      const { photo, title, description } = edits as BlogContext;
-      console.log("edits", photo?.url);
+      const { title, photo, description } = edits as BlogContext;
       const newPhoto = photo?.url;
+      if (!title.trim()) {
+        throw new GraphQLError("Input title empty*");
+      }
+      if (!description.trim()) {
+        throw new GraphQLError("Input description empty*");
+      }
+      if (!newPhoto.trim()) {
+        throw new GraphQLError("please Select an Avatar*");
+      }
       const newAvatar = { url: "", public_id: "" };
 
+      // !
       if (newPhoto?.match(/data:image\/(jpeg|jpg|png|gif|bmp|tiff|webp|svg\+xml);base64,/)) {
         const isData = (await blogContextModel.findById(id)) as BlogContext;
         const ImageID = isData.photo.public_id as string;
@@ -356,18 +360,18 @@ const resolvers: Resolvers = {
         });
         newAvatar.url = uploaded.secure_url;
         newAvatar.public_id = uploaded.public_id;
-        console.log("uploaded :>> ", uploaded);
       } else {
         throw new GraphQLError("Invalid image format. Supported formats are .jpg, .jpeg, .png, .gif, .bmp, .tiff, .webp, .svg");
       }
+      // !
 
       try {
         return (await blogContextModel.findByIdAndUpdate(
           id,
           {
             $set: {
-              title: title,
-              description: description,
+              title: title.trim(),
+              description: description.trim(),
               photo: {
                 url: newAvatar.url,
                 public_id: newAvatar.public_id,
@@ -385,15 +389,20 @@ const resolvers: Resolvers = {
     async editVideoContext(_, { id, edits }, context) {
       const { title, url } = edits as VideoBlogContext;
       const user = authContext(context);
-
+      if (!title.trim()) {
+        throw new GraphQLError("Input title empty*");
+      }
+      if (!url.trim()) {
+        throw new GraphQLError("Input url empty*");
+      }
       try {
         ///NOTE -  // * Check if Not item display not fount item
         const result = await videoBlogContentModel.findByIdAndUpdate(
           id,
           {
             $set: {
-              title: title,
-              url: url,
+              title: title.trim(),
+              url: url.trim(),
             },
           },
           { new: true }
@@ -410,9 +419,7 @@ const resolvers: Resolvers = {
     //!Delete the data
     async deleteUser(_, { id }, context) {
       const user = authContext(context);
-
       try {
-        ///NOTE -  // * Check if Not item display not fount item
         const result = (await userModel.findByIdAndDelete(id)) as User;
         return result;
       } catch (error: any) {
@@ -424,16 +431,23 @@ const resolvers: Resolvers = {
 
     async deleteBlogContext(_, { id }, context) {
       const user = authContext(context);
-      const { role } = user as UserInfoTypes;
+      const { id: uid, role, username } = user as UserInfoTypes;
+
       try {
-        if (role !== "Admin") {
-          throw new GraphQLError("cannot delete by user");
-        } else {
-          const isData = (await blogContextModel.findById(id)) as BlogContext;
+        if (role === "User") {
+          const isData = (await blogContextModel.findByIdAndDelete({ _id: id, "createdBy.id": uid, createdBy: username })) as BlogContext;
           const ImageID = isData.photo.public_id as string;
           await removeCloudinaryImage(ImageID);
+          return isData;
         }
-        return (await blogContextModel.findByIdAndDelete(id)) as BlogContext;
+        if (role === "Admin") {
+          const isData = (await blogContextModel.findByIdAndDelete(id)) as BlogContext;
+          const ImageID = isData.photo.public_id as string;
+          await removeCloudinaryImage(ImageID);
+          return isData;
+        } else {
+          throw new GraphQLError("cannot delete");
+        }
       } catch (error: any) {
         throw new GraphQLError(error.message);
       }
@@ -443,13 +457,18 @@ const resolvers: Resolvers = {
     //
     async deleteVideoContext(_, { id }, context) {
       const user = authContext(context);
-      const { role } = user as UserInfoTypes;
+      const { id: uid, role, username } = user as UserInfoTypes;
+
       try {
-        if (role !== "Admin") {
-          throw new GraphQLError("cannot delete by user");
-        } else {
+        if (role === "User") {
+          const result = (await videoBlogContentModel.findByIdAndDelete({ _id: id, "createdBy.id": uid, createdBy: username })) as VideoBlogContext;
+          return result;
+        }
+        if (role === "Admin") {
           const result = (await videoBlogContentModel.findByIdAndDelete(id)) as VideoBlogContext;
           return result;
+        } else {
+          throw new GraphQLError("cannot delete");
         }
       } catch (error: any) {
         throw new GraphQLError(error.message);

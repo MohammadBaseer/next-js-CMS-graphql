@@ -6,6 +6,10 @@ export const VIDEO_BLOG_CONTEXT = gql`
       _id
       title
       url
+      createdBy {
+        username
+      }
+      createdAt
     }
   }
 `;

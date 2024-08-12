@@ -6,10 +6,14 @@ export const GET_POST_CONTEXT = gql`
       _id
       title
       description
+      createdBy {
+        username
+      }
       photo {
         url
         public_id
       }
+      createdAt
     }
   }
 `;

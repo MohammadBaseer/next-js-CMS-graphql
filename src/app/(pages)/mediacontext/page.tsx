@@ -58,6 +58,7 @@ const MediaPost = () => {
               <th className={styles.th}>#</th>
               <th className={styles.th}>Video</th>
               <th className={styles.th}>Title</th>
+              <th className={styles.th}>Created By</th>
               <th className={styles.th}>Date</th>
               <th className={styles.th}>Action</th>
             </tr>
@@ -72,15 +73,14 @@ const MediaPost = () => {
                     <div className={styles.image}>{<YouTube videoId={getYouTubeID(video.url)} opts={opts_small_size} onReady={onReady} onError={onError} />}</div>
                   </td>
                   <td className={styles.td}>{video.title}</td>
-                  <td className={styles.td}>20.5.2024</td>
+                  <td className={styles.td}>{video.createdBy.username}</td>
+                  <td className={styles.td}>{video.createdAt}</td>
                   <td className={styles.td}>
                     <Link href={`mediacontext/edit/${video._id}`} className={styles.ref}>
                       <i className={`pi pi-file-edit ${styles.edit_icon}`}> </i>
                     </Link>
                     &nbsp;
-                    {/* <Link href={`mediacontext}`} className={styles.ref} onClick={deleteVideoBlogHandler(video.id)}> */}
                     <i className={`pi pi-trash ${styles.delete_icon}`} onClick={deleteVideoBlogHandler(video._id)}></i>
-                    {/* </Link> */}
                   </td>
                 </tr>
               );
