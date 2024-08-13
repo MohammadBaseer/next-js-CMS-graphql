@@ -138,16 +138,8 @@ const AuthContextProvider = ({ children }: childrenPropsTypes) => {
         },
       });
 
-      if (result.data.addUser.token) {
-        if (result.data.addUser.token) {
-          localStorage.setItem("token", result.data.addUser.token);
-          getUserProfile();
-          if (isToken()) {
-            router.push("/");
-          } else {
-            router.push("/login");
-          }
-        }
+      if (token) {
+        router.push("/users");
         setNewUserCredential({
           name: "",
           email: "",
@@ -156,6 +148,26 @@ const AuthContextProvider = ({ children }: childrenPropsTypes) => {
         });
         setError("");
         setSelectImage(null);
+      } else {
+        if (result.data.addUser.token) {
+          if (result.data.addUser.token) {
+            localStorage.setItem("token", result.data.addUser.token);
+            getUserProfile();
+            if (token) {
+              router.push("/");
+            } else {
+              router.push("/login");
+            }
+          }
+          setNewUserCredential({
+            name: "",
+            email: "",
+            password: "",
+            avatar: "",
+          });
+          setError("");
+          setSelectImage(null);
+        }
       }
     } catch (error) {
       const err = error as ApolloError;

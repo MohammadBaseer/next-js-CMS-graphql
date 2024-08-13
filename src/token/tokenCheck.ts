@@ -1,11 +1,9 @@
 import { jwtDecode } from "jwt-decode";
 
-
 type DecodedToken = {
-  exp: number; 
+  exp: number;
   [key: string]: any;
-}
-
+};
 
 const getToken = () => {
   const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
@@ -15,12 +13,7 @@ const getToken = () => {
   if (!token) {
     return null;
   }
-
 };
-
-
-
-
 
 const decodeToken = (): DecodedToken | null => {
   const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
@@ -40,28 +33,22 @@ const decodeToken = (): DecodedToken | null => {
       return null;
     }
   }
-  
+
   return null;
 };
 
+const isToken = () => {
+  const token = localStorage.getItem("token");
+  // const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
+  if (token) {
+    return true;
+  } else {
+    return false;
+  }
+};
 
-  
+const removeToken = () => {
+  localStorage.removeItem("token");
+};
 
-
-  const isToken = () => {
-    const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
-    if (token) {
-      return true;
-    } else {
-      return false;
-    }
-  };
-  
-
-  
-  const removeToken = () => {
-    localStorage.removeItem("token");
-  };
-  
-  export { getToken, isToken, removeToken, decodeToken };
-  
+export { getToken, isToken, removeToken, decodeToken };
