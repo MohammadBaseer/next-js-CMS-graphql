@@ -37,7 +37,7 @@ const EditBlogContext = ({ params: { id } }: ParamsPropsType) => {
   //! End SECTION
 
   //! ------
-  const [insertBlogContext, { error: fetchError, data }] = useMutation(INSERT_POST_CONTEXT);
+  // const [insertBlogContext, { error: fetchError, data }] = useMutation(INSERT_POST_CONTEXT);
   //! ------
   const [selectImage, setSelectImage] = useState<string | File | string | null>(null);
   const [error, setError] = useState<string>("");
