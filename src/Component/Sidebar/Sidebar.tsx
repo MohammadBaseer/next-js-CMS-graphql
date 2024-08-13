@@ -40,7 +40,7 @@ const Sidebar = () => {
 
             <ul className={styles.ul_sub}>
               <li className={styles.li_sub}>
-                <Link className={styles.link} href="/messages">
+                <Link className={styles.link} href="/role_Config">
                   <span className="pi pi-angle-right">&nbsp;Roles</span>
                 </Link>
               </li>

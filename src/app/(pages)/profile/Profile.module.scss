@@ -1,0 +1,98 @@
+$sideNavbar-width: 250px;
+$background-color: #f2f2f2;
+.main {
+  margin-left: $sideNavbar-width;
+  padding: 15px;
+  width: calc(100% - #{$sideNavbar-width});
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  .page_title {
+    padding: 20px;
+    color: #706f6f;
+    .title_href {
+      text-decoration-line: none;
+      color: #706f6f;
+      &:hover {
+        color: #cbc7c7;
+      }
+    }
+  }
+  @media (max-width: 768px) {
+    margin-left: 200px;
+    width: calc(100% - 200px);
+  }
+
+  @media (max-width: 576px) {
+    margin-left: 150px;
+    width: calc(100% - 150px);
+  }
+
+  @media (max-width: 480px) {
+    margin-left: 0;
+    width: 100%;
+  }
+}
+
+.post_context_table_box {
+  width: 90%;
+  margin: 0 auto;
+}
+
+.input[type="text"] {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  resize: vertical;
+}
+
+.label {
+  padding: 12px 12px 12px 0;
+  display: inline-block;
+}
+
+.input[type="submit"] {
+  background-color: #04aa6d;
+  color: white;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  float: right;
+}
+
+.input[type="submit"]:hover {
+  background-color: #45a049;
+}
+
+.col_25 {
+  float: left;
+  width: 25%;
+  margin-top: 6px;
+}
+
+.col_75 {
+  float: left;
+  width: 75%;
+  margin-top: 6px;
+}
+.p_image {
+  border: solid;
+  width: 200px;
+  height: 200px;
+}
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+@media screen and (max-width: 600px) {
+  .col_25,
+  .col_75,
+  .input[type="submit"] {
+    width: 100%;
+    margin-top: 0;
+  }
+}

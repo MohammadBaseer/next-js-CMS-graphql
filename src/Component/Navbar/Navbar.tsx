@@ -36,7 +36,7 @@ const Navbar = () => {
                 </div>
 
                 <div className={styles.user_tab_navbar_element}>
-                  <Link className={styles.href} href="/">
+                  <Link className={styles.href} href="/profile" onClick={toggle}>
                     <span className="pi pi-user"> My Profile</span>
                   </Link>
                 </div>
