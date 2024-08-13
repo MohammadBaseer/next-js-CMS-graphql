@@ -41,7 +41,6 @@ export const GET_USERS_BY_ID = gql`
         url
       }
       createdAt
-      updatedAt
     }
   }
 `;
@@ -49,13 +48,12 @@ export const GET_USERS_BY_ID = gql`
 export const UPDATE_USERS = gql`
   mutation EditUser($editUserId: ID!, $edits: userEdits) {
     editUser(id: $editUserId, edits: $edits) {
-      _id
       name
-      email
       password
       role
       avatar {
         url
+        public_id
       }
     }
   }

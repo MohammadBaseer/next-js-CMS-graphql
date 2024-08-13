@@ -1,15 +1,17 @@
 export type GetAllUsersType = {
-  Users: Users[];
+  users: Users[];
 };
 export type GetSingleUsersType = {
-  Users: Users;
+  users: Users;
 };
 
 export type Users = {
   id: string;
   name: string;
   email: string;
-  password: string;
   role: string;
-  avatar: string;
+  avatar: {
+    url: string;
+  };
+  createdAt: string;
 };

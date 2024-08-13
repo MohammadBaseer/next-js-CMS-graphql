@@ -121,7 +121,7 @@ export type MutationLoginUserArgs = {
 
 export type Pic = {
   public_id?: InputMaybe<Scalars['String']['input']>;
-  url: Scalars['String']['input'];
+  url?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type Picture = {
@@ -155,6 +155,12 @@ export type QueryVideoBlogContextArgs = {
   id: Scalars['ID']['input'];
 };
 
+export enum RoleSet {
+  Admin = 'Admin',
+  Editor = 'Editor',
+  User = 'User'
+}
+
 export type User = {
   __typename?: 'User';
   _id: Scalars['ID']['output'];
@@ -163,7 +169,7 @@ export type User = {
   email: Scalars['String']['output'];
   name: Scalars['String']['output'];
   password: Scalars['String']['output'];
-  role: Scalars['String']['output'];
+  role?: Maybe<RoleSet>;
   token: Scalars['String']['output'];
   updatedAt?: Maybe<Scalars['String']['output']>;
 };
@@ -171,7 +177,10 @@ export type User = {
 export type VideoBlogContext = {
   __typename?: 'VideoBlogContext';
   _id: Scalars['ID']['output'];
+  createdAt?: Maybe<Scalars['String']['output']>;
+  createdBy: CreatedByUser;
   title: Scalars['String']['output'];
+  updatedAt?: Maybe<Scalars['String']['output']>;
   url: Scalars['String']['output'];
 };
 
@@ -187,7 +196,7 @@ export type BlogContextEdits = {
 };
 
 export type UserEdits = {
-  avatar: Pic;
+  avatar?: InputMaybe<Pic>;
   name?: InputMaybe<Scalars['String']['input']>;
   password?: InputMaybe<Scalars['String']['input']>;
   role?: InputMaybe<Scalars['String']['input']>;
@@ -280,6 +289,7 @@ export type ResolversTypes = {
   Pic: Pic;
   Picture: ResolverTypeWrapper<Picture>;
   Query: ResolverTypeWrapper<{}>;
+  RoleSet: RoleSet;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
   User: ResolverTypeWrapper<User>;
   VideoBlogContext: ResolverTypeWrapper<VideoBlogContext>;
@@ -363,7 +373,7 @@ export type UserResolvers<ContextType = any, ParentType extends ResolversParentT
   email?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   password?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  role?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  role?: Resolver<Maybe<ResolversTypes['RoleSet']>, ParentType, ContextType>;
   token?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   updatedAt?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
@@ -371,7 +381,10 @@ export type UserResolvers<ContextType = any, ParentType extends ResolversParentT
 
 export type VideoBlogContextResolvers<ContextType = any, ParentType extends ResolversParentTypes['VideoBlogContext'] = ResolversParentTypes['VideoBlogContext']> = {
   _id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  createdAt?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  createdBy?: Resolver<ResolversTypes['CreatedByUser'], ParentType, ContextType>;
   title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  updatedAt?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   url?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };

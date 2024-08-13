@@ -310,24 +310,71 @@ const resolvers: Resolvers = {
     //!Edit the data
     async editUser(_, { id, edits }, context) {
       const user = authContext(context);
-      const { name, password, role, avatar } = edits as User;
-
+      const {
+        name,
+        password,
+        role,
+        avatar: { url, public_id },
+      } = edits as User;
+      const newPhoto = url;
       try {
-        const result = (await userModel.findByIdAndUpdate(
-          id,
-          {
-            $set: {
-              name: name,
-              password: password,
-              role: role,
-              avatar: {
-                url: avatar.url,
-                public_id: avatar.public_id,
-              },
-            },
-          },
-          { new: true }
-        )) as User;
+        // const result = (await userModel.findByIdAndUpdate(
+        //   id,
+        //   {
+        //     $set: {
+        //       name: name,
+        //       password: password,
+        //       role: role,
+        //       avatar: {
+        //         url: avatar.url,
+        //         public_id: avatar.public_id,
+        //       },
+        //     },
+        //   },
+        //   { new: true }
+        // )) as User;
+
+        const updateFields = {};
+        console.log("running-1");
+        const newAvatar = { url: "", public_id: "" };
+        // const avatar = {
+        //   url: edits.avatar.url,
+        //   public_id: edits.avatar.public_id,
+        // };
+
+        if (name) {
+          updateFields.name = name.trim();
+        }
+        if (password) {
+          updateFields.password = password;
+        }
+        if (role) {
+          updateFields.role = role;
+        }
+
+        if (url) {
+          if (newPhoto?.match(/data:image\/(jpeg|jpg|png|gif|bmp|tiff|webp|svg\+xml);base64,/)) {
+            const isData = (await userModel.findById(id)) as User;
+            const ImageID = isData.avatar.public_id as string;
+            await removeCloudinaryImage(ImageID);
+            const uploaded = await cloudinary.uploader.upload(newPhoto, {
+              folder: "NextJS_Apollo_GraphQL_Project/users_avatar",
+            });
+            newAvatar.url = uploaded.secure_url;
+            newAvatar.public_id = uploaded.public_id;
+          } else {
+            throw new GraphQLError("Invalid image format. Supported formats are .jpg, .jpeg, .png, .gif, .bmp, .tiff, .webp, .svg");
+          }
+
+          updateFields.avatar = newAvatar;
+        }
+
+        console.log("running", updateFields);
+
+        // await BookModel.findByIdAndUpdate(bookId, updateFields, { new: true });
+
+        const result = await userModel.findByIdAndUpdate(id, updateFields, { new: true });
+
         return result;
       } catch (error: any) {
         throw new GraphQLError(error.message);

@@ -103,7 +103,7 @@ const typeDefs = gql`
     photo: Pic
   }
   input Pic {
-    url: String!
+    url: String
     public_id: String
   }
   # //! --------------------
@@ -116,7 +116,7 @@ const typeDefs = gql`
     name: String
     password: String
     role: String
-    avatar: Pic!
+    avatar: Pic
   }
   input videoBlogContextEdits {
     title: String
