@@ -284,7 +284,6 @@ const resolvers: Resolvers = {
       const { title, url } = newVideoBlogContextData as VideoBlogContext;
       const user = authContext(context);
       const { id, username } = user as UserInfoTypes;
-      //Input Validation
       if (!title.trim()) {
         throw new GraphQLError("Input title empty*");
       }
@@ -308,29 +307,19 @@ const resolvers: Resolvers = {
     },
 
     async editUser(_: any, { id, edits }, context) {
-      // async   editUser(
-      //   _: any,
-      //   { id, edits }: { id: string; edits: { name?: string; password?: string; role?: string; avatar?: { url?: string; public_id?: string } } },
-      //   context: any
-      // ): Promise<{ result: User; token: string }> {
-
       const user = authContext(context);
       const { name, password, role, avatar } = edits as User;
-
-      console.log("edits:::::::::::::::>>>>>", edits);
 
       if (!id) {
         throw new GraphQLError("User ID is required");
       }
 
       try {
-        // Fetch existing user data
         const existingUser = (await userModel.findById(id)) as User;
         if (!existingUser) {
           throw new GraphQLError("User not found");
         }
 
-        // Prepare fields to update
         const updateFields: any = {};
 
         if (name) {
@@ -343,7 +332,6 @@ const resolvers: Resolvers = {
           updateFields.role = role;
         }
 
-        // Handle avatar update
         if (avatar && avatar.url) {
           const newPhoto = avatar.url;
 
@@ -364,7 +352,6 @@ const resolvers: Resolvers = {
           }
         }
 
-        // Perform update
         const updatedUser = await userModel.findByIdAndUpdate(id, updateFields, { new: true });
 
         if (!updatedUser) {
@@ -372,7 +359,6 @@ const resolvers: Resolvers = {
         }
         const refreshToken = generateToken(updatedUser);
 
-        // return updatedUser  ;
         return {
           result: updatedUser,
           refreshToken,
@@ -381,63 +367,6 @@ const resolvers: Resolvers = {
         throw new GraphQLError(error.message);
       }
     },
-
-    //!Edit the data
-    // async editUser(_: any, { id, edits }, context) {
-    //     async editUser(_: any, { id, edits }, context) {
-    //       const user = authContext(context);
-
-    // console.log("edits:::", user)
-    //   const {name, password, role, avatar: { url } } = edits as User;
-    //   console.log("url :::::::::::>>>> ", url);
-    //   const newPhoto = url;
-    // try {
-    //     const updateFields: any = {};
-    //     console.log("running-1");
-    //     if (name) {
-    //       updateFields.name = name.trim();
-    //     } else {
-    //       throw new GraphQLError("Name is required and cannot be null");
-    //     }
-    //     if (password) {
-    //       updateFields.password = password;
-    //     }
-    //     if (role) {
-    //       updateFields.role = role;
-    //     }
-    //     if (newPhoto !== "") {
-    //       if (newPhoto?.match(/data:image\/(jpeg|jpg|png|gif|bmp|tiff|webp|svg\+xml);base64,/)) {
-    //         const isData = (await userModel.findById(id)) as User;
-    //         const ImageID = isData.avatar.public_id as string;
-    //         await removeCloudinaryImage(ImageID);
-    //         const uploaded = await cloudinary.uploader.upload(newPhoto, {
-    //           folder: "NextJS_Apollo_GraphQL_Project/users_avatar",
-    //         });
-    //         updateFields.avatar = {
-    //           url: uploaded.secure_url,
-    //           public_id: uploaded.public_id
-    //         };
-    //       } else {
-    //         throw new GraphQLError("Invalid image format. Supported formats are .jpg, .jpeg, .png, .gif, .bmp, .tiff, .webp, .svg");
-    //       }
-    //     }
-    //     const result = await userModel.findByIdAndUpdate(id, updateFields, { new: true }) ;
-
-    //     if (!result) {
-    //       throw new GraphQLError("User not found");
-    //     }
-    // if (!result.name) {
-    //   throw new GraphQLError("User name is missing in the result");
-    // }
-    //     const token = generateToken(result);
-    //     return {
-    //       // result,
-    //       // token,
-    //     };
-    //   } catch (error: any) {
-    //     throw new GraphQLError(error.message);
-    //   }
-    // },
 
     //!=================================
     async editBlogContext(_, { id, edits }, context) {

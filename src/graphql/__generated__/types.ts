@@ -49,8 +49,8 @@ export type CreatedByUser = {
 
 export type EditUserResponse = {
   __typename?: 'EditUserResponse';
+  refreshToken: Scalars['String']['output'];
   result: User;
-  token: Scalars['String']['output'];
 };
 
 export type LoginInput = {
@@ -347,8 +347,8 @@ export type CreatedByUserResolvers<ContextType = any, ParentType extends Resolve
 };
 
 export type EditUserResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['EditUserResponse'] = ResolversParentTypes['EditUserResponse']> = {
+  refreshToken?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   result?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
-  token?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
