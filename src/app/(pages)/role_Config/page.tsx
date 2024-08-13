@@ -1,13 +1,12 @@
 "use client";
 import Link from "next/link";
-import styles from "./Users.module.scss";
+import styles from "./Role.module.scss";
 import { useSuspenseQuery } from "@apollo/client";
 import { GET_USERS } from "@/queries/userQuery";
 import { GetAllUsersType } from "@/types/customTypes/UsersCustomTypes";
 
 const Users = () => {
   const { data, error } = useSuspenseQuery<GetAllUsersType>(GET_USERS);
-  console.log("data:::", data);
 
   return (
     <div className={styles.main}>
@@ -17,17 +16,11 @@ const Users = () => {
           <Link href={"/home"} className={styles.title_href}>
             Home
           </Link>
-          /Context/Users
+          /Context/Users Role Configuration
         </p>
       </div>
       <div className={styles.post_context_table_box}>
-        <h1>Users</h1>
-
-        <div className={styles.add_button}>
-          <Link href={"/users/adduser"} className={styles.button}>
-            <span className="pi pi-plus">&nbsp;</span>Add New User
-          </Link>
-        </div>
+        <h1>Users Role Configuration</h1>
 
         <table className={styles.table}>
           <thead className={styles.thead}>
@@ -35,8 +28,6 @@ const Users = () => {
               <th className={styles.th}>#</th>
               <th className={styles.th}>Image</th>
               <th className={styles.th}>Name</th>
-              <th className={styles.th}>Email</th>
-              <th className={styles.th}>Registration Date</th>
               <th className={styles.th}>Role</th>
               <th className={styles.th}>Action</th>
             </tr>
@@ -51,17 +42,15 @@ const Users = () => {
                     <img className={styles.image} src={userData.avatar.url} alt="nice" />
                   </td>
                   <td className={styles.td}>{userData.name}</td>
-                  <td className={styles.td}>{userData.email}</td>
-                  <td className={styles.td}>{userData.createdAt}</td>
                   <td className={styles.td}>{userData.role}</td>
                   <td className={styles.td}>
+                    {/* <Link href={"/"} className={styles.ref}> */}
+                    <i className={`pi pi-file-edit ${styles.edit_icon}`}> </i>
+                    {/* </Link> */}
+                    &nbsp;
                     {/* <Link href={"/"} className={styles.ref}>
-                      <i className={`pi pi-file-edit ${styles.edit_icon}`}> </i>
-                    </Link>
-                    &nbsp; */}
-                    <Link href={"/"} className={styles.ref}>
                       <i className={`pi pi-trash ${styles.delete_icon}`}></i>
-                    </Link>
+                    </Link> */}
                   </td>
                 </tr>
               );
