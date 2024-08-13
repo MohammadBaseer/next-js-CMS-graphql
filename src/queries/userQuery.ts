@@ -48,13 +48,16 @@ export const GET_USERS_BY_ID = gql`
 export const UPDATE_USERS = gql`
   mutation EditUser($editUserId: ID!, $edits: userEdits) {
     editUser(id: $editUserId, edits: $edits) {
-      name
-      password
-      role
-      avatar {
-        url
-        public_id
+      result{
+        name
+        password
+        role
+        avatar{
+          url
+          public_id
+        }
       }
+      refreshToken
     }
   }
 `;

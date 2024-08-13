@@ -15,13 +15,13 @@ type inputsType = {
 };
 
 const MyProfile = () => {
-  const { userProfile } = useContext(AuthContext);
+  const { userProfile, getUserProfile } = useContext(AuthContext);
 
   // console.log("userProfile", userProfile);
 
   const [updateProfile, { loading }] = useMutation(UPDATE_USERS, {
     update(_, { data }) {
-      console.log("data:::", data);
+      // console.log("Update data:::", data);
     },
   });
 
@@ -41,7 +41,7 @@ const MyProfile = () => {
   });
 
   const [selectImage, setSelectImage] = useState<string | null>(null);
-  // const [userPhoto, setUserPhoto] = useState("");
+  const [userPhoto, setUserPhoto] = useState("");
   //!
   const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -52,15 +52,7 @@ const MyProfile = () => {
       const base64 = await convertToBase64(file);
       if (typeof base64 === "string") value = base64;
     }
-    // setUserPhoto{value}
-
-    setInputs((prev) => {
-      return {
-        ...prev,
-        image: value,
-      };
-    });
-
+    setUserPhoto(value);
     console.log("inputs", inputs);
   };
 
@@ -71,7 +63,7 @@ const MyProfile = () => {
     });
   };
 
-  const updateProfileFunction = async (e) => {
+  const updateProfileFunction = async (e: any) => {
     e.preventDefault();
     try {
       const result = await updateProfile({
@@ -80,14 +72,28 @@ const MyProfile = () => {
           edits: {
             name: inputs.name,
             avatar: {
-              url: inputs.image,
+              url: userPhoto,
             },
           },
         },
       });
+
+      console.log("result Data:::::>>>", result);
+      if (result.data) {
+        if (result.data.editUser.refreshToken) {
+          console.log(" yes it work ");
+          localStorage.setItem("token", result.data.editUser.refreshToken);
+          getUserProfile();
+        }
+
+        if (result.errors) {
+          console.error("Mutation errors:", result.errors);
+          // setError("An error occurred during login.");
+        }
+      }
     } catch (GraphQLError) {
       const err = GraphQLError as ApolloError;
-      console.log("GraphQL Error:", err);
+      console.log("GraphQL Error:", err.message);
       console.log("Error Details:", err.graphQLErrors);
       console.log("Network Error:", err.networkError);
       alert("profile couldn't be updated");

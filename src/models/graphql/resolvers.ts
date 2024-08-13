@@ -307,40 +307,31 @@ const resolvers: Resolvers = {
       }
     },
 
-    //!Edit the data
-    async editUser(_, { id, edits }, context) {
-      const user = authContext(context);
-      const {
-        name,
-        password,
-        role,
-        avatar: { url, public_id },
-      } = edits as User;
-      const newPhoto = url;
-      try {
-        // const result = (await userModel.findByIdAndUpdate(
-        //   id,
-        //   {
-        //     $set: {
-        //       name: name,
-        //       password: password,
-        //       role: role,
-        //       avatar: {
-        //         url: avatar.url,
-        //         public_id: avatar.public_id,
-        //       },
-        //     },
-        //   },
-        //   { new: true }
-        // )) as User;
+    async editUser(_: any, { id, edits }, context) {
+      // async   editUser(
+      //   _: any,
+      //   { id, edits }: { id: string; edits: { name?: string; password?: string; role?: string; avatar?: { url?: string; public_id?: string } } },
+      //   context: any
+      // ): Promise<{ result: User; token: string }> {
 
-        const updateFields = {};
-        console.log("running-1");
-        const newAvatar = { url: "", public_id: "" };
-        // const avatar = {
-        //   url: edits.avatar.url,
-        //   public_id: edits.avatar.public_id,
-        // };
+      const user = authContext(context);
+      const { name, password, role, avatar } = edits as User;
+
+      console.log("edits:::::::::::::::>>>>>", edits);
+
+      if (!id) {
+        throw new GraphQLError("User ID is required");
+      }
+
+      try {
+        // Fetch existing user data
+        const existingUser = (await userModel.findById(id)) as User;
+        if (!existingUser) {
+          throw new GraphQLError("User not found");
+        }
+
+        // Prepare fields to update
+        const updateFields: any = {};
 
         if (name) {
           updateFields.name = name.trim();
@@ -352,34 +343,101 @@ const resolvers: Resolvers = {
           updateFields.role = role;
         }
 
-        if (url) {
-          if (newPhoto?.match(/data:image\/(jpeg|jpg|png|gif|bmp|tiff|webp|svg\+xml);base64,/)) {
-            const isData = (await userModel.findById(id)) as User;
-            const ImageID = isData.avatar.public_id as string;
-            await removeCloudinaryImage(ImageID);
+        // Handle avatar update
+        if (avatar && avatar.url) {
+          const newPhoto = avatar.url;
+
+          if (newPhoto.match(/data:image\/(jpeg|jpg|png|gif|bmp|tiff|webp|svg\+xml);base64,/)) {
+            // Handle base64 image upload
+            if (existingUser.avatar && existingUser.avatar.public_id) {
+              await removeCloudinaryImage(existingUser.avatar.public_id);
+            }
             const uploaded = await cloudinary.uploader.upload(newPhoto, {
               folder: "NextJS_Apollo_GraphQL_Project/users_avatar",
             });
-            newAvatar.url = uploaded.secure_url;
-            newAvatar.public_id = uploaded.public_id;
+            updateFields.avatar = {
+              url: uploaded.secure_url,
+              public_id: uploaded.public_id,
+            };
           } else {
             throw new GraphQLError("Invalid image format. Supported formats are .jpg, .jpeg, .png, .gif, .bmp, .tiff, .webp, .svg");
           }
-
-          updateFields.avatar = newAvatar;
         }
 
-        console.log("running", updateFields);
+        // Perform update
+        const updatedUser = await userModel.findByIdAndUpdate(id, updateFields, { new: true });
 
-        // await BookModel.findByIdAndUpdate(bookId, updateFields, { new: true });
+        if (!updatedUser) {
+          throw new GraphQLError("Error updating user");
+        }
+        const refreshToken = generateToken(updatedUser);
 
-        const result = await userModel.findByIdAndUpdate(id, updateFields, { new: true });
-
-        return result;
+        // return updatedUser  ;
+        return {
+          result: updatedUser,
+          refreshToken,
+        };
       } catch (error: any) {
         throw new GraphQLError(error.message);
       }
     },
+
+    //!Edit the data
+    // async editUser(_: any, { id, edits }, context) {
+    //     async editUser(_: any, { id, edits }, context) {
+    //       const user = authContext(context);
+
+    // console.log("edits:::", user)
+    //   const {name, password, role, avatar: { url } } = edits as User;
+    //   console.log("url :::::::::::>>>> ", url);
+    //   const newPhoto = url;
+    // try {
+    //     const updateFields: any = {};
+    //     console.log("running-1");
+    //     if (name) {
+    //       updateFields.name = name.trim();
+    //     } else {
+    //       throw new GraphQLError("Name is required and cannot be null");
+    //     }
+    //     if (password) {
+    //       updateFields.password = password;
+    //     }
+    //     if (role) {
+    //       updateFields.role = role;
+    //     }
+    //     if (newPhoto !== "") {
+    //       if (newPhoto?.match(/data:image\/(jpeg|jpg|png|gif|bmp|tiff|webp|svg\+xml);base64,/)) {
+    //         const isData = (await userModel.findById(id)) as User;
+    //         const ImageID = isData.avatar.public_id as string;
+    //         await removeCloudinaryImage(ImageID);
+    //         const uploaded = await cloudinary.uploader.upload(newPhoto, {
+    //           folder: "NextJS_Apollo_GraphQL_Project/users_avatar",
+    //         });
+    //         updateFields.avatar = {
+    //           url: uploaded.secure_url,
+    //           public_id: uploaded.public_id
+    //         };
+    //       } else {
+    //         throw new GraphQLError("Invalid image format. Supported formats are .jpg, .jpeg, .png, .gif, .bmp, .tiff, .webp, .svg");
+    //       }
+    //     }
+    //     const result = await userModel.findByIdAndUpdate(id, updateFields, { new: true }) ;
+
+    //     if (!result) {
+    //       throw new GraphQLError("User not found");
+    //     }
+    // if (!result.name) {
+    //   throw new GraphQLError("User name is missing in the result");
+    // }
+    //     const token = generateToken(result);
+    //     return {
+    //       // result,
+    //       // token,
+    //     };
+    //   } catch (error: any) {
+    //     throw new GraphQLError(error.message);
+    //   }
+    // },
 
     //!=================================
     async editBlogContext(_, { id, edits }, context) {

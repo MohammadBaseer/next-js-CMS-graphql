@@ -23,6 +23,8 @@ type AuthContextTypes = {
   getLoginInputValues: (e: ChangeEvent<HTMLInputElement>) => void;
   //! Logout Elements Types
   logOutUser: () => void;
+  //! for after profile update
+  getUserProfile:()=>void;
 };
 
 const AuthContextInitialValue: AuthContextTypes = {
@@ -54,6 +56,10 @@ const AuthContextInitialValue: AuthContextTypes = {
   logOutUser: () => {
     throw new Error("The logOutUser Error");
   },
+    //! for after profile update
+    getUserProfile:() => {
+      throw new Error("The getUserProfile Error");
+    },
 };
 
 export const AuthContext = createContext<AuthContextTypes>(AuthContextInitialValue);
@@ -79,7 +85,7 @@ const AuthContextProvider = ({ children }: childrenPropsTypes) => {
   // ^ Registration Query
   const [registerUser, { loading: registrationLoader }] = useMutation(REGISTER_USER, {
     update(_, { data }) {
-      console.log("data:::", data);
+      // console.log("data:::", data.addUser.token);
     },
   });
   // ^ -------
@@ -138,6 +144,7 @@ const AuthContextProvider = ({ children }: childrenPropsTypes) => {
         },
       });
 
+const token = isToken();
       if (token) {
         router.push("/users");
         setNewUserCredential({
@@ -282,6 +289,7 @@ const AuthContextProvider = ({ children }: childrenPropsTypes) => {
         loginLoader,
         userProfile,
         logOutUser,
+        getUserProfile
       }}
     >
       {children}

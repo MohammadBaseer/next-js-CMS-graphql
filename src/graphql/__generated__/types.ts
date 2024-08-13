@@ -47,6 +47,12 @@ export type CreatedByUser = {
   username: Scalars['String']['output'];
 };
 
+export type EditUserResponse = {
+  __typename?: 'EditUserResponse';
+  result: User;
+  token: Scalars['String']['output'];
+};
+
 export type LoginInput = {
   email: Scalars['String']['input'];
   password: Scalars['String']['input'];
@@ -61,7 +67,7 @@ export type Mutation = {
   deleteUser: User;
   deleteVideoContext: VideoBlogContext;
   editBlogContext: BlogContext;
-  editUser: User;
+  editUser: EditUserResponse;
   editVideoContext: VideoBlogContext;
   loginUser: User;
 };
@@ -283,6 +289,7 @@ export type ResolversTypes = {
   BlogContext: ResolverTypeWrapper<BlogContext>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
   CreatedByUser: ResolverTypeWrapper<CreatedByUser>;
+  EditUserResponse: ResolverTypeWrapper<EditUserResponse>;
   ID: ResolverTypeWrapper<Scalars['ID']['output']>;
   LoginInput: LoginInput;
   Mutation: ResolverTypeWrapper<{}>;
@@ -306,6 +313,7 @@ export type ResolversParentTypes = {
   BlogContext: BlogContext;
   Boolean: Scalars['Boolean']['output'];
   CreatedByUser: CreatedByUser;
+  EditUserResponse: EditUserResponse;
   ID: Scalars['ID']['output'];
   LoginInput: LoginInput;
   Mutation: {};
@@ -338,6 +346,12 @@ export type CreatedByUserResolvers<ContextType = any, ParentType extends Resolve
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type EditUserResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['EditUserResponse'] = ResolversParentTypes['EditUserResponse']> = {
+  result?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
+  token?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
   addBlogContext?: Resolver<ResolversTypes['BlogContext'], ParentType, ContextType, Partial<MutationAddBlogContextArgs>>;
   addUser?: Resolver<ResolversTypes['User'], ParentType, ContextType, Partial<MutationAddUserArgs>>;
@@ -346,7 +360,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   deleteUser?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationDeleteUserArgs, 'id'>>;
   deleteVideoContext?: Resolver<ResolversTypes['VideoBlogContext'], ParentType, ContextType, RequireFields<MutationDeleteVideoContextArgs, 'id'>>;
   editBlogContext?: Resolver<ResolversTypes['BlogContext'], ParentType, ContextType, RequireFields<MutationEditBlogContextArgs, 'id'>>;
-  editUser?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationEditUserArgs, 'id'>>;
+  editUser?: Resolver<ResolversTypes['EditUserResponse'], ParentType, ContextType, RequireFields<MutationEditUserArgs, 'id'>>;
   editVideoContext?: Resolver<ResolversTypes['VideoBlogContext'], ParentType, ContextType, RequireFields<MutationEditVideoContextArgs, 'id'>>;
   loginUser?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationLoginUserArgs, 'inputData'>>;
 };
@@ -392,6 +406,7 @@ export type VideoBlogContextResolvers<ContextType = any, ParentType extends Reso
 export type Resolvers<ContextType = any> = {
   BlogContext?: BlogContextResolvers<ContextType>;
   CreatedByUser?: CreatedByUserResolvers<ContextType>;
+  EditUserResponse?: EditUserResponseResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   Picture?: PictureResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;

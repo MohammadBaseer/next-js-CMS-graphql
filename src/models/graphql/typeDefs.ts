@@ -47,6 +47,10 @@ const typeDefs = gql`
     username: String!
   }
 
+  type EditUserResponse {
+  result: User!
+  refreshToken: String!
+}
   # //! Create Query to get the data from Postman/Apollo SandBox
   type Query {
     # //! to fetch multi Data
@@ -69,7 +73,8 @@ const typeDefs = gql`
     addVideoBlogContext(newVideoBlogContextData: addVideoBlogContextInput): VideoBlogContext!
 
     #//! To Edit the Data
-    editUser(id: ID!, edits: userEdits): User!
+    # editUser(id: ID!, edits: userEdits): User!
+    editUser(id: ID!, edits: userEdits): EditUserResponse!
     editBlogContext(id: ID!, edits: blogContextEdits): BlogContext!
     editVideoContext(id: ID!, edits: videoBlogContextEdits): VideoBlogContext!
 
@@ -102,10 +107,7 @@ const typeDefs = gql`
     description: String
     photo: Pic
   }
-  input Pic {
-    url: String
-    public_id: String
-  }
+ 
   # //! --------------------
   input addVideoBlogContextInput {
     title: String
@@ -117,6 +119,11 @@ const typeDefs = gql`
     password: String
     role: String
     avatar: Pic
+  }
+  
+   input Pic {
+    url: String
+    public_id: String
   }
   input videoBlogContextEdits {
     title: String
