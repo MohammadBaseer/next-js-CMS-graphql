@@ -258,7 +258,9 @@ const AuthContextProvider = ({ children }: childrenPropsTypes) => {
   const logOutUser = () => {
     removeToken();
     setUserProfile(null);
-    router.push("/");
+    setTimeout(() => {
+      router.push("/");
+    }, 0);
   };
   // ? =================================== End Logout Part
 

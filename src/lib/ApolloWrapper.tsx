@@ -1,79 +1,54 @@
-// import { ApolloLink, concat, HttpLink } from "@apollo/client";
-// import { ApolloNextAppProvider, ApolloClient, InMemoryCache } from "@apollo/experimental-nextjs-app-support";
-
-// function makeClient() {
-//   const httpLink = new HttpLink({
-//     uri: "api/graphql",
-//     fetchOptions: { cache: "no-store" },
-//   });
-
-//   const token = localStorage.getItem("token");
-
-//   const authLink = new ApolloLink((operation, forward) => {
-//     if (token) {
-//       operation.setContext({
-//         headers: {
-//           authorization: token ? `Bearer ${token}` : null,
-//         },
-//       });
-//     }
-//     return forward(operation);
-//   });
-
-//   return new ApolloClient({
-//     cache: new InMemoryCache(),
-//     link: authLink.concat(httpLink),
-//   });
-// }
-
-// export function ApolloWrapper({ children }: React.PropsWithChildren) {
-//   return <ApolloNextAppProvider makeClient={makeClient}>{children}</ApolloNextAppProvider>;
-// }
-
 "use client";
-import { ApolloClient, InMemoryCache, HttpLink, ApolloLink, concat } from "@apollo/client";
-import { ApolloProvider } from "@apollo/client/react";
-import { cache, ReactNode } from "react";
+import { useEffect, useState } from "react";
+import { ApolloLink, HttpLink, ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
+import { ReactNode } from "react";
 
-let apolloClient: ApolloClient<any> | undefined;
+function createApolloClient(token: string | null) {
+  const httpLink = new HttpLink({
+    uri: process.env.NEXT_PUBLIC_GRAPHQL_URI,
+    fetchOptions: { cache: "no-store" },
+  });
 
-function makeClient() {
-  const httpLink = new HttpLink({ uri: "http://localhost:3000/api/graphql", fetchOptions: { cache: "no-store" } });
-
-  // Handle `localStorage` only in the browser
-  let token: string | null;
-  if (typeof window === "undefined") {
-    console.log("WINDOW UNDEFINED");
-    token = null;
-  }
-  if (typeof window !== "undefined") {
-    console.log("WINDOW DEFINED");
-    token = localStorage.getItem("token");
-  }
-
-  const authMiddleware = new ApolloLink((operation, forward) => {
-    // add the authorization to the headers
-    operation.setContext(({ headers = {} }) => ({
-      headers: {
-        ...headers,
-        // authorization: "Bearer " + localStorage.getItem("token") || null,
-        // authorization: "Bearer " + token || null,
-
-        authorization: typeof window === "undefined" ? null : "Bearer " + token,
-      },
-    }));
-
+  const authLink = new ApolloLink((operation, forward) => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      operation.setContext({
+        headers: {
+          authorization: `Bearer ${token}`,
+        },
+      });
+    }
     return forward(operation);
   });
 
   return new ApolloClient({
     cache: new InMemoryCache(),
-    link: concat(authMiddleware, httpLink),
+    link: authLink.concat(httpLink),
   });
 }
 
 export function ApolloWrapper({ children }: { children: ReactNode }) {
-  const client = makeClient();
+  const [client, setClient] = useState<ApolloClient<any> | null>(null);
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    const newClient = createApolloClient(token);
+    setClient(newClient);
+
+    const handleStorageChange = () => {
+      setClient(createApolloClient(localStorage.getItem("token")));
+    };
+
+    window.addEventListener("storage", handleStorageChange);
+
+    return () => {
+      window.removeEventListener("storage", handleStorageChange);
+    };
+  }, []);
+
+  if (!client) {
+    return null; // or a loading spinner
+  }
 
   return <ApolloProvider client={client}>{children}</ApolloProvider>;
 }
