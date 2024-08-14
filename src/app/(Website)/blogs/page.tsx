@@ -12,15 +12,15 @@ const Blogs = async () => {
     <section className={styles.blogs}>
       <h1 className={styles.title}>Our Latest Blogs</h1>
       <div className={styles.blogGrid}>
-        {data.blogContexts.map((post) => (
-          <div className={styles.blogCard}>
+        {data.blogContexts.map((post, index) => (
+          <div className={styles.blogCard} key={index}>
             <img src={post.photo.url} alt={post.title} className={styles.blogImage} />
             <Link href={`/blogs/${post._id}`} key={post._id} passHref>
               <h2 className={styles.blogTitle}>{post.title}</h2>
             </Link>
             <p className={styles.blogDescription}>{post.description}</p>
             <div className={styles.likeContainer}>
-              <button className={styles.likeButton}>❤️ {post.likes > 0 && `(${post.likes})`}</button>
+              <button className={styles.likeButton}>❤️ </button>
             </div>
           </div>
         ))}

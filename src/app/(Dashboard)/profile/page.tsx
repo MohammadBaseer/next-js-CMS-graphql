@@ -7,6 +7,7 @@ import { useMutation } from "@apollo/client";
 import { UPDATE_USERS } from "@/queries/userQuery";
 import { ApolloError } from "apollo-server-errors";
 import { convertToBase64 } from "@/util/convertToBase64";
+import withAuth from "@/Component/RoutesProtect/withAuth";
 
 type inputsType = {
   id: string;
@@ -161,4 +162,4 @@ const MyProfile = () => {
   );
 };
 
-export default MyProfile;
+export default withAuth(MyProfile);

@@ -5,8 +5,9 @@ import "primeicons/primeicons.css";
 import { useMutation, useSuspenseQuery } from "@apollo/client";
 import { DELETE_POST_CONTEXT, GET_POST_CONTEXT } from "@/queries/postContextQuery";
 import { GetAllBlogContextType } from "@/types/customTypes/PostBlogCustomTypes";
-import { useContext, useEffect, useState } from "react";
+import { useContext } from "react";
 import { AuthContext } from "@/context/authContext";
+import withAuth from "@/Component/RoutesProtect/withAuth";
 
 const PostContext = () => {
   const { userProfile } = useContext(AuthContext);
@@ -93,4 +94,4 @@ const PostContext = () => {
   );
 };
 
-export default PostContext;
+export default withAuth(PostContext);

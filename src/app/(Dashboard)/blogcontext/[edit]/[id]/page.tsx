@@ -2,15 +2,11 @@
 import styles from "./EditPostBlogContext.module.scss";
 import { ChangeEvent, FormEvent, useState } from "react";
 import Link from "next/link";
-import FroalaEditor from "react-froala-wysiwyg";
-import "froala-editor/css/froala_style.min.css";
-import "froala-editor/css/froala_editor.pkgd.min.css";
-import "froala-editor/js/plugins/code_view.min.js";
-import "froala-editor/css/plugins/code_view.min.css";
 import { ApolloError, useMutation, useSuspenseQuery } from "@apollo/client";
 import { GET_POST_CONTEXT_BY_ID, INSERT_POST_CONTEXT, UPDATE_POST_CONTEXT } from "@/queries/postContextQuery";
 import { convertToBase64 } from "@/util/convertToBase64";
 import { GetSingleBlogContextType } from "@/types/customTypes/PostBlogCustomTypes";
+import withAuth from "@/Component/RoutesProtect/withAuth";
 
 type ParamsPropsType = {
   params: {
@@ -146,7 +142,6 @@ const EditBlogContext = ({ params: { id } }: ParamsPropsType) => {
           <div>
             <label className={styles.file} htmlFor="addBlogFile">
               <img className={styles.avatar} src={(selectImage !== null ? selectImage : blogInput.photo.url) as string} width={80} height={80} alt={blogInput.title} />
-              {/* <Image className={styles.avatar} src={selectImage !== null ? selectImage : blogInput.photo.url} width={80} height={80} alt={blogInput.title} /> */}
               <span>Change Blog Photo</span>
             </label>
             <input style={{ display: "none" }} type="file" id="addBlogFile" name="photo" onChange={handleFileChange} />
@@ -159,16 +154,6 @@ const EditBlogContext = ({ params: { id } }: ParamsPropsType) => {
           <div>
             <label htmlFor="description">Description</label>
             <textarea className={styles.input_field} id="description" name="description" value={blogInput.description} onChange={getInputValues}></textarea>
-            {/* <FroalaEditor
-              tag="textarea"
-              model={blogInput.description}
-              onModelChange={handleModelChange}
-              config={{
-                placeholderText: "Description",
-                heightMin: 300,
-                heightMax: 600,
-              }}
-            />{" "} */}
           </div>
           {error && <div className={styles.error}>{error}</div>}
           <div className={styles.sub_btn_box}>
@@ -182,4 +167,4 @@ const EditBlogContext = ({ params: { id } }: ParamsPropsType) => {
   );
 };
 
-export default EditBlogContext;
+export default withAuth(EditBlogContext);

@@ -2,6 +2,7 @@
 import Link from "next/link";
 import styles from "./Sidebar.module.scss";
 import "primeicons/primeicons.css";
+import withAuth from "../RoutesProtect/withAuth";
 
 const Sidebar = () => {
   return (
@@ -66,4 +67,4 @@ const Sidebar = () => {
   );
 };
 
-export default Sidebar;
+export default withAuth(Sidebar);

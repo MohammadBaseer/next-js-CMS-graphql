@@ -4,14 +4,10 @@ import avatar from "../../../../assets/img/registrationFormAvatar/addAvatar.png"
 import { ChangeEvent, FormEvent, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import FroalaEditor from "react-froala-wysiwyg";
-import "froala-editor/css/froala_style.min.css";
-import "froala-editor/css/froala_editor.pkgd.min.css";
-import "froala-editor/js/plugins/code_view.min.js";
-import "froala-editor/css/plugins/code_view.min.css";
 import { ApolloError, useMutation } from "@apollo/client";
 import { INSERT_POST_CONTEXT } from "@/queries/postContextQuery";
 import { convertToBase64 } from "@/util/convertToBase64";
+import withAuth from "@/Component/RoutesProtect/withAuth";
 
 type BlogInputTypes = {
   title: string;
@@ -22,7 +18,6 @@ const AddNewBlog = () => {
   //! ------
   const [insertBlogContext, { loading, error: GraphQLError, data }] = useMutation(INSERT_POST_CONTEXT);
   //! ------
-  // const [error, setError] = useState< undefined | string>("");
   const [selectImage, setSelectImage] = useState<string | null>(null);
   const [blogInput, setBlogInput] = useState<BlogInputTypes>({
     title: "",
@@ -121,16 +116,6 @@ const AddNewBlog = () => {
           <div>
             <label htmlFor="description">Description</label>
             <textarea className={styles.input_field} id="description" name="description" value={blogInput.description} onChange={getInputValues}></textarea>
-            {/* <FroalaEditor
-              tag="textarea"
-              model={blogInput.description}
-              onModelChange={handleModelChange}
-              config={{
-                placeholderText: "Description",
-                heightMin: 300,
-                heightMax: 600,
-              }}
-            />{" "} */}
           </div>
           {/* {error && <div className={styles.error}>{error}</div>} */}
           <div className={styles.sub_btn_box}>
@@ -144,4 +129,4 @@ const AddNewBlog = () => {
   );
 };
 
-export default AddNewBlog;
+export default withAuth(AddNewBlog);

@@ -4,9 +4,10 @@ import styles from "./Role.module.scss";
 import { useSuspenseQuery } from "@apollo/client";
 import { GET_USERS } from "@/queries/userQuery";
 import { GetAllUsersType } from "@/types/customTypes/UsersCustomTypes";
+import withAuth from "@/Component/RoutesProtect/withAuth";
 
 const Users = () => {
-  const { data, error } = useSuspenseQuery<GetAllUsersType>(GET_USERS);
+  const { data } = useSuspenseQuery<GetAllUsersType>(GET_USERS);
 
   return (
     <div className={styles.main}>
@@ -62,4 +63,4 @@ const Users = () => {
   );
 };
 
-export default Users;
+export default withAuth(Users);

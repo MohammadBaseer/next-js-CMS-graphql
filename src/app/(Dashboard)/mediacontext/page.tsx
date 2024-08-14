@@ -6,13 +6,14 @@ import { useMutation, useSuspenseQuery } from "@apollo/client";
 import { GetAllVideoBlogsTypes } from "@/types/customTypes/VideoCustomTypes";
 import YouTube from "react-youtube";
 import getYouTubeID from "get-youtube-id";
-import { onError, onReady, opts, opts_small_size } from "@/util/YoutubeIDContext/YoutubeVideoOptionCustomFunction";
-import { useContext, useEffect } from "react";
+import { onError, onReady, opts_small_size } from "@/util/YoutubeIDContext/YoutubeVideoOptionCustomFunction";
+import { useContext } from "react";
 import { AuthContext } from "@/context/authContext";
+import withAuth from "@/Component/RoutesProtect/withAuth";
 
 const MediaPost = () => {
   const { userProfile } = useContext(AuthContext);
-  const { data, error, refetch } = useSuspenseQuery<GetAllVideoBlogsTypes>(VIDEO_BLOG_CONTEXT);
+  const { data, refetch } = useSuspenseQuery<GetAllVideoBlogsTypes>(VIDEO_BLOG_CONTEXT);
   //!
   console.log(":::::::::::::", data.videoBlogContexts.length);
   const [deleteVideContext, { error: GraphQLError, loading }] = useMutation(DELETE_VIDEO_CONTEXT);
@@ -98,4 +99,4 @@ const MediaPost = () => {
   );
 };
 
-export default MediaPost;
+export default withAuth(MediaPost);

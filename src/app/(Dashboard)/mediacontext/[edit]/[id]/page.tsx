@@ -7,6 +7,7 @@ import { GetSingleVideoBlogType } from "@/types/customTypes/VideoCustomTypes";
 import { ApolloError, useMutation, useSuspenseQuery } from "@apollo/client";
 import { GET_VIDEO_BLOG_BY_ID, UPDATE_VIDEO_CONTEXT } from "@/queries/videoBlogContextQuery";
 import { onError, onReady, opts } from "@/util/YoutubeIDContext/YoutubeVideoOptionCustomFunction";
+import withAuth from "@/Component/RoutesProtect/withAuth";
 var getYouTubeID = require("get-youtube-id");
 type ParamsType = {
   params: {
@@ -116,4 +117,4 @@ const EditVideoContext = ({ params: { id } }: ParamsType) => {
   );
 };
 
-export default EditVideoContext;
+export default withAuth(EditVideoContext);

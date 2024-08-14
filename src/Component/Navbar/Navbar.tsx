@@ -3,6 +3,7 @@ import Link from "next/link";
 import styles from "./Navbar.module.scss";
 import { useContext, useState } from "react";
 import { AuthContext } from "@/context/authContext";
+import withAuth from "../RoutesProtect/withAuth";
 
 const Navbar = () => {
   const { userProfile, logOutUser } = useContext(AuthContext);
@@ -67,4 +68,4 @@ const Navbar = () => {
   );
 };
 
-export default Navbar;
+export default withAuth(Navbar);

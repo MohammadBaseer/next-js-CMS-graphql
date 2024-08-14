@@ -5,6 +5,7 @@ import { ChangeEvent, FormEvent, useContext, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { AuthContext } from "@/context/authContext";
+import withAuth from "@/Component/RoutesProtect/withAuth";
 
 const AddNewUser = () => {
   const { userRegisterFunction, getInputValuesFunction, registerHandleFileChange, registrationLoader, newUserCredential, selectImage, error } = useContext(AuthContext);
@@ -72,4 +73,4 @@ const AddNewUser = () => {
   );
 };
 
-export default AddNewUser;
+export default withAuth(AddNewUser);

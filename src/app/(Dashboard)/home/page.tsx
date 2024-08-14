@@ -1,3 +1,5 @@
+"use client";
+import withAuth from "@/Component/RoutesProtect/withAuth";
 import styles from "./Home.module.scss";
 
 const HomePage = () => {
@@ -8,4 +10,4 @@ const HomePage = () => {
   );
 };
 
-export default HomePage;
+export default withAuth(HomePage);

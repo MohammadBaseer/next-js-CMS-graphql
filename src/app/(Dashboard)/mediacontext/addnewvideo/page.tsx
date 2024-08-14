@@ -7,6 +7,7 @@ import { useMutation } from "@apollo/client";
 import { INSERT_VIDEO_CONTEXT } from "@/queries/videoBlogContextQuery";
 import { onError, onReady, opts } from "@/util/YoutubeIDContext/YoutubeVideoOptionCustomFunction";
 import getYouTubeID from "get-youtube-id";
+import withAuth from "@/Component/RoutesProtect/withAuth";
 
 const AddNewVideo = () => {
   const [error, setError] = useState<string>("");
@@ -101,4 +102,4 @@ const AddNewVideo = () => {
   );
 };
 
-export default AddNewVideo;
+export default withAuth(AddNewVideo);

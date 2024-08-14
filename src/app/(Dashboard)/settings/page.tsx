@@ -1,3 +1,4 @@
+import withAuth from "@/Component/RoutesProtect/withAuth";
 import styles from "./Setting.module.scss";
 
 const Settings = () => {
@@ -8,4 +9,4 @@ const Settings = () => {
   );
 };
 
-export default Settings;
+export default withAuth(Settings);
