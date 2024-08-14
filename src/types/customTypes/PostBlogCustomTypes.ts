@@ -10,6 +10,7 @@ export type BlogContext = {
   title: string;
   description: string;
   createdBy: {
+    id: string;
     username: string;
   };
   photo: {

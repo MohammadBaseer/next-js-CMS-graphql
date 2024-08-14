@@ -24,7 +24,7 @@ type AuthContextTypes = {
   //! Logout Elements Types
   logOutUser: () => void;
   //! for after profile update
-  getUserProfile:()=>void;
+  getUserProfile: () => void;
 };
 
 const AuthContextInitialValue: AuthContextTypes = {
@@ -56,10 +56,10 @@ const AuthContextInitialValue: AuthContextTypes = {
   logOutUser: () => {
     throw new Error("The logOutUser Error");
   },
-    //! for after profile update
-    getUserProfile:() => {
-      throw new Error("The getUserProfile Error");
-    },
+  //! for after profile update
+  getUserProfile: () => {
+    throw new Error("The getUserProfile Error");
+  },
 };
 
 export const AuthContext = createContext<AuthContextTypes>(AuthContextInitialValue);
@@ -144,7 +144,7 @@ const AuthContextProvider = ({ children }: childrenPropsTypes) => {
         },
       });
 
-const token = isToken();
+      const token = isToken();
       if (token) {
         router.push("/users");
         setNewUserCredential({
@@ -263,8 +263,8 @@ const token = isToken();
   // ? =================================== End Logout Part
 
   // ! Check user Login Status with the help of Token
-  const isUserLogged = isToken();
   useEffect(() => {
+    const isUserLogged = isToken();
     if (isUserLogged) {
       getUserProfile();
     }
@@ -289,7 +289,7 @@ const token = isToken();
         loginLoader,
         userProfile,
         logOutUser,
-        getUserProfile
+        getUserProfile,
       }}
     >
       {children}

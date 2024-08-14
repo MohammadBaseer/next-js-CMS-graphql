@@ -15,8 +15,10 @@ const resolvers: Resolvers = {
   //TODO -  ==========---Query---==========
   Query: {
     async users(_, __, context) {
-      authContext(context);
       try {
+        authContext(context);
+
+        console.log(":::::::::::::::::::::::context::::::::::::::::", context);
         const documentCount = await userModel.countDocuments();
         if (documentCount === 0) {
           throw new GraphQLError("Not found");
@@ -31,35 +33,35 @@ const resolvers: Resolvers = {
 
     // !
 
-    async blogContexts(_, __, context) {
-      const user = authContext(context);
-      const { id, role, username } = user as UserInfoTypes;
+    async blogContexts() {
+      // const user = authContext(context);
+      // const { id, role, username } = user as UserInfoTypes;
 
       try {
-        if (role === "User") {
-          const result = await blogContextModel.find({ "createdBy.id": id, "createdBy.username": username });
-          return result;
-        } else {
-          const result = await blogContextModel.find();
-          return result;
-        }
+        // if (role === "User") {
+        //   const result = await blogContextModel.find({ "createdBy.id": id, "createdBy.username": username });
+        //   return result;
+        // } else {
+        const result = await blogContextModel.find();
+        return result;
+        // }
       } catch (error: any) {
         throw new GraphQLError(error.message);
       }
     },
 
     // !
-    async videoBlogContexts(_, __, context) {
-      const user = authContext(context);
-      const { id, role, username } = user as UserInfoTypes;
+    async videoBlogContexts() {
+      // const user = authContext(context);
+      // const { id, role, username } = user as UserInfoTypes;
       try {
-        if (role === "User") {
-          const result = await videoBlogContentModel.find({ "createdBy.id": id, "createdBy.username": username });
-          return result;
-        } else {
-          const result = await videoBlogContentModel.find();
-          return result;
-        }
+        // if (role === "User") {
+        //   const result = await videoBlogContentModel.find({ "createdBy.id": id, "createdBy.username": username });
+        //   return result;
+        // } else {
+        const result = await videoBlogContentModel.find();
+        return result;
+        // }
       } catch (error: any) {
         throw new GraphQLError(error.message);
       }
@@ -79,34 +81,34 @@ const resolvers: Resolvers = {
     },
 
     //!
-    async blogContext(_, { id }, context) {
-      const user = authContext(context);
-      const { id: uid, role, username } = user as UserInfoTypes;
+    async blogContext(_, { id }) {
+      // const user = authContext(context);
+      // const { id: uid, role, username } = user as UserInfoTypes;
       try {
-        if (role === "User") {
-          const result = await blogContextModel.findById({ _id: id, "createdBy.id": uid, "createdBy.username": username });
-          return result;
-        } else {
-          const result = await blogContextModel.findById(id);
-          return result;
-        }
+        // if (role === "User") {
+        //   const result = await blogContextModel.findById({ _id: id, "createdBy.id": uid, "createdBy.username": username });
+        //   return result;
+        // } else {
+        const result = await blogContextModel.findById(id);
+        return result;
+        // }
       } catch (error: any) {
         throw new GraphQLError(error.message);
       }
     },
 
     //!
-    async videoBlogContext(_, { id }, context) {
-      const user = authContext(context);
-      const { id: uid, role, username } = user as UserInfoTypes;
+    async videoBlogContext(_, { id }) {
+      // const user = authContext(context);
+      // const { id: uid, role, username } = user as UserInfoTypes;
       try {
-        if (role === "User") {
-          const result = await videoBlogContentModel.findById({ _id: id, "createdBy.id": uid, "createdBy.username": username });
-          return result;
-        } else {
-          const result = await videoBlogContentModel.findById(id);
-          return result;
-        }
+        // if (role === "User") {
+        //   const result = await videoBlogContentModel.findById({ _id: id, "createdBy.id": uid, "createdBy.username": username });
+        //   return result;
+        // } else {
+        const result = await videoBlogContentModel.findById(id);
+        return result;
+        // }
       } catch (error: any) {
         throw new GraphQLError(error.message);
       }

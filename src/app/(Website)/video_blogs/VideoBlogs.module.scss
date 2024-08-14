@@ -1,0 +1,150 @@
+// $primary-color: #333; // Dark gray
+// $secondary-color: #fff; // White
+// $hover-color: #ddd; // Light gray for hover states
+// $font-color: #333; // Dark gray$font-color: #333; // Dark gray for text
+
+// .videoBlogs {
+//   padding: 2rem;
+//   background-color: $secondary-color;
+//   text-align: center;
+//   // font-family: "Comic Sans MS", cursive, sans-serif;
+
+//   .title {
+//     font-size: 2.5rem;
+//     margin-bottom: 2rem;
+//     color: $primary-color;
+//   }
+
+//   .videoGrid {
+//     display: grid;
+//     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+//     gap: 1.5rem;
+//   }
+
+//   .videoCard {
+//     background-color: $primary-color;
+//     border-radius: 15px;
+//     overflow: hidden;
+//     box-shadow: 0 6px 12px rgba(255, 105, 97, 0.3);
+//     transition: transform 0.3s ease-in-out;
+
+//     &:hover {
+//       transform: translateY(-10px);
+//       background-color: $hover-color;
+//     }
+
+//     .videoImage {
+//       width: 100%;
+//       height: 180px;
+//       object-fit: cover;
+//     }
+
+//     .videoTitle {
+//       font-size: 1.5rem;
+//       margin: 1rem;
+//       color: $secondary-color;
+//     }
+//   }
+// }
+
+// @media (max-width: 768px) {
+//   .videoBlogs {
+//     padding: 1rem;
+
+//     .title {
+//       font-size: 2rem;
+//     }
+
+//     .videoGrid {
+//       grid-template-columns: 1fr;
+//     }
+//   }
+// }
+
+$primary-color: #333; // Dark gray
+$secondary-color: #fff; // White
+$hover-color: #ddd; // Light gray for hover states
+$font-color: #333; // Dark gray
+
+.videoBlogs {
+  padding: 2rem;
+  background-color: $secondary-color;
+  text-align: center;
+  // font-family: "Comic Sans MS", cursive, sans-serif;
+
+  .title {
+    font-size: 2.5rem;
+    margin-bottom: 2rem;
+    color: $primary-color;
+  }
+
+  .videoGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .videoCard {
+    background-color: $primary-color;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 6px 12px rgba(255, 105, 97, 0.3);
+    transition: transform 0.3s ease-in-out;
+    position: relative; // Added to support the play button overlay
+
+    // &:hover {
+    //   transform: translateY(-10px);
+    //   background-color: $hover-color;
+    // }
+
+    .thumbnailWrapper {
+      position: relative;
+      display: inline-block;
+      width: 100%;
+    }
+
+    .videoImage {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      display: block;
+    }
+
+    .playButton {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 60px;
+      height: 60px;
+      background: url("../../../assets/play.png") no-repeat center center;
+      background-size: contain;
+      opacity: 0.8;
+      transition: opacity 0.3s ease;
+
+      &:hover {
+        opacity: 1;
+      }
+    }
+
+    .videoTitle {
+      font-size: 1.5rem;
+      margin: 1rem;
+      color: $secondary-color;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .videoBlogs {
+    padding: 1rem;
+
+    .title {
+      font-size: 2rem;
+    }
+
+    .videoGrid {
+      grid-template-columns: 1fr;
+    }
+  }
+}

@@ -9,18 +9,12 @@ import connectMongoDB from "@/config/connectDB";
 const schema = makeExecutableSchema({ typeDefs, resolvers });
 
 const server = new ApolloServer({
-  // typeDefs,
-  // resolvers,
   schema,
 });
 
 (async function () {
   await connectMongoDB();
 })();
-
-// const handler = startServerAndCreateNextHandler<NextRequest>(server, {
-//   context: async (req) => ({ req }),
-// });\
 
 const handler = startServerAndCreateNextHandler<NextRequest>(server, {
   context: async (req) => ({

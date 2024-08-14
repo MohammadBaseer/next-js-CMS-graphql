@@ -40,12 +40,12 @@ const Navbar = () => {
                     <span className="pi pi-user"> My Profile</span>
                   </Link>
                 </div>
-                {/* <div className={styles.user_tab_navbar_element}>
-                <Link className={styles.href} href="/dashboard">
-                  {" "}
-                  <span className="pi pi-shop"> Admin Panel</span>{" "}
-                </Link>
-              </div> */}
+                <div className={styles.user_tab_navbar_element}>
+                  <Link className={styles.href} href="/">
+                    {" "}
+                    <span className="pi pi-shop"> Website</span>{" "}
+                  </Link>
+                </div>
                 {/* <div className={styles.user_tab_navbar_element}>
                       <Link className={styles.href} href="/register">
                         <span className="pi pi-cog"> Settings</span>

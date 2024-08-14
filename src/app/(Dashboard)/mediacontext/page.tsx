@@ -7,9 +7,11 @@ import { GetAllVideoBlogsTypes } from "@/types/customTypes/VideoCustomTypes";
 import YouTube from "react-youtube";
 import getYouTubeID from "get-youtube-id";
 import { onError, onReady, opts, opts_small_size } from "@/util/YoutubeIDContext/YoutubeVideoOptionCustomFunction";
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
+import { AuthContext } from "@/context/authContext";
 
 const MediaPost = () => {
+  const { userProfile } = useContext(AuthContext);
   const { data, error, refetch } = useSuspenseQuery<GetAllVideoBlogsTypes>(VIDEO_BLOG_CONTEXT);
   //!
   console.log(":::::::::::::", data.videoBlogContexts.length);
@@ -65,26 +67,28 @@ const MediaPost = () => {
           </thead>
 
           <tbody className={styles.tbody}>
-            {data?.videoBlogContexts.map((video, index) => {
-              return (
-                <tr className={styles.tr} key={index}>
-                  <td className={styles.td}>{index + 1}</td>
-                  <td className={styles.td}>
-                    <div className={styles.image}>{<YouTube videoId={getYouTubeID(video.url)} opts={opts_small_size} onReady={onReady} onError={onError} />}</div>
-                  </td>
-                  <td className={styles.td}>{video.title}</td>
-                  <td className={styles.td}>{video.createdBy.username}</td>
-                  <td className={styles.td}>{video.createdAt}</td>
-                  <td className={styles.td}>
-                    <Link href={`mediacontext/edit/${video._id}`} className={styles.ref}>
-                      <i className={`pi pi-file-edit ${styles.edit_icon}`}> </i>
-                    </Link>
-                    &nbsp;
-                    <i className={`pi pi-trash ${styles.delete_icon}`} onClick={deleteVideoBlogHandler(video._id)}></i>
-                  </td>
-                </tr>
-              );
-            })}
+            {data?.videoBlogContexts
+              .filter((videoBlog) => videoBlog.createdBy.id === userProfile?.id)
+              .map((video, index) => {
+                return (
+                  <tr className={styles.tr} key={index}>
+                    <td className={styles.td}>{index + 1}</td>
+                    <td className={styles.td}>
+                      <div className={styles.image}>{<YouTube videoId={getYouTubeID(video.url)} opts={opts_small_size} onReady={onReady} onError={onError} />}</div>
+                    </td>
+                    <td className={styles.td}>{video.title}</td>
+                    <td className={styles.td}>{video.createdBy.username}</td>
+                    <td className={styles.td}>{video.createdAt}</td>
+                    <td className={styles.td}>
+                      <Link href={`mediacontext/edit/${video._id}`} className={styles.ref}>
+                        <i className={`pi pi-file-edit ${styles.edit_icon}`}> </i>
+                      </Link>
+                      &nbsp;
+                      <i className={`pi pi-trash ${styles.delete_icon}`} onClick={deleteVideoBlogHandler(video._id)}></i>
+                    </td>
+                  </tr>
+                );
+              })}
           </tbody>
         </table>
 

@@ -5,8 +5,11 @@ import "primeicons/primeicons.css";
 import { useMutation, useSuspenseQuery } from "@apollo/client";
 import { DELETE_POST_CONTEXT, GET_POST_CONTEXT } from "@/queries/postContextQuery";
 import { GetAllBlogContextType } from "@/types/customTypes/PostBlogCustomTypes";
+import { useContext, useEffect, useState } from "react";
+import { AuthContext } from "@/context/authContext";
 
 const PostContext = () => {
+  const { userProfile } = useContext(AuthContext);
   // const { data, error, refetch } = useSuspenseQuery(GET_POST_CONTEXT);
   const { data, refetch } = useSuspenseQuery<GetAllBlogContextType>(GET_POST_CONTEXT);
 
@@ -58,27 +61,29 @@ const PostContext = () => {
             </thead>
 
             <tbody className={styles.tbody}>
-              {data.blogContexts.map((blog, index) => {
-                return (
-                  <tr className={styles.tr} key={index}>
-                    <td className={styles.td}>{index + 1}</td>
-                    <td className={styles.td}>
-                      <img className={styles.image} src={blog.photo.url} alt="nice" />
-                    </td>
-                    <td className={styles.td}>{blog.title}</td>
-                    <td className={styles.td}>{blog.description}</td>
-                    <td className={styles.td}>{blog.createdBy.username}</td>
-                    <td className={styles.td}>{blog.createdAt}</td>
-                    <td className={styles.td}>
-                      <Link href={`/blogcontext/edit/${blog._id}`} className={styles.ref}>
-                        <i className={`pi pi-file-edit ${styles.edit_icon}`}> </i>
-                      </Link>
-                      &nbsp;
-                      <i className={`pi pi-trash ${styles.delete_icon}`} onClick={deleteBlogHandler(blog._id)}></i>
-                    </td>
-                  </tr>
-                );
-              })}
+              {data.blogContexts
+                .filter((blog) => blog.createdBy.id === userProfile?.id)
+                .map((blog, index) => {
+                  return (
+                    <tr className={styles.tr} key={index}>
+                      <td className={styles.td}>{index + 1}</td>
+                      <td className={styles.td}>
+                        <img className={styles.image} src={blog.photo.url} alt="nice" />
+                      </td>
+                      <td className={styles.td}>{blog.title}</td>
+                      <td className={styles.td}>{blog.description}</td>
+                      <td className={styles.td}>{blog.createdBy.username}</td>
+                      <td className={styles.td}>{blog.createdAt}</td>
+                      <td className={styles.td}>
+                        <Link href={`/blogcontext/edit/${blog._id}`} className={styles.ref}>
+                          <i className={`pi pi-file-edit ${styles.edit_icon}`}> </i>
+                        </Link>
+                        &nbsp;
+                        <i className={`pi pi-trash ${styles.delete_icon}`} onClick={deleteBlogHandler(blog._id)}></i>
+                      </td>
+                    </tr>
+                  );
+                })}
             </tbody>
           </table>
           {data.blogContexts.length === 0 ? <h1>Not Found</h1> : ""}

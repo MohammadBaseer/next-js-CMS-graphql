@@ -1,9 +1,11 @@
-import styles from "./page.module.css";
+import WebNavbar from "@/Component/WebNavbar/WebNavbar";
+import Blogs from "./(Website)/blogs/page";
 
 export default function Home() {
   return (
-    <main className={styles.main}>
-      <h1>First Page</h1>{" "}
-    </main>
+    <>
+      <WebNavbar />
+      <Blogs />
+    </>
   );
 }

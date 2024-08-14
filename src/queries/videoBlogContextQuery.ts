@@ -7,6 +7,7 @@ export const VIDEO_BLOG_CONTEXT = gql`
       title
       url
       createdBy {
+        id
         username
       }
       createdAt

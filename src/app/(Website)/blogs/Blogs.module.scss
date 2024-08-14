@@ -1,0 +1,114 @@
+// components/Blogs.module.scss
+$primary-color: #333; // Dark gray
+$secondary-color: #fff; // White
+$accent-color: #555; // Medium gray for accents
+$hover-color: #ddd; // Light gray for hover states
+$font-color: #333; // Dark gray for text
+$shadow-color: rgba(0, 0, 0, 0.2); // Subtle shadow
+$border-color: #ccc; // Light gray border
+$font-family: "Arial", sans-serif; // Clean, modern font
+
+.blogs {
+  padding: 2rem;
+  background-color: $secondary-color;
+  font-family: $font-family;
+  text-align: center;
+
+  .title {
+    font-size: 2.8rem;
+    margin-bottom: 2.5rem;
+    color: $primary-color;
+    text-shadow: 1px 1px $shadow-color; // Subtle shadow to make the title stand out
+  }
+
+  .blogGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1.5rem;
+    padding: 0 1rem;
+    justify-content: center;
+  }
+
+  .blogCard {
+    background-color: $secondary-color;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 6px 12px $shadow-color;
+    border: 1px solid $border-color;
+    transition: transform 0.3s ease-in-out, background-color 0.3s ease-in-out;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    text-align: left;
+
+    &:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 8px 16px $shadow-color;
+      background-color: $hover-color;
+    }
+
+    .blogImage {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      border-radius: 20px 20px 0 0;
+    }
+
+    .blogTitle {
+      font-size: 1.8rem;
+      margin: 1rem;
+      color: $primary-color;
+      text-align: center;
+    }
+
+    .blogDescription {
+      margin: 0 1.2rem 1.2rem 1.2rem;
+      color: darken($font-color, 15%);
+      line-height: 1.6;
+      font-size: 1rem;
+      text-align: center;
+    }
+
+    .likeContainer {
+      margin: 0 1.2rem 1.5rem 1.2rem;
+      text-align: center;
+
+      .likeButton {
+        background-color: $accent-color;
+        color: $secondary-color;
+        border: none;
+        padding: 0.6rem 1.2rem;
+        border-radius: 25px;
+        cursor: pointer;
+        font-size: 1.1rem;
+        transition: background-color 0.3s ease-in-out, transform 0.2s ease-in-out;
+
+        &:hover {
+          background-color: $primary-color;
+          transform: scale(1.05);
+        }
+
+        &::before {
+          //   content: "❤️ ";
+          font-size: 1.2rem;
+        }
+      }
+    }
+  }
+}
+
+// Responsive design
+@media (max-width: 768px) {
+  .blogs {
+    padding: 1rem;
+
+    .title {
+      font-size: 2.4rem;
+    }
+
+    .blogGrid {
+      grid-template-columns: 1fr;
+    }
+  }
+}

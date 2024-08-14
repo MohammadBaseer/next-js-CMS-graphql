@@ -7,6 +7,7 @@ export const GET_POST_CONTEXT = gql`
       title
       description
       createdBy {
+        id
         username
       }
       photo {

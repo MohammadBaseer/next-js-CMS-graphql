@@ -158,8 +158,8 @@ const EditBlogContext = ({ params: { id } }: ParamsPropsType) => {
 
           <div>
             <label htmlFor="description">Description</label>
-            {/* <textarea className={styles.input_field} id="description" name="description" value={blogInput.description} onChange={getInputValues}></textarea> */}
-            <FroalaEditor
+            <textarea className={styles.input_field} id="description" name="description" value={blogInput.description} onChange={getInputValues}></textarea>
+            {/* <FroalaEditor
               tag="textarea"
               model={blogInput.description}
               onModelChange={handleModelChange}
@@ -168,7 +168,7 @@ const EditBlogContext = ({ params: { id } }: ParamsPropsType) => {
                 heightMin: 300,
                 heightMax: 600,
               }}
-            />{" "}
+            />{" "} */}
           </div>
           {error && <div className={styles.error}>{error}</div>}
           <div className={styles.sub_btn_box}>
