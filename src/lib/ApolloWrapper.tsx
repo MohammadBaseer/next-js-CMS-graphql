@@ -5,7 +5,7 @@ import { ReactNode } from "react";
 
 function createApolloClient(token: string | null) {
   const httpLink = new HttpLink({
-    uri: process.env.NEXT_PUBLIC_GRAPHQL_URI,
+    uri: "/api/graphql",
     fetchOptions: { cache: "no-store" },
   });
 
