@@ -10,9 +10,18 @@ import { onError, onReady, opts_small_size } from "@/util/YoutubeIDContext/Youtu
 import { useContext } from "react";
 import { AuthContext } from "@/context/authContext";
 import withAuth from "@/Component/RoutesProtect/withAuth";
+import { GetSingleUsersType } from "@/types/customTypes/UsersCustomTypes";
+import { GET_USERS_BY_ID } from "@/queries/userQuery";
 
 const MediaPost = () => {
   const { userProfile } = useContext(AuthContext);
+  const { data: userData } = useSuspenseQuery<GetSingleUsersType>(GET_USERS_BY_ID, {
+    variables: {
+      userId: userProfile.id,
+    },
+  });
+  const userRole = userData.user.role;
+
   const { data, refetch } = useSuspenseQuery<GetAllVideoBlogsTypes>(VIDEO_BLOG_CONTEXT);
   //!
   const [deleteVideContext] = useMutation(DELETE_VIDEO_CONTEXT);
@@ -68,7 +77,7 @@ const MediaPost = () => {
 
           <tbody className={styles.tbody}>
             {data?.videoBlogContexts
-              .filter((videoBlog) => (userProfile.role === "User" ? videoBlog.createdBy.id === userProfile?.id : videoBlog))
+              .filter((videoBlog) => (userRole === "User" ? videoBlog.createdBy.id === userProfile?.id : videoBlog))
               .map((video, index) => {
                 return (
                   <tr className={styles.tr} key={index}>

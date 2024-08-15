@@ -8,10 +8,19 @@ import { GetAllBlogContextType } from "@/types/customTypes/PostBlogCustomTypes";
 import { useContext } from "react";
 import { AuthContext } from "@/context/authContext";
 import withAuth from "@/Component/RoutesProtect/withAuth";
+import { GetAllUsersType, GetSingleUsersType } from "@/types/customTypes/UsersCustomTypes";
+import { GET_USERS, GET_USERS_BY_ID } from "@/queries/userQuery";
 
 const PostContext = () => {
   const { userProfile } = useContext(AuthContext);
   // const { data, error, refetch } = useSuspenseQuery(GET_POST_CONTEXT);
+  const { data: userData } = useSuspenseQuery<GetSingleUsersType>(GET_USERS_BY_ID, {
+    variables: {
+      userId: userProfile.id,
+    },
+  });
+  const userRole = userData.user.role;
+
   const { data, refetch } = useSuspenseQuery<GetAllBlogContextType>(GET_POST_CONTEXT);
 
   const [deleteBlogContext] = useMutation(DELETE_POST_CONTEXT);
@@ -63,7 +72,7 @@ const PostContext = () => {
 
             <tbody className={styles.tbody}>
               {data.blogContexts
-                .filter((blog) => (userProfile.role === "User" ? blog.createdBy.id === userProfile?.id : blog))
+                .filter((blog) => (userRole === "User" ? blog.createdBy.id === userProfile?.id : blog))
                 .map((blog, index) => {
                   return (
                     <tr className={styles.tr} key={index}>

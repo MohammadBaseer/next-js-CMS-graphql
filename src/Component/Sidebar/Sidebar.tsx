@@ -5,9 +5,20 @@ import "primeicons/primeicons.css";
 import withAuth from "../RoutesProtect/withAuth";
 import { useContext } from "react";
 import { AuthContext } from "@/context/authContext";
+import { useSuspenseQuery } from "@apollo/client";
+import { GetSingleUsersType } from "@/types/customTypes/UsersCustomTypes";
+import { GET_USERS_BY_ID } from "@/queries/userQuery";
 
 const Sidebar = () => {
   const { userProfile } = useContext(AuthContext);
+
+  const { data: userData } = useSuspenseQuery<GetSingleUsersType>(GET_USERS_BY_ID, {
+    variables: {
+      userId: userProfile.id,
+    },
+  });
+  const userRole = userData.user.role;
+
   return (
     <div className={styles.main_container}>
       <div className={styles.navbar}>
@@ -38,7 +49,7 @@ const Sidebar = () => {
               </li>
             </ul>
 
-            {userProfile.role === "Admin" ? (
+            {userRole === "Admin" ? (
               <>
                 <li className={styles.li_main}>
                   <span className="pi pi-cog">&nbsp;Roles Config</span>
