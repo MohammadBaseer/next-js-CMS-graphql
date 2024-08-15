@@ -4,7 +4,7 @@ import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import Link from "next/link";
 import YouTube from "react-youtube";
 import { GetSingleVideoBlogType } from "@/types/customTypes/VideoCustomTypes";
-import { ApolloError, useMutation, useSuspenseQuery } from "@apollo/client";
+import { useMutation, useSuspenseQuery } from "@apollo/client";
 import { GET_VIDEO_BLOG_BY_ID, UPDATE_VIDEO_CONTEXT } from "@/queries/videoBlogContextQuery";
 import { onError, onReady, opts } from "@/util/YoutubeIDContext/YoutubeVideoOptionCustomFunction";
 import withAuth from "@/Component/RoutesProtect/withAuth";
@@ -27,7 +27,7 @@ const EditVideoContext = ({ params: { id } }: ParamsType) => {
   //!
 
   //! To Update/Edit The Data by ID
-  const [editVideo, { loading, error: GraphQLError }] = useMutation(UPDATE_VIDEO_CONTEXT, {
+  const [editVideo, { loading }] = useMutation(UPDATE_VIDEO_CONTEXT, {
     onCompleted: (data) => {
       // console.log(":::", data);
     },
@@ -108,7 +108,7 @@ const EditVideoContext = ({ params: { id } }: ParamsType) => {
           {error && <div className={styles.error}>{error}</div>}
           <div className={styles.sub_btn_box}>
             <button className={styles.form_btn} type="submit">
-              Update
+              {loading ? "Updating..." : "Update"}
             </button>
           </div>
         </form>

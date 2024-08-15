@@ -16,7 +16,7 @@ type BlogInputTypes = {
 };
 const AddNewBlog = () => {
   //! ------
-  const [insertBlogContext, { loading, error: GraphQLError, data }] = useMutation(INSERT_POST_CONTEXT);
+  const [insertBlogContext, { loading }] = useMutation(INSERT_POST_CONTEXT);
   //! ------
   const [selectImage, setSelectImage] = useState<string | null>(null);
   const [blogInput, setBlogInput] = useState<BlogInputTypes>({
@@ -31,12 +31,7 @@ const AddNewBlog = () => {
       return { ...prev, [e.target.name]: e.target.value };
     });
   };
-  //! =====================
-  const handleModelChange = (description: string) => {
-    setBlogInput((prev) => {
-      return { ...prev, description };
-    });
-  };
+
   //! =====================
   const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];

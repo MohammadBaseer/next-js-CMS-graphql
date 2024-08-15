@@ -1,7 +1,7 @@
 "use client";
 import styles from "./AddUser.module.scss";
 import avatar from "../../../../assets/img/registrationFormAvatar/addAvatar.png";
-import { ChangeEvent, FormEvent, useContext, useState } from "react";
+import { useContext } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { AuthContext } from "@/context/authContext";

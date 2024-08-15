@@ -17,9 +17,9 @@ const AddNewVideo = () => {
     url: "",
   });
 
-  const [InsertVideoBlog, { loading, error: GraphQLError, data }] = useMutation(INSERT_VIDEO_CONTEXT, {
+  const [InsertVideoBlog, { loading, error: GraphQLError }] = useMutation(INSERT_VIDEO_CONTEXT, {
     onCompleted: (data) => {
-      // console.log(":::", data)
+      console.log(data ? "success" : "Failed");
     },
     onError: (error) => {
       setError(`Submission error! ${error.message}`);
@@ -93,7 +93,7 @@ const AddNewVideo = () => {
           {error && <div className={styles.error}>{error}</div>}
           <div className={styles.sub_btn_box}>
             <button className={styles.form_btn} type="submit">
-              Add New Video
+              {loading ? "Adding..." : "Add Video"}
             </button>
           </div>
         </form>

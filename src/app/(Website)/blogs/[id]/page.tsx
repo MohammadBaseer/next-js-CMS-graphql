@@ -1,6 +1,5 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import Link from "next/link";
 import styles from "./BlogDetail.module.scss"; // Adjust the path as necessary
 import { useSuspenseQuery } from "@apollo/client";

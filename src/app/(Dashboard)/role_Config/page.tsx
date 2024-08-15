@@ -45,9 +45,9 @@ const Users = () => {
                   <td className={styles.td}>{userData.name}</td>
                   <td className={styles.td}>{userData.role}</td>
                   <td className={styles.td}>
-                    {/* <Link href={"/"} className={styles.ref}> */}
-                    <i className={`pi pi-file-edit ${styles.edit_icon}`}> </i>
-                    {/* </Link> */}
+                    <Link href={`/role_Config/edit/${userData._id}`} className={styles.ref}>
+                      <i className={`pi pi-file-edit ${styles.edit_icon}`}> </i>
+                    </Link>
                     &nbsp;
                     {/* <Link href={"/"} className={styles.ref}>
                       <i className={`pi pi-trash ${styles.delete_icon}`}></i>

@@ -18,11 +18,9 @@ type inputsType = {
 const MyProfile = () => {
   const { userProfile, getUserProfile } = useContext(AuthContext);
 
-  // console.log("userProfile", userProfile);
-
   const [updateProfile, { loading }] = useMutation(UPDATE_USERS, {
     update(_, { data }) {
-      // console.log("Update data:::", data);
+      console.log(data ? "success" : "Failed");
     },
   });
 
@@ -153,7 +151,9 @@ const MyProfile = () => {
             </div>
             <br />
             <div className={styles.row}>
-              <input className={styles.input} type="submit" value="Submit" />
+              <button className={styles.input} type="submit" value="Submit">
+                {loading ? "Updating..." : " Update"}
+              </button>
             </div>
           </form>
         </div>

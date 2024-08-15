@@ -14,7 +14,7 @@ const PostContext = () => {
   // const { data, error, refetch } = useSuspenseQuery(GET_POST_CONTEXT);
   const { data, refetch } = useSuspenseQuery<GetAllBlogContextType>(GET_POST_CONTEXT);
 
-  const [deleteBlogContext, { error, loading }] = useMutation(DELETE_POST_CONTEXT);
+  const [deleteBlogContext] = useMutation(DELETE_POST_CONTEXT);
 
   const deleteBlogHandler = (id: string) => async (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
     event.preventDefault();
@@ -63,7 +63,7 @@ const PostContext = () => {
 
             <tbody className={styles.tbody}>
               {data.blogContexts
-                .filter((blog) => blog.createdBy.id === userProfile?.id)
+                .filter((blog) => (userProfile.role === "User" ? blog.createdBy.id === userProfile?.id : blog))
                 .map((blog, index) => {
                   return (
                     <tr className={styles.tr} key={index}>

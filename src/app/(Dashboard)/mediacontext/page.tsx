@@ -15,8 +15,7 @@ const MediaPost = () => {
   const { userProfile } = useContext(AuthContext);
   const { data, refetch } = useSuspenseQuery<GetAllVideoBlogsTypes>(VIDEO_BLOG_CONTEXT);
   //!
-  console.log(":::::::::::::", data.videoBlogContexts.length);
-  const [deleteVideContext, { error: GraphQLError, loading }] = useMutation(DELETE_VIDEO_CONTEXT);
+  const [deleteVideContext] = useMutation(DELETE_VIDEO_CONTEXT);
 
   const deleteVideoBlogHandler = (id: string) => async (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
     event.preventDefault();
@@ -69,7 +68,7 @@ const MediaPost = () => {
 
           <tbody className={styles.tbody}>
             {data?.videoBlogContexts
-              .filter((videoBlog) => videoBlog.createdBy.id === userProfile?.id)
+              .filter((videoBlog) => (userProfile.role === "User" ? videoBlog.createdBy.id === userProfile?.id : videoBlog))
               .map((video, index) => {
                 return (
                   <tr className={styles.tr} key={index}>

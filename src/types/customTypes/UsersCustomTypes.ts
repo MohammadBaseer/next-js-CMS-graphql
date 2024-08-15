@@ -2,11 +2,11 @@ export type GetAllUsersType = {
   users: Users[];
 };
 export type GetSingleUsersType = {
-  users: Users;
+  user: Users;
 };
 
 export type Users = {
-  id: string;
+  _id: string;
   name: string;
   email: string;
   role: string;

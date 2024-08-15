@@ -3,7 +3,7 @@ import styles from "./EditPostBlogContext.module.scss";
 import { ChangeEvent, FormEvent, useState } from "react";
 import Link from "next/link";
 import { ApolloError, useMutation, useSuspenseQuery } from "@apollo/client";
-import { GET_POST_CONTEXT_BY_ID, INSERT_POST_CONTEXT, UPDATE_POST_CONTEXT } from "@/queries/postContextQuery";
+import { GET_POST_CONTEXT_BY_ID, UPDATE_POST_CONTEXT } from "@/queries/postContextQuery";
 import { convertToBase64 } from "@/util/convertToBase64";
 import { GetSingleBlogContextType } from "@/types/customTypes/PostBlogCustomTypes";
 import withAuth from "@/Component/RoutesProtect/withAuth";

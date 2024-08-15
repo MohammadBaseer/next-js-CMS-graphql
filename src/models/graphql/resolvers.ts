@@ -17,8 +17,6 @@ const resolvers: Resolvers = {
     async users(_, __, context) {
       try {
         authContext(context);
-
-        console.log(":::::::::::::::::::::::context::::::::::::::::", context);
         const documentCount = await userModel.countDocuments();
         if (documentCount === 0) {
           throw new GraphQLError("Not found");

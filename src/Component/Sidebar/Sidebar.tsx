@@ -3,8 +3,11 @@ import Link from "next/link";
 import styles from "./Sidebar.module.scss";
 import "primeicons/primeicons.css";
 import withAuth from "../RoutesProtect/withAuth";
+import { useContext } from "react";
+import { AuthContext } from "@/context/authContext";
 
 const Sidebar = () => {
+  const { userProfile } = useContext(AuthContext);
   return (
     <div className={styles.main_container}>
       <div className={styles.navbar}>
@@ -35,31 +38,37 @@ const Sidebar = () => {
               </li>
             </ul>
 
-            <li className={styles.li_main}>
-              <span className="pi pi-cog">&nbsp;Roles Config</span>
-            </li>
+            {userProfile.role === "Admin" ? (
+              <>
+                <li className={styles.li_main}>
+                  <span className="pi pi-cog">&nbsp;Roles Config</span>
+                </li>
 
-            <ul className={styles.ul_sub}>
-              <li className={styles.li_sub}>
-                <Link className={styles.link} href="/role_Config">
-                  <span className="pi pi-angle-right">&nbsp;Roles</span>
-                </Link>
-              </li>
-            </ul>
+                <ul className={styles.ul_sub}>
+                  <li className={styles.li_sub}>
+                    <Link className={styles.link} href="/role_Config">
+                      <span className="pi pi-angle-right">&nbsp;Roles</span>
+                    </Link>
+                  </li>
+                </ul>
 
-            <li className={styles.li_main}>
-              <span className="pi">
-                <i className="pi pi-spin pi-cog"></i>&nbsp;Settings
-              </span>
-            </li>
+                <li className={styles.li_main}>
+                  <span className="pi">
+                    <i className="pi pi-spin pi-cog"></i>&nbsp;Settings
+                  </span>
+                </li>
 
-            <ul className={styles.ul_sub}>
-              <li className={styles.li_sub}>
-                <Link className={styles.link} href="/users">
-                  <span className="pi pi-angle-right">&nbsp;Users</span>
-                </Link>
-              </li>
-            </ul>
+                <ul className={styles.ul_sub}>
+                  <li className={styles.li_sub}>
+                    <Link className={styles.link} href="/users">
+                      <span className="pi pi-angle-right">&nbsp;Users</span>
+                    </Link>
+                  </li>
+                </ul>
+              </>
+            ) : (
+              ""
+            )}
           </ul>
         </div>
       </div>
