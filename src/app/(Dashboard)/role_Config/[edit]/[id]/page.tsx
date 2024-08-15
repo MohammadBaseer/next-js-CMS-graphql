@@ -4,9 +4,10 @@ import { useState } from "react";
 import Link from "next/link";
 import withAuth from "@/Component/RoutesProtect/withAuth";
 import { useMutation, useSuspenseQuery } from "@apollo/client";
-import { GET_USERS_BY_ID, UPDATE_USERS } from "@/queries/userQuery";
+import { GET_USERS, GET_USERS_BY_ID, UPDATE_USERS } from "@/queries/userQuery";
 import { GetSingleUsersType } from "@/types/customTypes/UsersCustomTypes";
 import { ApolloError } from "apollo-server-errors";
+import { useRouter } from "next/navigation";
 
 type ParamsPropsType = {
   params: {
@@ -15,19 +16,16 @@ type ParamsPropsType = {
 };
 
 const UpdateUser = ({ params: { id } }: ParamsPropsType) => {
+  const router = useRouter();
+  const [error, setError] = useState<string | null>(null);
+
   const { data, refetch } = useSuspenseQuery<GetSingleUsersType>(GET_USERS_BY_ID, {
     variables: {
       userId: id,
     },
   });
 
-  const [roleUpdate, { loading }] = useMutation(UPDATE_USERS, {
-    update(_, { data }) {
-      console.log("Update data:::", data);
-    },
-  });
-
-  const [error, setError] = useState<string | null>(null);
+  const [roleUpdate, { loading }] = useMutation(UPDATE_USERS);
 
   const [role, setRole] = useState<any>(data.user.role);
 
@@ -45,11 +43,16 @@ const UpdateUser = ({ params: { id } }: ParamsPropsType) => {
             role,
           },
         },
+        refetchQueries: [
+          {
+            query: GET_USERS,
+          },
+        ],
+        onCompleted: () => router.push("/role_Config"),
       });
 
-      console.log("result Data:::::>>>", result);
       if (result.data) {
-        refetch;
+        refetch();
         if (result.errors) {
           setError("Mutation errors");
           console.error("Mutation errors:", result.errors);
@@ -91,7 +94,7 @@ const UpdateUser = ({ params: { id } }: ParamsPropsType) => {
           </div>
           <div>
             <label htmlFor="name">Name</label>
-            <input className={styles.input_field} type="text" id="name" name="name" readOnly value={data.user.name} />
+            <input className={styles.input_field} type="text" id="name" name="name" readOnly value={data.user.name} disabled={true} />
           </div>
 
           <div>

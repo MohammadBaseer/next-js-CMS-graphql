@@ -8,18 +8,19 @@ import { GetAllBlogContextType } from "@/types/customTypes/PostBlogCustomTypes";
 import { useContext } from "react";
 import { AuthContext } from "@/context/authContext";
 import withAuth from "@/Component/RoutesProtect/withAuth";
-import { GetAllUsersType, GetSingleUsersType } from "@/types/customTypes/UsersCustomTypes";
-import { GET_USERS, GET_USERS_BY_ID } from "@/queries/userQuery";
+import { GetSingleUsersType } from "@/types/customTypes/UsersCustomTypes";
+import { GET_USERS_BY_ID } from "@/queries/userQuery";
 
 const PostContext = () => {
   const { userProfile } = useContext(AuthContext);
-  // const { data, error, refetch } = useSuspenseQuery(GET_POST_CONTEXT);
+
   const { data: userData } = useSuspenseQuery<GetSingleUsersType>(GET_USERS_BY_ID, {
     variables: {
       userId: userProfile.id,
     },
   });
   const userRole = userData.user.role;
+  const user_id = userData.user._id;
 
   const { data, refetch } = useSuspenseQuery<GetAllBlogContextType>(GET_POST_CONTEXT);
 
@@ -89,7 +90,7 @@ const PostContext = () => {
                           <i className={`pi pi-file-edit ${styles.edit_icon}`}> </i>
                         </Link>
                         &nbsp;
-                        <i className={`pi pi-trash ${styles.delete_icon}`} onClick={deleteBlogHandler(blog._id)}></i>
+                        {(blog.createdBy.id === user_id && userRole === "Editor") || userRole === "User" ? <i className={`pi pi-trash ${styles.delete_icon}`} onClick={deleteBlogHandler(blog._id)}></i> : userRole === "Admin" ? <i className={`pi pi-trash ${styles.delete_icon}`} onClick={deleteBlogHandler(blog._id)}></i> : " "}
                       </td>
                     </tr>
                   );

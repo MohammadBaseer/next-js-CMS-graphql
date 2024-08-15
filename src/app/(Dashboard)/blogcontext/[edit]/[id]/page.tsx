@@ -3,10 +3,11 @@ import styles from "./EditPostBlogContext.module.scss";
 import { ChangeEvent, FormEvent, useState } from "react";
 import Link from "next/link";
 import { ApolloError, useMutation, useSuspenseQuery } from "@apollo/client";
-import { GET_POST_CONTEXT_BY_ID, UPDATE_POST_CONTEXT } from "@/queries/postContextQuery";
+import { GET_POST_CONTEXT, GET_POST_CONTEXT_BY_ID, UPDATE_POST_CONTEXT } from "@/queries/postContextQuery";
 import { convertToBase64 } from "@/util/convertToBase64";
 import { GetSingleBlogContextType } from "@/types/customTypes/PostBlogCustomTypes";
 import withAuth from "@/Component/RoutesProtect/withAuth";
+import { useRouter } from "next/navigation";
 
 type ParamsPropsType = {
   params: {
@@ -22,6 +23,7 @@ type BlogInputTypes = {
   };
 };
 const EditBlogContext = ({ params: { id } }: ParamsPropsType) => {
+  const router = useRouter();
   //!SECTION
 
   const { data: fetchData } = useSuspenseQuery<GetSingleBlogContextType>(GET_POST_CONTEXT_BY_ID, {
@@ -37,6 +39,7 @@ const EditBlogContext = ({ params: { id } }: ParamsPropsType) => {
   //! ------
   const [selectImage, setSelectImage] = useState<string | File | string | null>(null);
   const [error, setError] = useState<string>("");
+
   const [blogInput, setBlogInput] = useState<BlogInputTypes>({
     title: fetchData.blogContext.title,
     description: fetchData.blogContext.description,
@@ -80,8 +83,6 @@ const EditBlogContext = ({ params: { id } }: ParamsPropsType) => {
       setSelectImage(fetchData.blogContext.photo.url);
     }
 
-    //FIXME -
-    //REVIEW -  //! write an statement to handel the file if the file.length is 0
     let value = "";
     if (file) {
       const base64 = await convertToBase64(file);
@@ -107,8 +108,14 @@ const EditBlogContext = ({ params: { id } }: ParamsPropsType) => {
           editBlogContextId: id,
           edits: blogInput,
         },
+        refetchQueries: [
+          {
+            query: GET_POST_CONTEXT,
+          },
+        ],
+        onCompleted: () => router.push("/blogcontext"),
       });
-      console.log("Successfully Added");
+
       // ! reset the state after insert
     } catch (GraphQLError) {
       const err = GraphQLError as ApolloError;

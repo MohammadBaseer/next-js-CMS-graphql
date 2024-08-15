@@ -60,9 +60,10 @@ const Users = () => {
                       <i className={`pi pi-file-edit ${styles.edit_icon}`}> </i>
                     </Link>
                     &nbsp; */}
-                    <Link href={"/"} className={styles.ref}>
+                    {/* <Link href={"/"} className={styles.ref}>
                       <i className={`pi pi-trash ${styles.delete_icon}`}></i>
-                    </Link>
+                    </Link> */}
+                    N/A
                   </td>
                 </tr>
               );

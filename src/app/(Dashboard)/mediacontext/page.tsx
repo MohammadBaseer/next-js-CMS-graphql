@@ -21,6 +21,7 @@ const MediaPost = () => {
     },
   });
   const userRole = userData.user.role;
+  const user_id = userData.user._id;
 
   const { data, refetch } = useSuspenseQuery<GetAllVideoBlogsTypes>(VIDEO_BLOG_CONTEXT);
   //!
@@ -93,7 +94,7 @@ const MediaPost = () => {
                         <i className={`pi pi-file-edit ${styles.edit_icon}`}> </i>
                       </Link>
                       &nbsp;
-                      <i className={`pi pi-trash ${styles.delete_icon}`} onClick={deleteVideoBlogHandler(video._id)}></i>
+                      {(video.createdBy.id === user_id && userRole === "Editor") || userRole === "User" ? <i className={`pi pi-trash ${styles.delete_icon}`} onClick={deleteVideoBlogHandler(video._id)}></i> : userRole === "Admin" ? <i className={`pi pi-trash ${styles.delete_icon}`} onClick={deleteVideoBlogHandler(video._id)}></i> : " "}
                     </td>
                   </tr>
                 );

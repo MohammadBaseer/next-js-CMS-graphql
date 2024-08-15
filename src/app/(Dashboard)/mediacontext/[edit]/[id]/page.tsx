@@ -5,9 +5,10 @@ import Link from "next/link";
 import YouTube from "react-youtube";
 import { GetSingleVideoBlogType } from "@/types/customTypes/VideoCustomTypes";
 import { useMutation, useSuspenseQuery } from "@apollo/client";
-import { GET_VIDEO_BLOG_BY_ID, UPDATE_VIDEO_CONTEXT } from "@/queries/videoBlogContextQuery";
+import { GET_VIDEO_BLOG_BY_ID, UPDATE_VIDEO_CONTEXT, VIDEO_BLOG_CONTEXT } from "@/queries/videoBlogContextQuery";
 import { onError, onReady, opts } from "@/util/YoutubeIDContext/YoutubeVideoOptionCustomFunction";
 import withAuth from "@/Component/RoutesProtect/withAuth";
+import { useRouter } from "next/navigation";
 var getYouTubeID = require("get-youtube-id");
 type ParamsType = {
   params: {
@@ -15,6 +16,7 @@ type ParamsType = {
   };
 };
 const EditVideoContext = ({ params: { id } }: ParamsType) => {
+  const router = useRouter();
   const [error, setError] = useState<string>("");
   const [urlId, setUrlId] = useState<string | null>(null);
 
@@ -56,6 +58,12 @@ const EditVideoContext = ({ params: { id } }: ParamsType) => {
           editVideoContextId: id,
           edits: videoInput,
         },
+        refetchQueries: [
+          {
+            query: VIDEO_BLOG_CONTEXT,
+          },
+        ],
+        onCompleted: () => router.push("/mediacontext"),
       });
 
       if (result.data) {

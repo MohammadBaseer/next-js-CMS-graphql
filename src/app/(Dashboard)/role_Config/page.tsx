@@ -9,6 +9,8 @@ import withAuth from "@/Component/RoutesProtect/withAuth";
 const Users = () => {
   const { data } = useSuspenseQuery<GetAllUsersType>(GET_USERS);
 
+  const dataCount1 = data.users.filter((userRole) => userRole.role === "Admin").length;
+
   return (
     <div className={styles.main}>
       <div className={styles.page_title}>
@@ -36,6 +38,8 @@ const Users = () => {
 
           <tbody className={styles.tbody}>
             {data.users.map((userData, index) => {
+              // const roleCount = userData.role === "Admin";
+              // console.log("roleCount", typeof roleCount);
               return (
                 <tr className={styles.tr} key={index + 1}>
                   <td className={styles.td}>{index + 1}</td>
@@ -45,13 +49,17 @@ const Users = () => {
                   <td className={styles.td}>{userData.name}</td>
                   <td className={styles.td}>{userData.role}</td>
                   <td className={styles.td}>
-                    <Link href={`/role_Config/edit/${userData._id}`} className={styles.ref}>
-                      <i className={`pi pi-file-edit ${styles.edit_icon}`}> </i>
-                    </Link>
-                    &nbsp;
-                    {/* <Link href={"/"} className={styles.ref}>
-                      <i className={`pi pi-trash ${styles.delete_icon}`}></i>
-                    </Link> */}
+                    {userData.role === "User" || userData.role === "Editor" ? (
+                      <Link href={`/role_Config/edit/${userData._id}`} className={styles.ref}>
+                        <i className={`pi pi-file-edit ${styles.edit_icon}`}> </i>
+                      </Link>
+                    ) : dataCount1 === 1 ? (
+                      ""
+                    ) : (
+                      <Link href={`/role_Config/edit/${userData._id}`} className={styles.ref}>
+                        <i className={`pi pi-file-edit ${styles.edit_icon}`}> </i>
+                      </Link>
+                    )}
                   </td>
                 </tr>
               );

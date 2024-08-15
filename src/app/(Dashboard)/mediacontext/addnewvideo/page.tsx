@@ -4,12 +4,15 @@ import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import Link from "next/link";
 import YouTube from "react-youtube";
 import { useMutation } from "@apollo/client";
-import { INSERT_VIDEO_CONTEXT } from "@/queries/videoBlogContextQuery";
+import { INSERT_VIDEO_CONTEXT, VIDEO_BLOG_CONTEXT } from "@/queries/videoBlogContextQuery";
 import { onError, onReady, opts } from "@/util/YoutubeIDContext/YoutubeVideoOptionCustomFunction";
 import getYouTubeID from "get-youtube-id";
 import withAuth from "@/Component/RoutesProtect/withAuth";
+import { useRouter } from "next/navigation";
 
 const AddNewVideo = () => {
+  const router = useRouter();
+
   const [error, setError] = useState<string>("");
   const [urlId, setUrlId] = useState<string | null>(null);
   const [videoInput, setVideoInput] = useState({
@@ -39,12 +42,17 @@ const AddNewVideo = () => {
         variables: {
           newVideoBlogContextData: videoInput,
         },
+        refetchQueries: [
+          {
+            query: VIDEO_BLOG_CONTEXT,
+          },
+        ],
+        onCompleted: () => router.push("/mediacontext"),
       });
 
       if (result) {
         setError("");
         setVideoInput({ title: "", url: "" });
-        alert("Added");
         return;
       }
     } catch (error) {

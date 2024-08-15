@@ -5,9 +5,10 @@ import { ChangeEvent, FormEvent, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { ApolloError, useMutation } from "@apollo/client";
-import { INSERT_POST_CONTEXT } from "@/queries/postContextQuery";
+import { GET_POST_CONTEXT, INSERT_POST_CONTEXT } from "@/queries/postContextQuery";
 import { convertToBase64 } from "@/util/convertToBase64";
 import withAuth from "@/Component/RoutesProtect/withAuth";
+import { useRouter } from "next/navigation";
 
 type BlogInputTypes = {
   title: string;
@@ -15,6 +16,7 @@ type BlogInputTypes = {
   photo: string;
 };
 const AddNewBlog = () => {
+  const router = useRouter();
   //! ------
   const [insertBlogContext, { loading }] = useMutation(INSERT_POST_CONTEXT);
   //! ------
@@ -64,9 +66,13 @@ const AddNewBlog = () => {
             },
           },
         },
+        refetchQueries: [
+          {
+            query: GET_POST_CONTEXT,
+          },
+        ],
+        onCompleted: () => router.push("/blogcontext"),
       });
-      console.log("Successfully Added", result);
-      // ! reset the state after insert
       setBlogInput({ title: "", description: "", photo: "" });
       setSelectImage(null);
     } catch (GraphQLError) {
