@@ -7,7 +7,151 @@ $background-color: #f2f2f2;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  border: solid;
+
+  .containerBox {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+    justify-content: center;
+  
+    @media (min-width: 768px) {
+      flex-direction: row;
+      justify-content: space-between;
+    }
+  }
+  
+  .users {
+    display: flex;
+    gap: 10px;
+  
+    @media (max-width: 768px) {
+      flex-direction: column;
+      align-items: center;
+    }
+  }
+  
+  .userType {
+    display: flex;
+    align-items: center;
+    background-color: #f4f4f4;
+    border-radius: 5px;
+    padding: 10px 15px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    text-align: center;
+  }
+  
+  .blogs, .videoBlogs {
+    display: flex;
+    align-items: center;
+    background-color: #f4f4f4;
+    border-radius: 5px;
+    padding: 10px 15px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    text-align: center;
+  }
+  
+  .pi {
+    font-size: 1.5rem;
+    margin-right: 10px;
+    color: #444444;
+  }
+  
+  .count, .blogCount, .videoCount {
+    font-size: 1.2rem;
+    font-weight: bold;
+  }
+  
+  @media (max-width: 480px) {
+    .pi {
+      font-size: 1.2rem;
+    }
+  
+    .count, .blogCount, .videoCount {
+      font-size: 1rem;
+    }
+  }
+  
+
+.containerBox {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  background-color: #f9f9f9;
+
+  @media (min-width: 768px) {
+    flex-direction: row;
+    justify-content: space-around;
+  }
+}
+
+.users, .blogs, .videoBlogs {
+  margin: 10px;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.icon, .blogIcon, .videoIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  color: #333;
+}
+
+.count, .blogCount, .videoCount {
+  font-size: 18px;
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+.adminUser {
+  background-color: #e0f7fa;
+}
+
+.editorUser {
+  background-color: #ffe0b2;
+}
+
+.normalUser {
+  background-color: #c8e6c9;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   @media (max-width: 768px) {
     margin-left: 200px;
