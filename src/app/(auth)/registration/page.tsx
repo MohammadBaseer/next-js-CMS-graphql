@@ -5,9 +5,16 @@ import Link from "next/link";
 import avatar from "../../../assets/img/registrationFormAvatar/addAvatar.png";
 import Image from "next/image";
 import { AuthContext } from "@/context/authContext";
+import { isToken } from "@/token/tokenCheck";
+import { useRouter } from "next/navigation";
 
 const Registration = () => {
   const { userRegisterFunction, getInputValuesFunction, registerHandleFileChange, registrationLoader, newUserCredential, selectImage, error } = useContext(AuthContext);
+  const router = useRouter();
+  const token = isToken();
+  if (token) {
+    router.push("/");
+  }
 
   useEffect(() => {
     //! This is only one way that I found to change the page title of client component, but No warranty for SEO
@@ -48,6 +55,8 @@ const Registration = () => {
           <div>
             <p>
               Do you have already an account? <Link href="/login">Login </Link>
+              <br />
+              Go Home? <Link href="/">Home </Link>
             </p>
           </div>
           <div className={styles.sub_btn_box}>

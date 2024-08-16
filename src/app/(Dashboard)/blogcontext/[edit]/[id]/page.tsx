@@ -23,6 +23,7 @@ type BlogInputTypes = {
   };
 };
 const EditBlogContext = ({ params: { id } }: ParamsPropsType) => {
+  console.log(":::::", id);
   const router = useRouter();
   //!SECTION
 

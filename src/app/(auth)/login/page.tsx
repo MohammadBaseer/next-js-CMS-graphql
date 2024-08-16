@@ -3,9 +3,17 @@ import { useContext, useEffect } from "react";
 import styles from "./Login.module.scss";
 import Link from "next/link";
 import { AuthContext } from "@/context/authContext";
+import { useRouter } from "next/navigation";
+import { isToken } from "@/token/tokenCheck";
 
 const Login = () => {
   const { userLoginFunction, getLoginInputValues, loginCredential, loginLoader, error } = useContext(AuthContext);
+
+  const router = useRouter();
+  const token = isToken();
+  if (token) {
+    router.push("/");
+  }
 
   useEffect(() => {
     //! This is only one way that I found to change the page title of client component, but No warranty for SEO
@@ -35,6 +43,8 @@ const Login = () => {
           <div>
             <p>
               Do you want to Register? <Link href="/registration">Registration </Link>
+              <br />
+              Go Home? <Link href="/">Home </Link>
             </p>
           </div>
           <div className={styles.sub_btn_box}>

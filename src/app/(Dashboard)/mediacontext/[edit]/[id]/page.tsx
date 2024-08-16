@@ -16,6 +16,7 @@ type ParamsType = {
   };
 };
 const EditVideoContext = ({ params: { id } }: ParamsType) => {
+  console.log(":::::", id);
   const router = useRouter();
   const [error, setError] = useState<string>("");
   const [urlId, setUrlId] = useState<string | null>(null);

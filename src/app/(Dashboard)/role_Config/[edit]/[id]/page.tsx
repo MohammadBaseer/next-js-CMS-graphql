@@ -16,6 +16,7 @@ type ParamsPropsType = {
 };
 
 const UpdateUser = ({ params: { id } }: ParamsPropsType) => {
+  console.log(":::::", id);
   const router = useRouter();
   const [error, setError] = useState<string | null>(null);
 
