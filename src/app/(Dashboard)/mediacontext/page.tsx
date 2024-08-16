@@ -80,6 +80,8 @@ const MediaPost = () => {
             {data?.videoBlogContexts
               .filter((videoBlog) => (userRole === "User" ? videoBlog.createdBy.id === userProfile?.id : videoBlog))
               .map((video, index) => {
+                const dateObject = new Date(video.createdAt);
+                const dateString = dateObject.toDateString();
                 return (
                   <tr className={styles.tr} key={index}>
                     <td className={styles.td}>{index + 1}</td>
@@ -88,7 +90,7 @@ const MediaPost = () => {
                     </td>
                     <td className={styles.td}>{video.title}</td>
                     <td className={styles.td}>{video.createdBy.username}</td>
-                    <td className={styles.td}>{video.createdAt}</td>
+                    <td className={styles.td}>{dateString}</td>
                     <td className={styles.td}>
                       <Link href={`mediacontext/edit/${video._id}`} className={styles.ref}>
                         <i className={`pi pi-file-edit ${styles.edit_icon}`}> </i>

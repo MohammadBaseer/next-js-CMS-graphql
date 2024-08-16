@@ -10,6 +10,7 @@ import { GET_POST_CONTEXT } from "@/queries/postContextQuery";
 import { VIDEO_BLOG_CONTEXT } from "@/queries/videoBlogContextQuery";
 import { useContext } from "react";
 import { AuthContext } from "@/context/authContext";
+import Link from "next/link";
 
 const HomePage = () => {
   const { userProfile } = useContext(AuthContext);
@@ -52,17 +53,20 @@ const HomePage = () => {
         ) : (
           ""
         )}
-        <div className={styles.blogs}>
-          <p className={styles.blogCount}>
-            <span className="pi pi-images"></span> Blogs: {userProfile?.role === "Admin" ? allPost : myPost}
-          </p>
-        </div>
-        <div className={styles.videoBlogs}>
-          <span className="pi pi-youtube"></span>
-          <p className={styles.videoCount}>
-            <span className="pi pi-youtube"></span> Video Blogs: {userProfile?.role === "Admin" ? allVideo : myVideo}
-          </p>
-        </div>
+        <Link href={"/blogcontext"}>
+          <div className={styles.blogs}>
+            <p className={styles.blogCount}>
+              <span className="pi pi-images"></span> Blogs: {userProfile?.role === "Admin" ? allPost : myPost}
+            </p>
+          </div>
+        </Link>
+        <Link href={"/mediacontext"}>
+          <div className={styles.videoBlogs}>
+            <p className={styles.videoCount}>
+              <span className="pi pi-youtube"></span> Video Blogs: {userProfile?.role === "Admin" ? allVideo : myVideo}
+            </p>
+          </div>
+        </Link>
       </div>
     </div>
   );

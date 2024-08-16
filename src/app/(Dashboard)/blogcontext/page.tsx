@@ -75,6 +75,8 @@ const PostContext = () => {
               {data.blogContexts
                 .filter((blog) => (userRole === "User" ? blog.createdBy.id === userProfile?.id : blog))
                 .map((blog, index) => {
+                  const dateObject = new Date(blog.createdAt);
+                  const dateString = dateObject.toDateString();
                   return (
                     <tr className={styles.tr} key={index}>
                       <td className={styles.td}>{index + 1}</td>
@@ -82,9 +84,9 @@ const PostContext = () => {
                         <img className={styles.image} src={blog.photo.url} alt="nice" />
                       </td>
                       <td className={styles.td}>{blog.title}</td>
-                      <td className={styles.td}>{blog.description}</td>
+                      <td className={styles.td}>{blog.description.slice(0, 50) + "..."}</td>
                       <td className={styles.td}>{blog.createdBy.username}</td>
-                      <td className={styles.td}>{blog.createdAt}</td>
+                      <td className={styles.td}>{dateString}</td>
                       <td className={styles.td}>
                         <Link href={`/blogcontext/edit/${blog._id}`} className={styles.ref}>
                           <i className={`pi pi-file-edit ${styles.edit_icon}`}> </i>

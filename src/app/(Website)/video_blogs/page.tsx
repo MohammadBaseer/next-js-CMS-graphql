@@ -28,13 +28,13 @@ export default function VideoBlogs() {
 
           return (
             <div key={post._id} className={styles.videoCard}>
+              <div className={styles.thumbnailWrapper}>
+                <img src={thumbnailUrl} alt={post.title} className={styles.videoImage} />
+                <div className={styles.playButton}></div>
+              </div>
               <Link href={`/video_blogs/${post._id}`}>
-                <div className={styles.thumbnailWrapper}>
-                  <img src={thumbnailUrl} alt={post.title} className={styles.videoImage} />
-                  <div className={styles.playButton}></div>
-                </div>
+                <h2 className={styles.videoTitle}>{post.title}</h2>
               </Link>
-              <h2 className={styles.videoTitle}>{post.title}</h2>
             </div>
           );
         })}

@@ -5,7 +5,10 @@ export default function Home() {
   return (
     <>
       <WebNavbar />
-      <Blogs />
+      <div>
+        <h1>Welcome To The GraphQL 'CMS' Project</h1>
+        <h3></h3>
+      </div>{" "}
     </>
   );
 }

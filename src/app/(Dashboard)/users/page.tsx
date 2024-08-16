@@ -45,6 +45,8 @@ const Users = () => {
 
           <tbody className={styles.tbody}>
             {data.users.map((userData, index) => {
+              const dateObject = new Date(userData.createdAt);
+              const dateString = dateObject.toDateString();
               return (
                 <tr className={styles.tr} key={index + 1}>
                   <td className={styles.td}>{index + 1}</td>
@@ -53,18 +55,9 @@ const Users = () => {
                   </td>
                   <td className={styles.td}>{userData.name}</td>
                   <td className={styles.td}>{userData.email}</td>
-                  <td className={styles.td}>{userData.createdAt}</td>
+                  <td className={styles.td}>{dateString}</td>
                   <td className={styles.td}>{userData.role}</td>
-                  <td className={styles.td}>
-                    {/* <Link href={"/"} className={styles.ref}>
-                      <i className={`pi pi-file-edit ${styles.edit_icon}`}> </i>
-                    </Link>
-                    &nbsp; */}
-                    {/* <Link href={"/"} className={styles.ref}>
-                      <i className={`pi pi-trash ${styles.delete_icon}`}></i>
-                    </Link> */}
-                    N/A
-                  </td>
+                  <td className={styles.td}>N/A</td>
                 </tr>
               );
             })}

@@ -6,6 +6,7 @@ import { GetAllBlogContextType } from "@/types/customTypes/PostBlogCustomTypes";
 import { GetAllVideoBlogsTypes } from "@/types/customTypes/VideoCustomTypes";
 import { useSuspenseQuery } from "@apollo/client";
 import getYouTubeID from "get-youtube-id";
+import Link from "next/link";
 
 const Blogs = () => {
   const { data } = useSuspenseQuery<GetAllBlogContextType>(GET_POST_CONTEXT);
@@ -14,26 +15,9 @@ const Blogs = () => {
 
   return (
     <>
-      {/* <section className={styles.blogs}>
+      <div className={styles.blog} style={{ textAlign: "center" }}>
         <h1 className={styles.title}>Our Latest Blogs</h1>
-        <div className={styles.blogGrid}>
-          {data.blogContexts.map((post, index) => (
-            <div className={styles.blogCard} key={index}>
-              <img src={post.photo.url} alt={post.title} className={styles.blogImage} />
-              <Link href={`/blogs/${post._id}`} key={post._id} passHref>
-                <h2 className={styles.blogTitle}>{post.title}</h2>
-              </Link>
-              <p className={styles.blogDescription}>{post.description}</p>
-              <div className={styles.likeContainer}>
-                <button className={styles.likeButton}>❤️ </button>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section> */}
-      <hr />
-
-      <h1 className={styles.title}>Our Latest Blogs</h1>
+      </div>
       <div className={styles.main_container}>
         <div className={styles.blogs_container}>
           {data.blogContexts.map((post, index) => (
@@ -50,9 +34,9 @@ const Blogs = () => {
                     <p>{post.description.slice(0, 190) + "..."}</p>
                   </div>
                   <div className={styles.button}>
-                    <button>
-                      <span className="Like_icon"></span>
-                    </button>
+                    <Link href={`/blogs/${post._id}`} key={post._id} passHref>
+                      <span className="Like_icon">More</span>
+                    </Link>
                   </div>
                 </div>
               </div>
