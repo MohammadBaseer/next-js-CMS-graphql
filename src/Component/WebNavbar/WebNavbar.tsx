@@ -60,7 +60,7 @@ const WebNavbar = () => {
                     </Link>
                   </div>
                   <div className={styles.user_tab_navbar_element}>
-                    <Link className={styles.href} href="/home">
+                    <Link className={styles.href} href="/dashboard">
                       {" "}
                       <span className="pi pi-shop"> Dashboard</span>{" "}
                     </Link>

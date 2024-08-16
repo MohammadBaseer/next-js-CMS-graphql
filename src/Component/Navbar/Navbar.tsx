@@ -4,11 +4,14 @@ import styles from "./Navbar.module.scss";
 import { useContext, useState } from "react";
 import { AuthContext } from "@/context/authContext";
 import withAuth from "../RoutesProtect/withAuth";
+import { Button } from "primereact/button";
 
 const Navbar = () => {
   const { userProfile, logOutUser } = useContext(AuthContext);
   const [profileNavbarToggle, setProfileNavbarToggle] = useState<boolean>(false);
-
+  // if (!userProfile) {
+  //   setUserProfile(null);
+  // }
   const toggle = () => {
     if (profileNavbarToggle) {
       setProfileNavbarToggle(false);
@@ -22,14 +25,14 @@ const Navbar = () => {
       {userProfile ? (
         <div className={styles.nav_container}>
           <div className={styles.box_1}>
-            <h3>{userProfile.username}</h3>
+            <h3>{userProfile?.username}</h3>
           </div>
 
           <div className={styles.box_2}>
             <div className=""></div>
 
             <div className={styles.profile_image_box}>
-              <img className={styles.profile_image} src={userProfile.avatar} alt="" onClick={toggle} />
+              <img className={styles.profile_image} src={userProfile?.avatar} alt="" onClick={toggle} />
 
               <div className={styles.user_tab_navbar_element_box} style={profileNavbarToggle === true ? { display: "block" } : { display: "none" }}>
                 <div className={styles.user_tab_navbar_element}>
@@ -53,9 +56,15 @@ const Navbar = () => {
                       </Link>
                     </div> */}
                 <div className={styles.user_tab_navbar_element}>
-                  <Link className={styles.href} href="#" onClick={logOutUser}>
+                  {/* <Link className={styles.href} href="#" onClick={logOutUser}>
                     <span className="pi pi-sign-out"> Logout</span>
-                  </Link>
+                  </Link> */}
+                  <div className={styles.href} onClick={logOutUser}>
+                    <span className="pi pi-sign-out"> Logout</span>
+                  </div>
+                  {/* <Button className={styles.href} onClick={logOutUser}>
+                    <span className="pi pi-sign-out"> Logout</span>
+                  </Button> */}
                 </div>
               </div>
             </div>
@@ -68,4 +77,4 @@ const Navbar = () => {
   );
 };
 
-export default withAuth(Navbar);
+export default Navbar;

@@ -17,7 +17,7 @@ const MediaPost = () => {
   const { userProfile } = useContext(AuthContext);
   const { data: userData } = useSuspenseQuery<GetSingleUsersType>(GET_USERS_BY_ID, {
     variables: {
-      userId: userProfile.id,
+      userId: userProfile?.id,
     },
   });
   const userRole = userData.user.role;
@@ -48,8 +48,8 @@ const MediaPost = () => {
       <div className={styles.page_title}>
         <p>
           <span className="pi pi-home">&nbsp;</span>
-          <Link href={"/home"} className={styles.title_href}>
-            Home
+          <Link href={"/dashboard"} className={styles.title_href}>
+            Dashboard
           </Link>
           /Context/Media Context
         </p>

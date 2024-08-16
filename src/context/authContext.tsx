@@ -3,8 +3,8 @@ import { decodeToken, isToken, removeToken } from "@/token/tokenCheck";
 import { convertToBase64 } from "@/util/convertToBase64";
 import { useMutation } from "@apollo/client";
 import { ApolloError } from "apollo-server-errors";
-import { useRouter } from "next/navigation";
-import React, { ChangeEvent, createContext, FormEvent, ReactNode, useEffect, useState } from "react";
+import { redirect, useRouter } from "next/navigation";
+import React, { ChangeEvent, createContext, Dispatch, FormEvent, ReactNode, useEffect, useState } from "react";
 
 type AuthContextTypes = {
   userProfile: { id: string; email: string; username: string; avatar: string; role: string };
@@ -23,6 +23,7 @@ type AuthContextTypes = {
   getLoginInputValues: (e: ChangeEvent<HTMLInputElement>) => void;
   //! Logout Elements Types
   logOutUser: () => void;
+  setUserProfile: Dispatch<any>;
   //! for after profile update
   getUserProfile: () => void;
 };
@@ -54,6 +55,9 @@ const AuthContextInitialValue: AuthContextTypes = {
   },
   //! Logout Initial Value Elements
   logOutUser: () => {
+    throw new Error("The logOutUser Error");
+  },
+  setUserProfile: () => {
     throw new Error("The logOutUser Error");
   },
   //! for after profile update
@@ -258,10 +262,14 @@ const AuthContextProvider = ({ children }: childrenPropsTypes) => {
   const logOutUser = () => {
     removeToken();
     setUserProfile(null);
+
+    console.log(":::::::::::::::::", userProfile);
     setTimeout(() => {
       router.push("/");
     }, 0);
+    // redirect("/");
   };
+
   // ? =================================== End Logout Part
 
   // ! Check user Login Status with the help of Token
@@ -292,6 +300,7 @@ const AuthContextProvider = ({ children }: childrenPropsTypes) => {
         userProfile,
         logOutUser,
         getUserProfile,
+        setUserProfile,
       }}
     >
       {children}

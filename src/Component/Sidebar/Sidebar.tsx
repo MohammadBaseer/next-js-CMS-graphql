@@ -10,12 +10,12 @@ import { GetSingleUsersType } from "@/types/customTypes/UsersCustomTypes";
 import { GET_USERS_BY_ID } from "@/queries/userQuery";
 
 const Sidebar = () => {
-  const { userProfile } = useContext(AuthContext);
+  const { userProfile, logOutUser } = useContext(AuthContext);
   const [isActive, setIsActive] = useState(false);
 
   const { data: userData } = useSuspenseQuery<GetSingleUsersType>(GET_USERS_BY_ID, {
     variables: {
-      userId: userProfile.id,
+      userId: userProfile?.id ? userProfile?.id : "",
     },
   });
   const userRole = userData.user.role;
@@ -41,8 +41,8 @@ const Sidebar = () => {
               </li>
               <ul className={styles.ul_sub}>
                 <li className={styles.li_sub}>
-                  <Link className={styles.link} href="/home">
-                    <span className="pi pi-angle-right">&nbsp;Home</span>
+                  <Link className={styles.link} href="/dashboard">
+                    <span className="pi pi-angle-right">&nbsp;Dashboard</span>
                   </Link>
                 </li>
               </ul>

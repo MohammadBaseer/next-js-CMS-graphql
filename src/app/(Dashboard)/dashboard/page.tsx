@@ -23,15 +23,15 @@ const HomePage = () => {
   const usersCount3 = users.users.filter((users) => users.role === "User").length;
 
   const allPost = post.blogContexts.length;
-  const myPost = post.blogContexts.filter((post) => post.createdBy.id === userProfile.id).length;
+  const myPost = post.blogContexts.filter((post) => post.createdBy.id === userProfile?.id).length;
 
   const allVideo = videos.videoBlogContexts.length;
-  const myVideo = videos.videoBlogContexts.filter((video) => video.createdBy.id === userProfile.id).length;
+  const myVideo = videos.videoBlogContexts.filter((video) => video.createdBy.id === userProfile?.id).length;
 
   return (
     <div className={styles.main}>
       <div className={styles.containerBox}>
-        {userProfile.role === "Admin" ? (
+        {userProfile && userProfile?.role === "Admin" ? (
           <div className={styles.users}>
             <div className={styles.userType}>
               <p className={styles.count}>
@@ -54,13 +54,13 @@ const HomePage = () => {
         )}
         <div className={styles.blogs}>
           <p className={styles.blogCount}>
-            <span className="pi pi-images"></span> Blogs: {userProfile.role === "Admin" ? allPost : myPost}
+            <span className="pi pi-images"></span> Blogs: {userProfile?.role === "Admin" ? allPost : myPost}
           </p>
         </div>
         <div className={styles.videoBlogs}>
           <span className="pi pi-youtube"></span>
           <p className={styles.videoCount}>
-            <span className="pi pi-youtube"></span> Video Blogs: {userProfile.role === "Admin" ? allVideo : myVideo}
+            <span className="pi pi-youtube"></span> Video Blogs: {userProfile?.role === "Admin" ? allVideo : myVideo}
           </p>
         </div>
       </div>

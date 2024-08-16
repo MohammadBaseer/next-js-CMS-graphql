@@ -87,8 +87,8 @@ const AddNewBlog = () => {
       <div className={styles.page_title}>
         <p>
           <span className="pi pi-home">&nbsp;</span>
-          <Link href={"/home"} className={styles.title_href}>
-            Home
+          <Link href={"/dashboard"} className={styles.title_href}>
+            Dashboard
           </Link>
           /Context/
           <Link href={"/blogcontext"} className={styles.title_href}>
