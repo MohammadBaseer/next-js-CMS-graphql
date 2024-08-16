@@ -109,6 +109,10 @@ const MyProfile = () => {
     }
   }, [userProfile]);
 
+  useEffect(() => {
+    document.title = "My Profile";
+  }, []);
+
   return (
     <div className={styles.container}>
       <div className={styles.main}>

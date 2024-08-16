@@ -5,14 +5,17 @@ import { VIDEO_BLOG_CONTEXT } from "@/queries/videoBlogContextQuery";
 import { GetAllBlogContextType } from "@/types/customTypes/PostBlogCustomTypes";
 import { GetAllVideoBlogsTypes } from "@/types/customTypes/VideoCustomTypes";
 import { useSuspenseQuery } from "@apollo/client";
-import getYouTubeID from "get-youtube-id";
 import Link from "next/link";
+import { useEffect } from "react";
 
 const Blogs = () => {
   const { data } = useSuspenseQuery<GetAllBlogContextType>(GET_POST_CONTEXT);
 
   const { data: videoBlog, error } = useSuspenseQuery<GetAllVideoBlogsTypes>(VIDEO_BLOG_CONTEXT);
 
+  useEffect(() => {
+    document.title = "Post Blogs";
+  }, []);
   return (
     <>
       <div className={styles.blog} style={{ textAlign: "center" }}>

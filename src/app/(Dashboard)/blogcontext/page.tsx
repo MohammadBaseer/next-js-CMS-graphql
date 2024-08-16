@@ -5,7 +5,7 @@ import "primeicons/primeicons.css";
 import { useMutation, useSuspenseQuery } from "@apollo/client";
 import { DELETE_POST_CONTEXT, GET_POST_CONTEXT } from "@/queries/postContextQuery";
 import { GetAllBlogContextType } from "@/types/customTypes/PostBlogCustomTypes";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { AuthContext } from "@/context/authContext";
 import withAuth from "@/Component/RoutesProtect/withAuth";
 import { GetSingleUsersType } from "@/types/customTypes/UsersCustomTypes";
@@ -39,6 +39,9 @@ const PostContext = () => {
       console.error("Failed to delete video context", error);
     }
   };
+  useEffect(() => {
+    document.title = "Post Blog List";
+  }, []);
   return (
     <div className={styles.container}>
       <div className={styles.main}>

@@ -5,10 +5,15 @@ import { useSuspenseQuery } from "@apollo/client";
 import { GET_USERS } from "@/queries/userQuery";
 import { GetAllUsersType } from "@/types/customTypes/UsersCustomTypes";
 import withAuth from "@/Component/RoutesProtect/withAuth";
+import { useEffect } from "react";
 
 const Users = () => {
   const { data } = useSuspenseQuery<GetAllUsersType>(GET_USERS);
   console.log("data:::", data);
+
+  useEffect(() => {
+    document.title = "Users";
+  }, []);
 
   return (
     <div className={styles.main}>

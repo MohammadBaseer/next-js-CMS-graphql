@@ -64,6 +64,10 @@ const AddNewVideo = () => {
     setUrlId(getYouTubeID(videoInput.url));
   }, [videoInput.url]);
 
+  useEffect(() => {
+    document.title = "Add New Video Blog";
+  }, []);
+
   return (
     <div className={styles.main}>
       <div className={styles.page_title}>

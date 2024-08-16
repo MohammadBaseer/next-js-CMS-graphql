@@ -1,7 +1,7 @@
 "use client";
 import styles from "./AddUser.module.scss";
 import avatar from "../../../../assets/img/registrationFormAvatar/addAvatar.png";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { AuthContext } from "@/context/authContext";
@@ -9,6 +9,10 @@ import withAuth from "@/Component/RoutesProtect/withAuth";
 
 const AddNewUser = () => {
   const { userRegisterFunction, getInputValuesFunction, registerHandleFileChange, registrationLoader, newUserCredential, selectImage, error } = useContext(AuthContext);
+
+  useEffect(() => {
+    document.title = "Add User";
+  }, []);
 
   return (
     <div className={styles.main}>

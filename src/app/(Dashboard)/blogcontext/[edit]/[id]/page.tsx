@@ -1,6 +1,6 @@
 "use client";
 import styles from "./EditPostBlogContext.module.scss";
-import { ChangeEvent, FormEvent, useState } from "react";
+import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import Link from "next/link";
 import { ApolloError, useMutation, useSuspenseQuery } from "@apollo/client";
 import { GET_POST_CONTEXT, GET_POST_CONTEXT_BY_ID, UPDATE_POST_CONTEXT } from "@/queries/postContextQuery";
@@ -127,6 +127,9 @@ const EditBlogContext = ({ params: { id } }: ParamsPropsType) => {
     }
   };
   //! =====================
+  useEffect(() => {
+    document.title = "Edit Post Blog";
+  }, []);
   return (
     <div className={styles.main}>
       <div className={styles.page_title}>

@@ -7,6 +7,7 @@ import getYouTubeID from "get-youtube-id";
 import styles from "./VideoDetail.module.scss"; // Adjust the path as necessary
 import { GetSingleVideoBlogType } from "@/types/customTypes/VideoCustomTypes";
 import { GET_VIDEO_BLOG_BY_ID } from "@/queries/videoBlogContextQuery";
+import { useEffect } from "react";
 
 type ParamsType = {
   params: {
@@ -23,6 +24,10 @@ export default function VideoDetail({ params: { id } }: ParamsType) {
 
   const videoUrl = data.videoBlogContext.url;
   const youtubeId = getYouTubeID(videoUrl);
+
+  useEffect(() => {
+    document.title = "Video Blogs Add";
+  }, []);
 
   return (
     <div className={styles.videoDetail}>

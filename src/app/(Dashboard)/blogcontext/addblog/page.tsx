@@ -1,7 +1,7 @@
 "use client";
 import styles from "./AddBlog.module.scss";
 import avatar from "../../../../assets/img/registrationFormAvatar/addAvatar.png";
-import { ChangeEvent, FormEvent, useState } from "react";
+import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { ApolloError, useMutation } from "@apollo/client";
@@ -82,6 +82,9 @@ const AddNewBlog = () => {
     }
   };
   //! =====================
+  useEffect(() => {
+    document.title = "Add New Post Blog";
+  }, []);
   return (
     <div className={styles.main}>
       <div className={styles.page_title}>

@@ -1,7 +1,11 @@
+"use client";
 import WebNavbar from "@/Component/WebNavbar/WebNavbar";
-import Blogs from "./(Website)/blogs/page";
+import { useEffect } from "react";
 
 export default function Home() {
+  useEffect(() => {
+    document.title = "Home";
+  }, []);
   return (
     <>
       <WebNavbar />

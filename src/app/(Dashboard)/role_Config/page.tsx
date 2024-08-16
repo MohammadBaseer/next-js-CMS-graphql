@@ -5,11 +5,16 @@ import { useSuspenseQuery } from "@apollo/client";
 import { GET_USERS } from "@/queries/userQuery";
 import { GetAllUsersType } from "@/types/customTypes/UsersCustomTypes";
 import withAuth from "@/Component/RoutesProtect/withAuth";
+import { useEffect } from "react";
 
 const Users = () => {
   const { data } = useSuspenseQuery<GetAllUsersType>(GET_USERS);
 
   const dataCount1 = data.users.filter((userRole) => userRole.role === "Admin").length;
+
+  useEffect(() => {
+    document.title = "Config Users";
+  }, []);
 
   return (
     <div className={styles.main}>

@@ -5,6 +5,7 @@ import styles from "./BlogDetail.module.scss"; // Adjust the path as necessary
 import { useSuspenseQuery } from "@apollo/client";
 import { GetSingleBlogContextType } from "@/types/customTypes/PostBlogCustomTypes";
 import { GET_POST_CONTEXT_BY_ID } from "@/queries/postContextQuery";
+import { useEffect } from "react";
 
 type ParamsPropTypes = {
   params: {
@@ -18,6 +19,9 @@ export default function BlogDetail({ params: { id } }: ParamsPropTypes) {
       blogContextId: id,
     },
   });
+  useEffect(() => {
+    document.title = "Post Blog Add";
+  }, []);
 
   return (
     <div className={styles.blogDetail}>

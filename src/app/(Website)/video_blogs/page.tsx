@@ -6,6 +6,7 @@ import { useSuspenseQuery } from "@apollo/client";
 import { GetAllVideoBlogsTypes } from "@/types/customTypes/VideoCustomTypes";
 import { VIDEO_BLOG_CONTEXT } from "@/queries/videoBlogContextQuery";
 import getYouTubeID from "get-youtube-id";
+import { useEffect } from "react";
 
 export default function VideoBlogs() {
   const { data, error } = useSuspenseQuery<GetAllVideoBlogsTypes>(VIDEO_BLOG_CONTEXT);
@@ -17,6 +18,10 @@ export default function VideoBlogs() {
   if (!data || !data.videoBlogContexts) {
     return <p>Loading...</p>;
   }
+
+  useEffect(() => {
+    document.title = "Video Blogs";
+  }, []);
 
   return (
     <section className={styles.videoBlogs}>

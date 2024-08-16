@@ -1,6 +1,6 @@
 "use client";
 import styles from "./EditUser.module.scss";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import withAuth from "@/Component/RoutesProtect/withAuth";
 import { useMutation, useSuspenseQuery } from "@apollo/client";
@@ -67,6 +67,10 @@ const UpdateUser = ({ params: { id } }: ParamsPropsType) => {
       alert("profile couldn't be updated");
     }
   };
+
+  useEffect(() => {
+    document.title = "User Role Change";
+  }, []);
 
   return (
     <div className={styles.main}>

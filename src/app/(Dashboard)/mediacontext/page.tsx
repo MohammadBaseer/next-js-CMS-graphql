@@ -7,7 +7,7 @@ import { GetAllVideoBlogsTypes } from "@/types/customTypes/VideoCustomTypes";
 import YouTube from "react-youtube";
 import getYouTubeID from "get-youtube-id";
 import { onError, onReady, opts_small_size } from "@/util/YoutubeIDContext/YoutubeVideoOptionCustomFunction";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { AuthContext } from "@/context/authContext";
 import withAuth from "@/Component/RoutesProtect/withAuth";
 import { GetSingleUsersType } from "@/types/customTypes/UsersCustomTypes";
@@ -42,6 +42,10 @@ const MediaPost = () => {
       console.error("Failed to delete video context", error);
     }
   };
+
+  useEffect(() => {
+    document.title = "Media Blog List";
+  }, []);
 
   return (
     <div className={styles.main}>

@@ -80,6 +80,10 @@ const EditVideoContext = ({ params: { id } }: ParamsType) => {
     setUrlId(getYouTubeID(videoInput.url));
   }, [videoInput.url]);
 
+  useEffect(() => {
+    document.title = "Edit Media Blog";
+  }, []);
+
   return (
     <div className={styles.main}>
       <div className={styles.page_title}>

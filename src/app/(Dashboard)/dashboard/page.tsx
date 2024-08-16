@@ -8,7 +8,7 @@ import { GetAllVideoBlogsTypes } from "@/types/customTypes/VideoCustomTypes";
 import { GET_USERS } from "@/queries/userQuery";
 import { GET_POST_CONTEXT } from "@/queries/postContextQuery";
 import { VIDEO_BLOG_CONTEXT } from "@/queries/videoBlogContextQuery";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { AuthContext } from "@/context/authContext";
 import Link from "next/link";
 
@@ -28,7 +28,9 @@ const HomePage = () => {
 
   const allVideo = videos.videoBlogContexts.length;
   const myVideo = videos.videoBlogContexts.filter((video) => video.createdBy.id === userProfile?.id).length;
-
+  useEffect(() => {
+    document.title = "Dashboard Home";
+  }, []);
   return (
     <div className={styles.main}>
       <div className={styles.containerBox}>
