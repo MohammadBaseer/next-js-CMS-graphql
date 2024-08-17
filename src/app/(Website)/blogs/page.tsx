@@ -46,26 +46,7 @@ const Blogs = () => {
             </div>
           ))}
         </div>
-        <div className={styles.sidebar_blogs_news}>
-          {/* {videoBlog.videoBlogContexts.map((video, index) => {
-            const videoId = getYouTubeID(video.url);
-            const thumbnailUrl = `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
-            return (
-              <div className={styles.blog_item} key={index}>
-                <div className={styles.blog_image}>
-                  <img className={styles.news_image} src={thumbnailUrl} alt={thumbnailUrl} />
-                </div>
-                <div className={styles.blog_context}>
-                  <div className={styles.title_box}>
-                    <div className={styles.title}>
-                      <h3>{video.title}</h3>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            );
-          })} */}
-        </div>
+        <div className={styles.sidebar_blogs_news}></div>
       </div>
     </>
   );
