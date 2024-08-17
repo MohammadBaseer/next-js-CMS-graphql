@@ -6,12 +6,14 @@ import { useSuspenseQuery } from "@apollo/client";
 import { GetSingleBlogContextType } from "@/types/customTypes/PostBlogCustomTypes";
 import { GET_POST_CONTEXT_BY_ID } from "@/queries/postContextQuery";
 import { useEffect } from "react";
-import { useRouter } from "next/router";
 
-export default function BlogDetail() {
-  const router = useRouter();
-  const { id } = router.query;
+type ParamsPropTypes = {
+  params: {
+    id: string;
+  };
+};
 
+export default function BlogDetail({ params: { id } }: ParamsPropTypes) {
   const { data: fetchData } = useSuspenseQuery<GetSingleBlogContextType>(GET_POST_CONTEXT_BY_ID, {
     variables: {
       blogContextId: id,

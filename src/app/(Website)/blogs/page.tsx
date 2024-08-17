@@ -11,8 +11,6 @@ import { useEffect } from "react";
 const Blogs = () => {
   const { data } = useSuspenseQuery<GetAllBlogContextType>(GET_POST_CONTEXT);
 
-  const { data: videoBlog, error } = useSuspenseQuery<GetAllVideoBlogsTypes>(VIDEO_BLOG_CONTEXT);
-
   useEffect(() => {
     document.title = "Post Blogs";
   }, []);
