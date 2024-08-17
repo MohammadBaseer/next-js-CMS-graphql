@@ -37,7 +37,7 @@ const Blogs = () => {
                     <p>{post.description.slice(0, 190) + "..."}</p>
                   </div>
                   <div className={styles.button}>
-                    <Link href={`/blogs/${post._id}`} key={post._id} passHref>
+                    <Link href={`/blogs/${post._id}`}>
                       <span className="Like_icon">More</span>
                     </Link>
                   </div>
