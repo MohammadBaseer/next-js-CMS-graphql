@@ -10,7 +10,7 @@ export default function Home() {
     <>
       <WebNavbar />
       <div>
-        <h1>Welcome To The GraphQL 'CMS' Project</h1>
+        <h1>Welcome To The Next- js- 14 App - GraphQL 'CMS' Project</h1>
         <h3>User Base Roles: </h3>
         <br />
         <h4> Admin: Full Access</h4>
